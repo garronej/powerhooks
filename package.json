@@ -29,12 +29,12 @@
         "@types/node": "^10.0.0",
         "@types/react": "^17.0.2",
         "denoify": "^0.5.10",
-        "evt": "beta",
         "lint-staged": "^10.4.2",
         "react": "^17.0.1",
         "typescript": "^4.1.5"
     },
     "dependencies": {
+        "evt": "beta",
         "memoizee": "^0.4.15",
         "resize-observer-polyfill": "^1.5.1"
     }
