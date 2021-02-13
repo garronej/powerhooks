@@ -1,8 +1,9 @@
 {
     "compilerOptions": {
+        "jsx": "react",
         "module": "commonjs",
         "target": "es5",
-        "lib": ["es2015"],
+        "lib": ["es2015", "DOM", "ES2019.Object"],
         "declaration": true,
         "outDir": "./dist",
         "sourceMap": true,

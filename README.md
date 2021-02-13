@@ -18,49 +18,19 @@
 
 # Install / Import
 
-```bash
-$ npm install --save powerhooks
-```
+https://github.com/testing-library/react-hooks-testing-library
+
+https://github.com/InseeFrLab/onyxia-ui/tree/structure_rework/src/app/tools/hooks
+
 
 ```typescript
-import { myFunction, myObject } from "powerhooks";
-```
+import { createUseGlobalState } from "powerhooks/useGlobalState";
 
-Specific imports:
-
-```typescript
-import { myFunction } from "powerhooks/myFunction";
-import { myObject } from "powerhooks/myObject";
-```
-
-## Import from HTML, with CDN
-
-Import it via a bundle that creates a global ( wider browser support ):
-
-```html
-<script src="//unpkg.com/powerhooks/bundle.min.js"></script>
-<script>
-    const { myFunction, myObject } = powerhooks;
-</script>
-```
-
-Or import it as an ES module:
-
-```html
-<script type="module">
-    import {
-        myFunction,
-        myObject,
-    } from "//unpkg.com/powerhooks/zz_esm/index.js";
-</script>
-```
-
-_You can specify the version you wish to import:_ [unpkg.com](https://unpkg.com)
-
-## Contribute
-
-```bash
-npm install
-npm run build
-npm test
+export const { useIsDarkModeEnabled } = createUseGlobalState(
+    "isDarkModeEnabled",
+    () => (
+        window.matchMedia &&
+        window.matchMedia("(prefers-color-scheme: dark)").matches
+    )
+);
 ```

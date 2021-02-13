@@ -19,7 +19,6 @@ jobs:
     - name: Making sure 'npm run lint' and 'npm run format' does not changes anything.
       run: |
         npm run lint:check
-        npm run format:check
   test_node:
     runs-on: ${{ matrix.os }}
     needs: test_lint

@@ -10,25 +10,14 @@
     "types": "dist/index.d.ts",
     "scripts": {
         "test": "node dist/test/",
-        "cdn:bundle:.js": "simplifyify dist/index.js -s powerhooks -o dist/bundle.js --debug --bundle",
-        "cdn:bundle:.min.js": "terser dist/bundle.js -cmo dist/bundle.min.js",
-        "cdn:bundle": "npm run cdn:bundle:.js && npm run cdn:bundle:.min.js",
-        "cdn:esm": "tsc -p tsconfig.esm.json",
-        "cdn": "npm run cdn:bundle && npm run cdn:esm",
-        "build": "tsc && npm run cdn",
+        "build": "tsc",
         "enable_short_import_path": "npm run build && denoify_enable_short_npm_import_path",
         "lint:check": "eslint . --ext .ts,.tsx",
-        "lint": "npm run lint:check -- --fix",
-        "_format": "prettier '**/*.{ts,tsx,json,md}'",
-        "format": "npm run _format -- --write",
-        "format:check": "npm run _format -- --list-different"
+        "lint": "npm run lint:check -- --fix"
     },
     "lint-staged": {
         "*.{ts,tsx}": [
             "eslint --fix"
-        ],
-        "*.{ts,tsx,json,md}": [
-            "prettier --write"
         ]
     },
     "husky": {
@@ -48,18 +37,21 @@
     "keywords": [],
     "homepage": "https://github.com/garronej/powerhooks",
     "devDependencies": {
-        "typescript": "^4.0.3",
+        "@types/memoizee": "^0.4.5",
         "@types/node": "^10.0.0",
-        "denoify": "^0.5.10",
-        "evt": "^1.8.11",
-        "simplifyify": "^8.0.3",
-        "terser": "^5.3.8",
-        "husky": "^4.3.0",
-        "prettier": "^2.0.5",
-        "eslint": "^7.7.0",
-        "@typescript-eslint/parser": "^4.5.0",
+        "@types/react": "^17.0.2",
         "@typescript-eslint/eslint-plugin": "^4.5.0",
-        "eslint-config-prettier": "^6.14.0",
-        "lint-staged": "^10.4.2"
+        "@typescript-eslint/parser": "^4.5.0",
+        "denoify": "^0.5.10",
+        "eslint": "^7.7.0",
+        "evt": "beta",
+        "husky": "^4.3.0",
+        "lint-staged": "^10.4.2",
+        "react": "^17.0.1",
+        "typescript": "^4.1.5"
+    },
+    "dependencies": {
+        "memoizee": "^0.4.15",
+        "resize-observer-polyfill": "^1.5.1"
     }
 }
