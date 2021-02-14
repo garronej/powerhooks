@@ -21,7 +21,11 @@
         "noEmit": true,
         "jsx": "react-jsx",
         "noFallthroughCasesInSwitch": true,
-        "downlevelIteration": true
+        "downlevelIteration": true,
+        "outDir": "./dist",
+        
     },
-    "filesGlob": ["src/**/*"]
+    "include": [
+        "src"
+    ]
 }
