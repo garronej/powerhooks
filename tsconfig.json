@@ -1,19 +1,29 @@
 {
-    "compilerOptions": {
-        "jsx": "react",
-        "module": "commonjs",
-        "target": "es5",
-        "lib": ["es2015", "DOM", "ES2019.Object"],
-        "declaration": true,
-        "outDir": "./dist",
-        "sourceMap": true,
-        "newLine": "LF",
-        "noUnusedLocals": true,
-        "noUnusedParameters": true,
-        "incremental": true,
-        "strict": true,
-        "downlevelIteration": true
-    },
-    "filesGlob": ["src/**/*"],
-    "exclude": ["node_modules/", "dist/**/*"]
+      "compilerOptions": {
+    "baseUrl": "src",
+    "target": "es5",
+    "lib": ["es2015", "DOM", "ES2019.Object"],
+    "allowJs": true,
+    "skipLibCheck": true,
+    "esModuleInterop": true,
+    "allowSyntheticDefaultImports": true,
+    "strict": true,
+    "noUnusedLocals": true,
+    "noUnusedParameters": true,
+    "forceConsistentCasingInFileNames": true,
+    "module": "esnext",
+    "moduleResolution": "node",
+    "resolveJsonModule": true,
+    "isolatedModules": true,
+    "noEmit": true,
+    "jsx": "react-jsx",
+    "noFallthroughCasesInSwitch": true,
+    "downlevelIteration": true
+  },
+  "include": [
+    "src"
+  ]
+    
+    
+    
 }
