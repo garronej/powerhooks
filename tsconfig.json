@@ -23,7 +23,5 @@
         "noFallthroughCasesInSwitch": true,
         "downlevelIteration": true
     },
-    "include": [
-        "src"
-    ]
+    "filesGlob": ["src/**/*"]
 }
