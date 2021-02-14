@@ -22,8 +22,7 @@
         "jsx": "react-jsx",
         "noFallthroughCasesInSwitch": true,
         "downlevelIteration": true,
-        "outDir": "./dist",
-        
+        "outDir": "./dist"
     },
     "include": [
         "src"
