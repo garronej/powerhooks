@@ -1,7 +1,4 @@
 
-
-
-
 import type * as React from "react";
 import { useState } from "react";
 import { Evt } from "evt";
@@ -135,28 +132,3 @@ export function useClick<ExtraArg>(
 
 }
 
-
-/*
-function MyComponent(){
-
-    const { getOnMouseProps } = useClick<{ btnIndex: number; }>({
-        "doubleClickDelayMs": 300,
-        "callback": ({ extraArg: { btnIndex }, type }) => {
-
-            console.log(`We got a click type ${type} on button index: ${btnIndex}`);
-
-            return null as any;
-
-        }
-    });
-
-    return (
-        <>
-        <button {...getOnMouseProps({ "btnIndex": 1})}> my button 1</button>
-        <button {...getOnMouseProps({ "btnIndex": 2})}> my button 1</button>
-        <button {...getOnMouseProps({ "btnIndex": 3})}> my button 1</button>
-        </>
-    );
-
-}
-*/
