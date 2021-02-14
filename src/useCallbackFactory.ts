@@ -1,5 +1,5 @@
 import { useRef, useState } from "react";
-import * as memoize from "memoizee";
+import memoize from "memoizee";
 import { id } from "evt/tools/typeSafety/id";
 
 export type CallbackFactory<

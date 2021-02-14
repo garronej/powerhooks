@@ -1,10 +1,10 @@
 
-import type * as React from "react";
+import type React from "react";
 import { useState } from "react";
 import { Evt } from "evt";
 import { useEvt } from "evt/hooks";
 import { id } from "evt/tools/typeSafety/id";
-import * as memoize from "memoizee";
+import memoize from "memoizee";
 import { useConstCallback } from "./useConstCallback";
 
 export type ReactMouseEvent = React.MouseEvent<HTMLElement, MouseEvent>;

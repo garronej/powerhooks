@@ -1,3 +1,5 @@
 
 
 console.log("PASS");
+
+export {};
