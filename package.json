@@ -34,7 +34,7 @@
         "typescript": "^4.1.5"
     },
     "dependencies": {
-        "evt": "2.0.0-beta.10",
+        "evt": "2.0.0-beta.12",
         "memoizee": "^0.4.15",
         "resize-observer-polyfill": "^1.5.1"
     }

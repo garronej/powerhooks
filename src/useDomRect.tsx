@@ -3,35 +3,9 @@ import  { createContext, createElement } from "react";
 import type { ReactNode } from "react";
 import { useState, useRef, useContext, useEffect } from "react";
 import { useEvt } from "evt/hooks";
-import { Evt } from "evt";
 import ResizeObserver from "resize-observer-polyfill";
 import { useWindowInnerSize } from "./useWindowInnerSize";
-import type { Ctx } from "evt";
-
-function Evt_fromObserver(
-    ctx: Ctx<any>,
-    ObserverConstructor: typeof ResizeObserver,
-    target: HTMLElement
-): Evt<void> {
-
-    const evt = Evt.create();
-
-    const listener = () => evt.post();
-
-    const observer = new ObserverConstructor(listener);
-
-    observer.observe(target);
-
-    ctx.evtDoneOrAborted.attachOnce(
-        () => observer.disconnect()
-    );
-
-    return evt;
-
-}
-
-
-
+import { Evt } from "evt";
 
 export type PartialDomRect = Pick<DOMRectReadOnly, "bottom" | "right" | "top" | "left" | "height" | "width">;
 
@@ -54,7 +28,6 @@ export function useDomRect<T extends HTMLElement = any>() {
 
     useEffect(
         () => { setHtmlElement(ref.current); },
-        /* // eslint-disable-next-line react-hooks/exhaustive-deps */
         [ref.current ?? {}]
     );
 
@@ -67,7 +40,7 @@ export function useDomRect<T extends HTMLElement = any>() {
                 return;
             }
 
-            Evt_fromObserver(ctx, ResizeObserver, htmlElement)
+            Evt.from(ctx, ResizeObserver, htmlElement)
                 .toStateful()
                 .attach(
                     () => {
