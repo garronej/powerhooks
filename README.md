@@ -11,9 +11,9 @@
     <img src="https://img.shields.io/npm/l/powerhooks">
 </p>
 <p align="center">
-  <a href="https://github.com/garronej/powerhooks">Home</a>
+  <a href="https://powerhooks.dev">Home</a>
   -
-  <a href="https://github.com/garronej/powerhooks">Documentation</a>
+  <a href="https://docs.powerhooks.dev">Documentation</a>
 </p>
 
 # Install / Import
