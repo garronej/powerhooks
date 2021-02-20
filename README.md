@@ -22,6 +22,8 @@ https://github.com/testing-library/react-hooks-testing-library
 
 https://github.com/InseeFrLab/onyxia-ui/tree/structure_rework/src/app/tools/hooks
 
+https://github.com/facebook/react/blob/9198a5cec0936a21a5ba194a22fcbac03eba5d1d/packages/eslint-plugin-react-hooks/src/ExhaustiveDeps.js
+
 
 ```typescript
 import { createUseGlobalState } from "powerhooks/useGlobalState";
