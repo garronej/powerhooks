@@ -4689,6 +4689,14 @@ evp_bytestokey@^1.0.0, evp_bytestokey@^1.0.3:
     md5.js "^1.3.4"
     safe-buffer "^5.1.1"
 
+evt@^1.8.11:
+  version "1.9.12"
+  resolved "https://registry.yarnpkg.com/evt/-/evt-1.9.12.tgz#8d06177259cbcb09ef936e18945bf7ddd087170c"
+  integrity sha512-u8wC4Xif2pcDJ9cEm0wzWCIQb+Y214m1eUgsgm2hVIuXuvC6LToryA0Ecl1O8Slii2E9l6USLsyxXWntjlnIbw==
+  dependencies:
+    minimal-polyfills "^2.1.5"
+    run-exclusive "^2.2.14"
+
 exec-sh@^0.3.2:
   version "0.3.4"
   resolved "https://registry.yarnpkg.com/exec-sh/-/exec-sh-0.3.4.tgz#3a018ceb526cc6f6df2bb504b2bfe8e3a4934ec5"
@@ -5245,11 +5253,12 @@ gh-pages@^3.1.0:
     fs-extra "^8.1.0"
     globby "^6.1.0"
 
-github-pages-plugin-for-type-route@^0.0.6:
-  version "0.0.6"
-  resolved "https://registry.yarnpkg.com/github-pages-plugin-for-type-route/-/github-pages-plugin-for-type-route-0.0.6.tgz#3823c4de45f994f17d53a9951867650116b9b3e9"
-  integrity sha512-Ii7clDG7TJ4sC4R2wtytiFfHPDEi7GUNJ8U4WrEoH94f9mBwSXY4f7ef50feAfsV8yhNQEr2q8e0ebyIOt2lLg==
+github-pages-plugin-for-type-route@^0.0.7:
+  version "0.0.7"
+  resolved "https://registry.yarnpkg.com/github-pages-plugin-for-type-route/-/github-pages-plugin-for-type-route-0.0.7.tgz#82fb3e851b6aa39567d75b631db4921527b16c87"
+  integrity sha512-W4TaBKOIOz3E7SezW2mdpSaI2ZnP18VedYIzaof6TfGt9IfjfINHV8DWPlSyOwrlWfgIjuJnq7HrwjgtZpm/4w==
   dependencies:
+    evt "^1.8.11"
     scripting-tools "^0.19.13"
 
 glob-parent@^3.1.0:
@@ -7218,6 +7227,11 @@ mini-css-extract-plugin@0.11.3:
     normalize-url "1.9.1"
     schema-utils "^1.0.0"
     webpack-sources "^1.1.0"
+
+minimal-polyfills@^2.1.5:
+  version "2.1.6"
+  resolved "https://registry.yarnpkg.com/minimal-polyfills/-/minimal-polyfills-2.1.6.tgz#eab50832add31afd40a22b38fb76d1fdcd2a51e4"
+  integrity sha512-vqoxj7eMzsqX0M6/dkgoNFPw6Mztgn5qjSl0bWGboQeU7Y4UPLeyoqQw6JI+0qmBcJYdkr3nK7dqY8u/fgRp5g==
 
 minimalistic-assert@^1.0.0, minimalistic-assert@^1.0.1:
   version "1.0.1"
@@ -9558,6 +9572,13 @@ rsvp@^4.8.4:
   version "4.8.5"
   resolved "https://registry.yarnpkg.com/rsvp/-/rsvp-4.8.5.tgz#c8f155311d167f68f21e168df71ec5b083113734"
   integrity sha512-nfMOlASu9OnRJo1mbEk2cz0D56a1MBNrJ7orjRZQG10XDyuvwksKbuXNp6qa+kbn839HwjwhBzhFmdsaEAfauA==
+
+run-exclusive@^2.2.14:
+  version "2.2.14"
+  resolved "https://registry.yarnpkg.com/run-exclusive/-/run-exclusive-2.2.14.tgz#4f41dc7843e091f10991f8708fce87b09022a0ce"
+  integrity sha512-NHaQfB3zPJFx7p4M06AcmoK8xz/h8YDMCdy3jxfyoC9VqIbl1U+DiVjUuAYZBRMwvj5qkQnOUGfsmyUC4k46dg==
+  dependencies:
+    minimal-polyfills "^2.1.5"
 
 run-parallel@^1.1.9:
   version "1.2.0"
