@@ -29,14 +29,12 @@ jobs:
     runs-on: ubuntu-latest
     steps:
     - uses: actions/checkout@v2
-      with:
-        lfs: true
     - uses: actions/setup-node@v2-beta
-    - run: yarn install --frozen-lockfile
+    - run: cd www && yarn install --frozen-lockfile
     - run: git remote set-url origin https://git:${GITHUB_TOKEN}@github.com/${{github.repository}}.git
       env:
         GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-    - run: yarn deploy -u "github-actions-bot <support+actions@github.com>"
+    - run: cd www && yarn deploy -u "github-actions-bot <support+actions@github.com>"
 
   trigger_publish:
     name: Trigger publish.yaml workflow if package.json version updated ( and secrets.PAT is set ).
