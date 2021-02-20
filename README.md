@@ -5,7 +5,7 @@
     <i></i>
     <br>
     <br>
-    <img src="https://github.com/garronej/powerhooks/workflows/ci/badge.svg?branch=develop">
+    <img src="https://github.com/garronej/powerhooks/workflows/ci/badge.svg?branch=master">
     <img src="https://img.shields.io/bundlephobia/minzip/powerhooks">
     <img src="https://img.shields.io/npm/dw/powerhooks">
     <img src="https://img.shields.io/npm/l/powerhooks">
