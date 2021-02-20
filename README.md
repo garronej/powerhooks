@@ -5,15 +5,15 @@
     <i></i>
     <br>
     <br>
-    <img src="https://github.com/garronej/powerhooks/workflows/ci/badge.svg?branch=develop">
+    <img src="https://github.com/garronej/powerhooks/workflows/ci/badge.svg?branch=master">
     <img src="https://img.shields.io/bundlephobia/minzip/powerhooks">
     <img src="https://img.shields.io/npm/dw/powerhooks">
     <img src="https://img.shields.io/npm/l/powerhooks">
 </p>
 <p align="center">
-  <a href="https://github.com/garronej/powerhooks">Home</a>
+  <a href="https://powerhooks.dev">Home</a>
   -
-  <a href="https://github.com/garronej/powerhooks">Documentation</a>
+  <a href="https://docs.powerhooks.dev">Documentation</a>
 </p>
 
 # Install / Import
