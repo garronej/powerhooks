@@ -11,7 +11,7 @@
     <img src="https://img.shields.io/npm/l/powerhooks">
 </p>
 <p align="center">
-  <a href="https://powerhooks.dev">Home</a>
+  <a href="https://www.powerhooks.dev">Home</a>
   -
   <a href="https://docs.powerhooks.dev">Documentation</a>
 </p>
@@ -21,6 +21,8 @@
 https://github.com/testing-library/react-hooks-testing-library
 
 https://github.com/InseeFrLab/onyxia-ui/tree/structure_rework/src/app/tools/hooks
+
+https://github.com/facebook/react/blob/9198a5cec0936a21a5ba194a22fcbac03eba5d1d/packages/eslint-plugin-react-hooks/src/ExhaustiveDeps.js
 
 
 ```typescript
