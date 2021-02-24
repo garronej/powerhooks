@@ -7,6 +7,8 @@ import ResizeObserver from "resize-observer-polyfill";
 import { useWindowInnerSize } from "./useWindowInnerSize";
 import { Evt } from "evt";
 
+//TODO: only re-renders when width or height change.
+
 export type PartialDomRect = Pick<DOMRectReadOnly, "bottom" | "right" | "top" | "left" | "height" | "width">;
 
 // https://gist.github.com/morajabi/523d7a642d8c0a2f71fcfa0d8b3d2846
