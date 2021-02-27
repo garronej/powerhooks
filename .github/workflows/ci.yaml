@@ -26,19 +26,6 @@ jobs:
         repo: ${{github.event.repository.name}}
         branch: ${{github.ref}}
 
-    - name: Dump steps context
-      env:
-        STEPS_CONTEXT: ${{ toJSON(steps) }}
-        OWNER: ${{github.repository_owner}}
-        REPO: ${{github.event.repository.name}}
-        BRANCH: ${{github.ref}}
-      run: |
-        echo "$STEPS_CONTEXT"
-        echo "$OWNER"
-        echo "$REPO"
-        echo "$BRANCH"
-        echo "DONE"
-
     - uses: actions/checkout@v2
     - uses: actions/setup-node@v1
       with:
