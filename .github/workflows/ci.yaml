@@ -58,18 +58,25 @@ jobs:
     - name: Dump steps context
       env:
         STEPS_CONTEXT: ${{ toJSON(steps) }}
-      run: echo "$STEPS_CONTEXT"
+        OWNER: ${{github.repository_owner}}
+        REPO: ${{github.event.repository.name}}
+        BRANCH: ${{github.ref}}
+      run: |
+        echo "$STEPS_CONTEXT"
+        echo "$OWNER"
+        echo "$REPO"
+        echo "$BRANCH"
 
     - uses: actions/checkout@v2
     - uses: actions/setup-node@v1
       with:
         node-version: ${{ matrix.node }}
-    - if: steps._1.npm_or_yarn == 'yarn'
+    - if: steps._1.outputs.npm_or_yarn == 'yarn'
       run: |
         yarn install --frozen-lockfile                                                                                                                                                                                        
         yarn run build
         yarn run test
-    - if: steps._1.npm_or_yarn == 'npm'
+    - if: steps._1.outputs.npm_or_yarn == 'npm'
       run: |
         npm ci                                                                                                                                                                                        
         npm run build
