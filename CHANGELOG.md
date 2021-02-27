@@ -1,3 +1,20 @@
+### **0.0.10** (2021-02-24)  
+  
+- Bump version  
+- Update package.json  
+- Update README.md  
+- Update README.md  
+- update deps  
+- Update www deps  
+- Fix build  
+- unlfs  
+- Setup landingpage  
+- Update README.md  
+- Update publish.yaml  
+- Update README.md  
+- Update ci.yaml  
+- Configure gitbook    
+  
 ### **0.0.9** (2021-02-15)  
   
 - Update Evt    
