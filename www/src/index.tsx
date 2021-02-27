@@ -1,20 +1,23 @@
-import React from 'react';
-import ReactDOM from 'react-dom';
-import './index.css';
-import App from './App';
-import reportWebVitals from './reportWebVitals';
-import { RouteProvider } from "./router";
 
-ReactDOM.render(
-  <React.StrictMode>
-    <RouteProvider>
-      <App />
-    </RouteProvider>
-  </React.StrictMode>,
-  document.getElementById('root')
+import * as reactDom from "react-dom";
+
+import { App } from "components/App";
+import { ThemeProvider } from "theme/ThemeProvider";
+import { useIsDarkModeEnabled } from "tools/useIsDarkModeEnabled";
+
+function Root() {
+
+    const { isDarkModeEnabled } = useIsDarkModeEnabled();
+
+    return (
+        <ThemeProvider isDarkModeEnabled={isDarkModeEnabled}>
+            <App />
+        </ThemeProvider>
+    );
+
+}
+
+reactDom.render(
+    <Root/>,
+    document.getElementById("root")
 );
-
-// If you want to start measuring performance in your app, pass a function
-// to log results (for example: reportWebVitals(console.log))
-// or send to an analytics endpoint. Learn more: https://bit.ly/CRA-vitals
-reportWebVitals();
