@@ -1,11 +1,11 @@
 
-import  { createContext, createElement } from "react";
+import { createContext, createElement } from "react";
 import type { ReactNode } from "react";
 import { useState, useRef, useContext, useEffect } from "react";
 import { useEvt } from "evt/hooks";
-import ResizeObserver from "resize-observer-polyfill";
 import { useWindowInnerSize } from "./useWindowInnerSize";
-import { Evt } from "evt";
+import { Evt } from "evt";
+import ResizeObserver from "./tools/ResizeObserver";
 
 //TODO: only re-renders when width or height change.
 
@@ -26,7 +26,7 @@ export function useDomRect<T extends HTMLElement = any>() {
         "width": 0
     });
 
-    const [htmlElement, setHtmlElement] =useState<T | null>(null);
+    const [htmlElement, setHtmlElement] = useState<T | null>(null);
 
     useEffect(
         () => { setHtmlElement(ref.current); },
@@ -65,7 +65,7 @@ export function useDomRect<T extends HTMLElement = any>() {
 
                         } else {
 
-                            const factor= window.innerWidth / referenceWidth;
+                            const factor = window.innerWidth / referenceWidth;
 
                             setDomRect({
                                 "bottom": bottom / factor,
