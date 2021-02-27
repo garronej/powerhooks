@@ -54,10 +54,12 @@ jobs:
         owner: ${{github.repository_owner}}
         repo: ${{github.event.repository.name}}
         branch: ${{github.ref}}
+
     - name: Dump steps context
       env:
         STEPS_CONTEXT: ${{ toJSON(steps) }}
       run: echo "$STEPS_CONTEXT"
+
     - uses: actions/checkout@v2
     - uses: actions/setup-node@v1
       with:
