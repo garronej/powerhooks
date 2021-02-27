@@ -1,3 +1,8 @@
+### **0.0.13** (2021-02-27)  
+  
+- Fix useDomRect  
+- Update ci.yaml    
+  
 ### **0.0.11** (2021-02-27)  
   
 - update  
