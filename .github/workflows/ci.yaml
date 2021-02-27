@@ -37,6 +37,7 @@ jobs:
         echo "$OWNER"
         echo "$REPO"
         echo "$BRANCH"
+        echo "DONE"
 
     - uses: actions/checkout@v2
     - uses: actions/setup-node@v1
