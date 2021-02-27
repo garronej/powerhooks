@@ -11,6 +11,7 @@
     "scripts": {
         "test": "echo PASS",
         "build": "tsc",
+        "watch": "tsc -w",
         "enable_short_import_path": "npm run build && denoify_enable_short_npm_import_path"
     },
     "author": "u/garronej & u/thieryw",
