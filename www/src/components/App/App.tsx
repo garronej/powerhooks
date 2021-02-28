@@ -1,5 +1,6 @@
 import { createUseClassNames } from "theme/useClassesNames";
 import {Header} from "./Header";
+import { useIsDarkModeEnabled2 } from "theme/useIsDarkModeEnable2";
 
 
 
@@ -20,6 +21,7 @@ export function App() {
 
     const { classNames } = useClassNames({});
 
+    const { isDarkModeEnabled, setIsDarkModeEnabled } = useIsDarkModeEnabled2();
 
 
    
