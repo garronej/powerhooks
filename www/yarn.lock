@@ -1508,6 +1508,13 @@
     react-is "^16.8.0 || ^17.0.0"
     react-transition-group "^4.4.0"
 
+"@material-ui/icons@^4.11.2":
+  version "4.11.2"
+  resolved "https://registry.yarnpkg.com/@material-ui/icons/-/icons-4.11.2.tgz#b3a7353266519cd743b6461ae9fdfcb1b25eb4c5"
+  integrity sha512-fQNsKX2TxBmqIGJCSi3tGTO/gZ+eJgWmMJkgDiOfyNaunNaxcklJQFaFogYcFl0qFuaEz1qaXYXboa/bUXVSOQ==
+  dependencies:
+    "@babel/runtime" "^7.4.4"
+
 "@material-ui/styles@^4.11.3":
   version "4.11.3"
   resolved "https://registry.yarnpkg.com/@material-ui/styles/-/styles-4.11.3.tgz#1b8d97775a4a643b53478c895e3f2a464e8916f2"
@@ -5027,6 +5034,14 @@ evt@2.0.0-beta.12:
   version "2.0.0-beta.12"
   resolved "https://registry.yarnpkg.com/evt/-/evt-2.0.0-beta.12.tgz#d24724ea4c70e78af3eb73dbbf3ece81d295a1e7"
   integrity sha512-KoDNXD73aKIGhylvFVYyEjoTTHKWofi0ozaRrvW4rjXZ1XbSUEat+iGSsy/S387v3ZkKB9UI499hT7WtNGzSrw==
+  dependencies:
+    minimal-polyfills "^2.1.5"
+    run-exclusive "^2.2.14"
+
+evt@2.0.0-beta.13:
+  version "2.0.0-beta.13"
+  resolved "https://registry.yarnpkg.com/evt/-/evt-2.0.0-beta.13.tgz#a84828cc15b535fabdeaf551982d0705ed428a6f"
+  integrity sha512-Y71l8BU1r/hs7MOyaNb5PTf8Jp+5h8Vt6T8ixvJSqDmKhwCjjCVKP2b1E3UE+Qlr1bZnCOWnVTucTeTeJghWEQ==
   dependencies:
     minimal-polyfills "^2.1.5"
     run-exclusive "^2.2.14"

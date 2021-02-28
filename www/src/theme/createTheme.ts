@@ -1,7 +1,7 @@
 
 // @ts-ignore: unused
 // eslint-disable-next-line @typescript-eslint/no-unused-vars
-import type { Theme, ThemeOptions } from "@material-ui/core/styles/createMuiTheme";
+import type { Theme } from "@material-ui/core/styles/createMuiTheme";
 
 import { createMuiTheme } from "@material-ui/core/styles";
 import "./font.scss";
@@ -27,7 +27,7 @@ export function createTheme(
     params: {
         isDarkModeEnabled: boolean;
     }
-): { theme: Theme;  } {
+): { theme: Theme; } {
 
     const { isDarkModeEnabled } = params;
 
