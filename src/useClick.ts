@@ -4,12 +4,14 @@ import { useState } from "react";
 import { Evt } from "evt";
 import { useEvt } from "evt/hooks";
 import { id } from "evt/tools/typeSafety/id";
-import memoize from "memoizee";
 import { useConstCallback } from "./useConstCallback";
+import memoizeWithNonExportableTypings from "memoizee";
+const memoize: <F extends (...args: any[]) => any>(f: F)=> F = memoizeWithNonExportableTypings;
 
 export type ReactMouseEvent = React.MouseEvent<HTMLElement, MouseEvent>;
 
 type OnMouseUpOrDown = (mouseEvent: ReactMouseEvent) => void;
+
 
 /**
  * Why not use onDoubleClick? 

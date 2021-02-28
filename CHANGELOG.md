@@ -1,3 +1,9 @@
+### **0.0.14** (2021-02-28)  
+  
+- Do not rely on @types/memoizee  
+- Initial setup setup  
+- add watch script    
+  
 ### **0.0.13** (2021-02-27)  
   
 - Fix useDomRect  
