@@ -8,6 +8,7 @@ import { overwriteReadonlyProp } from "evt/tools/typeSafety/overwriteReadonlyPro
 import type { UseNamedStateReturnType } from "./useNamedState";
 import { typeGuard } from "evt/tools/typeSafety/typeGuard";
 import { capitalize } from "./tools/capitalize";
+import memoize from "memoizee";
 
 
 type PersistentStorage = {
@@ -87,8 +88,6 @@ const { getPersistentStorage } = (() => {
 
 })();
 
-
-
 const names = new Set<string>();
 
 /**
@@ -128,40 +127,49 @@ export function createUseGlobalState<T, Name extends string>(
             )
         });
 
-    //TODO: should be initialized when first used
-    const evtValue = Evt.create(
-        (
+    const getEvtValue = memoize(() => {
+
+        //TODO: should be initialized when first used
+        const evtValue = Evt.create(
             (
-                persistentStorage !== undefined &&
-                (() => {
+                (
+                    persistentStorage !== undefined &&
+                    (() => {
 
-                    const serializedBoxedValue = persistentStorage.getItem();
+                        const serializedBoxedValue = persistentStorage.getItem();
 
-                    return serializedBoxedValue === null ?
-                        false :
-                        JSON.parse(serializedBoxedValue) as [T]
-                        ;
+                        return serializedBoxedValue === null ?
+                            false :
+                            JSON.parse(serializedBoxedValue) as [T]
+                            ;
 
-                })()
-            )
-            ||
-            [
-                typeGuard<() => T>(initialState, typeof initialState === "function") ?
-                    initialState() :
-                    initialState
-            ]
-        )[0]
-    );
-
-    if (persistentStorage !== undefined) {
-
-        evtValue.attach(value =>
-            persistentStorage.setItem(JSON.stringify([value]))
+                    })()
+                )
+                ||
+                [
+                    typeGuard<() => T>(initialState, typeof initialState === "function") ?
+                        initialState() :
+                        initialState
+                ]
+            )[0]
         );
 
-    }
+        if (persistentStorage !== undefined) {
+
+            evtValue.attach(value =>
+                persistentStorage.setItem(JSON.stringify([value]))
+            );
+
+        }
+
+        return { evtValue };
+
+    });
+
 
     function useGlobalState() {
+
+        const { evtValue } = getEvtValue();
 
         const [state, setState] = useState(evtValue.state);
 
