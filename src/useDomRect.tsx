@@ -1,5 +1,5 @@
 
-import { createContext, createElement } from "react";
+import { useMemo, createContext } from "react";
 import type { ReactNode } from "react";
 import { useState, useRef, useContext, useEffect } from "react";
 import { useEvt } from "evt/hooks";
@@ -102,30 +102,31 @@ export function ZoomProvider(props: Props) {
 
     const { windowInnerWidth, windowInnerHeight } = useWindowInnerSize();
 
+    const value = useMemo(() => ({ referenceWidth }), [referenceWidth]);
+
     if (referenceWidth === undefined) {
         return <>{children}</>;
     }
 
     const zoomFactor = windowInnerWidth / referenceWidth;
 
-    return createElement(
-        zoomContext.Provider,
-        { "value": { referenceWidth } },
-        <div style={{
-            "height": "100vh",
-            "overflow": "hidden"
-        }}>
+    return (
+        <zoomContext.Provider value={value}>
             <div style={{
-                "transform": `scale(${zoomFactor})`,
-                "transformOrigin": "0 0",
-                "width": referenceWidth,
-                "height": windowInnerHeight / zoomFactor,
+                "height": "100vh",
                 "overflow": "hidden"
             }}>
-                {children}
+                <div style={{
+                    "transform": `scale(${zoomFactor})`,
+                    "transformOrigin": "0 0",
+                    "width": referenceWidth,
+                    "height": windowInnerHeight / zoomFactor,
+                    "overflow": "hidden"
+                }}>
+                    {children}
+                </div>
             </div>
-        </div>
+        </zoomContext.Provider>
     );
-
 
 }
