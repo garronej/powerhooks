@@ -1,3 +1,11 @@
+### **0.0.15** (2021-03-01)  
+  
+- Fix useDomRectProvider  
+- update  
+- update  
+- update  
+- Add gitattributes    
+  
 ### **0.0.14** (2021-02-28)  
   
 - Do not rely on @types/memoizee  
