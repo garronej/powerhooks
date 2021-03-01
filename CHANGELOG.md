@@ -1,3 +1,7 @@
+### **0.0.16** (2021-03-01)  
+  
+- useGlobalState initialization done when first used    
+  
 ### **0.0.15** (2021-03-01)  
   
 - Fix useDomRectProvider  
