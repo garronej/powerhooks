@@ -48,7 +48,7 @@ export const Usage = ()=>{
                 <Typography variant="h5">&&</Typography>
                 <CodeSnippet
                     showLineNumbers={true}
-                    text='import {} from "powerhooks"'
+                    text='import {} from "powerhooks";'
                 />
             </div>
         </section>

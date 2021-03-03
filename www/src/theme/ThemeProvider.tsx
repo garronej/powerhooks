@@ -8,7 +8,6 @@ import { createTheme } from "./createTheme";
 import { ThemeProvider as MuiThemeProvider, StylesProvider } from "@material-ui/core/styles";
 import { ZoomProvider } from "powerhooks";
 import { useIsDarkModeEnabled } from "./useIsDarkModeEnabled";
-import {css} from "tss-react";
 
 export function ThemeProvider(
     props: {
