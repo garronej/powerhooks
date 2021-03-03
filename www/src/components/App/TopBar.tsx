@@ -5,6 +5,9 @@ import {useConstCallback} from "powerhooks/useConstCallback";
 import {ReactComponent as SvgLogo} from "assets/SVG/physics.svg";
 import Button from "@material-ui/core/Button";
 import GitHubIcon from '@material-ui/icons/GitHub';
+import {GithubStarCount} from "../designSystem/GithubStarCount";
+import Divider from "@material-ui/core/Divider";
+import {css} from "tss-react";
 
 const {useClassNames} = createUseClassNames()(
     ()=>({
@@ -27,6 +30,12 @@ const {useClassNames} = createUseClassNames()(
             "marginLeft": -50,
             "top": 10
 
+        },
+
+        "DocButtons": {
+            "display": "flex",
+            "alignItems": "center",
+
         }
         
 
@@ -44,6 +53,7 @@ export const TopBar = ()=>{
     })
 
     return(
+        <>
         <nav className={classNames.root}>
             <DarkModeSwitch
                 isDarkModeEnabled={isDarkModeEnabled}
@@ -52,16 +62,25 @@ export const TopBar = ()=>{
 
             <SvgLogo className={classNames.logo} />
 
-            <div>
+            <div className={classNames.DocButtons}>
                 <Button href="https://github.com/garronej/powerhooks">documentation</Button>
-                <Button href="https://github.com/garronej/powerhooks">
+                <Button className={css({
+                    "marginRight": 10
+                })} href="https://github.com/garronej/powerhooks">
                     {
                         <GitHubIcon/>
                     }
 
                 </Button>
+                <GithubStarCount 
+                    size="large"
+                />
             </div>
 
         </nav>
+        <Divider className={css({
+            "width": "100%"
+        })}/>
+        </>
     )
 }

@@ -62,6 +62,7 @@ export const CodeSnippet = memo((props: Props)=>{
             showLineNumbers={showLineNumbers}
             text={animationSpeed === undefined ? text : textData.text}
             theme={dracula}
+            language="jsx"
         />
     )
 

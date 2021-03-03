@@ -1,11 +1,13 @@
 import {TopBar} from "./TopBar";
 import Typography from "@material-ui/core/Typography";
 import {createUseClassNames} from "theme/useClassesNames";
-import {CodeSnippet} from "../designSystem/CodeSnippet";
-import {useIsDarkModeEnabled} from "theme/useIsDarkModeEnabled";
+import gifUrl from "../../assets/img/todo.gif";
+import {useRef} from "react";
+import Divider from "@material-ui/core/Divider";
+import {css} from "tss-react";
 
-const {useClassNames} = createUseClassNames<{isDarkModeEnabled: boolean}>()(
-    (...[, {isDarkModeEnabled}])=>({
+const {useClassNames} = createUseClassNames()(
+    (theme)=>({
         "root": {
             "display": "flex",
             "flexDirection": "column",
@@ -17,13 +19,13 @@ const {useClassNames} = createUseClassNames<{isDarkModeEnabled: boolean}>()(
 
         "title": {
             "textTransform": "uppercase",
-            "marginTop": 100
+            "marginTop": 50
 
 
         },
         "installation":{
             "width": 400,
-            "border": `solid ${isDarkModeEnabled ? "white" : "black"} 1px`,
+            "border": `solid ${theme.palette.type === "dark" ? "white" : "black"} 1px`,
             "marginTop": 50,
             "padding": 30,
             "& h5": {
@@ -33,6 +35,11 @@ const {useClassNames} = createUseClassNames<{isDarkModeEnabled: boolean}>()(
                 "margin" : "20px 0 20px 0"
             }
 
+        },
+        "gif": {
+            "width": 800,
+            "boxShadow": theme.palette.type === "light" ? "-4px 2px 41px 1px rgba(0,0,0,0.75)" : "",
+            "marginTop": 70
         }
 
     })
@@ -41,33 +48,35 @@ const {useClassNames} = createUseClassNames<{isDarkModeEnabled: boolean}>()(
 
 export const Header = ()=>{
 
-    const {isDarkModeEnabled} = useIsDarkModeEnabled();
 
-    const {classNames} = useClassNames({isDarkModeEnabled})
+    const {classNames} = useClassNames({})
+    const gifRef = useRef<HTMLImageElement>(null);
+
+
 
     return(
         <header className={classNames.root}>
             <TopBar/>
             <Typography className={classNames.title} variant="h2">powerhooks</Typography>
-            <Typography variant="h4">A collection of essential React hooks that will enhance the developers experience</Typography>
+            <Divider className={css({
+                "width": 50,
+                "margin": 20
+            })}/>
+            <Typography variant="h4">A collection of essential React hooks<br/>that will enhance the developers experience</Typography>
+            <Divider className={css({
+                "width": 200,
+                "marginTop": 50
+            })} />
 
-            <div className={classNames.installation}>
-                <Typography variant="h5">Installation :</Typography>
-                <CodeSnippet 
-                    showLineNumbers={false}
-                    text="> npm install -save powerhooks"
-                    animationSpeed={20}
-                />
 
-                <Typography>Or</Typography>
+            <img 
+                className={classNames.gif} 
+                ref={gifRef} 
+                src={gifUrl} 
+                alt="gif of todo list with code extract"
+            />
 
-                <CodeSnippet 
-                    showLineNumbers={false}
-                    text="> yarn add powerhooks"
-                    animationSpeed={20}
-                />
-
-            </div>
+            
 
             
         </header>
