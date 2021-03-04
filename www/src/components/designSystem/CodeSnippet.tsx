@@ -4,17 +4,19 @@ import {useNamedState} from "powerhooks";
 
 
 
+
 type Props = {
     text: string;
     showLineNumbers: boolean;
     animationSpeed?: number;
+    height?: number;
+    overflow?: "scroll"
 }
-
 
 
 export const CodeSnippet = memo((props: Props)=>{
 
-    const {showLineNumbers, text, animationSpeed} = props;
+    const {showLineNumbers, text, animationSpeed, height, overflow} = props;
 
 
     
@@ -54,16 +56,28 @@ export const CodeSnippet = memo((props: Props)=>{
     // eslint-disable-next-line react-hooks/exhaustive-deps
     },[textData]);
 
+    
+
+
 
 
 
     return (
-        <CodeBlock 
-            showLineNumbers={showLineNumbers}
-            text={animationSpeed === undefined ? text : textData.text}
-            theme={dracula}
-            language="jsx"
-        />
+        <div>
+            <CodeBlock 
+
+                customStyle={{
+                    height: height === undefined ? "" : `${height}px`,
+                    overflow: overflow === undefined ? "" : overflow
+                }}
+                showLineNumbers={showLineNumbers}
+                text={animationSpeed === undefined ? text : textData.text}
+                theme={dracula}
+                language="tsx"
+            />
+        </div>
+
     )
 
 });
+

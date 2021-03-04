@@ -1,6 +1,7 @@
 import {CodeSnippet} from "../designSystem/CodeSnippet";
 import Typography from "@material-ui/core/Typography";
 import {createUseClassNames} from "theme/useClassesNames";
+import type {Params} from "evt/tools/typeSafety/Params";
 
 const {useClassNames} = createUseClassNames()(
     (theme)=>({
@@ -48,10 +49,14 @@ export const Usage = ()=>{
                 <Typography variant="h5">&&</Typography>
                 <CodeSnippet
                     showLineNumbers={true}
-                    text='import {} from "powerhooks";'
+                    text={`import {} from "powerhooks";`}
                 />
+
+                    
             </div>
         </section>
 
     )
 }
+
+

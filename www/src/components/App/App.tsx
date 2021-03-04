@@ -1,6 +1,8 @@
 import { createUseClassNames } from "theme/useClassesNames";
 import {Header} from "./Header";
 import {Usage} from "./Usage";
+import {useRef, useEffect} from "react";
+import {Examples} from "./Examples";
 
 
 
@@ -21,16 +23,15 @@ export function App() {
 
     const { classNames } = useClassNames({});
 
-
-
-   
-
     return (
         <div className={classNames.root}>
 
 
             <Header />
             <Usage />
+
+            <Examples />
+
             
             
 
