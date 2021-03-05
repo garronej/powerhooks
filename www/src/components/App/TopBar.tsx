@@ -1,7 +1,5 @@
 import {createUseClassNames} from "theme/useClassesNames";
 import {DarkModeSwitch} from "../designSystem/DarkModeSwitch";
-import {useIsDarkModeEnabled} from "theme/useIsDarkModeEnabled";
-import {useConstCallback} from "powerhooks/useConstCallback";
 import {ReactComponent as SvgLogo} from "assets/SVG/physics.svg";
 import Button from "@material-ui/core/Button";
 import GitHubIcon from '@material-ui/icons/GitHub';
@@ -46,19 +44,12 @@ export const TopBar = ()=>{
 
     const {classNames} = useClassNames({});
 
-    const {isDarkModeEnabled, setIsDarkModeEnabled} = useIsDarkModeEnabled();
 
-    const toggleDarkMode = useConstCallback(()=>{
-        setIsDarkModeEnabled(!isDarkModeEnabled);
-    })
 
     return(
         <>
         <nav className={classNames.root}>
-            <DarkModeSwitch
-                isDarkModeEnabled={isDarkModeEnabled}
-                onChange={toggleDarkMode}
-            />
+            <DarkModeSwitch/>
 
             <SvgLogo className={classNames.logo} />
 

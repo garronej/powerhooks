@@ -1,64 +1,34 @@
 import {memo} from "react";
-import Switch from "@material-ui/core/Switch";
-import Paper from "@material-ui/core/Paper";
-import Brightness7Icon from '@material-ui/icons/Brightness7';
-import NightsStayIcon from '@material-ui/icons/NightsStay';
-import {createUseClassNames} from "theme/useClassesNames";
-import {css, cx} from "tss-react";
-
-
-const {useClassNames} = createUseClassNames()(
-
-    (theme)=>({
-        "root": {
-            "width": 100,
-            "height": 40,
-            "display": "flex",
-            "alignItems": "center",
-            "backgroundColor": theme.custom.typeScriptBlue
-        },
+import {useConstCallback} from "powerhooks";
+import {useIsDarkModeEnabled} from "theme/useIsDarkModeEnabled";
+import IconButton from "@material-ui/core/IconButton";
+import Brightness4 from "@material-ui/icons/Brightness4";
+import Brightness7 from "@material-ui/icons/Brightness7";
 
 
 
 
-    })
-)
+export const DarkModeSwitch = memo(()=>{
 
+    const {isDarkModeEnabled, setIsDarkModeEnabled} = useIsDarkModeEnabled();
 
-export const DarkModeSwitch = memo((props: {
-    isDarkModeEnabled: boolean;
-    onChange(): void;
-    className?: string;
-})=>{
-
-    const {isDarkModeEnabled, onChange, className} = props;
-
-    const {classNames} = useClassNames({});
 
 
     return (
-        <Paper className={cx(classNames.root, className)}>
-            <Switch
-
-                checked={isDarkModeEnabled}
-                onChange={onChange}
-                color={"secondary"}
-                
-            />
-            <div className={css({
-                "display": "flex",
-
-                "& svg": {
-                    "fill": `${isDarkModeEnabled ? "yellow" : "orange"}`
-                }
-
-            })}>
+        <div 
+            onClick={useConstCallback(
+                ()=> setIsDarkModeEnabled(!isDarkModeEnabled)
+            )}
+        >
+            <IconButton>
                 {
-                    isDarkModeEnabled ? <NightsStayIcon/> : <Brightness7Icon/>
+                    isDarkModeEnabled ? <Brightness7/> : <Brightness4/>
                 }
-            </div>
+            </IconButton>
+            
 
-        </Paper>
+        </div>
+
 
     )
 });
