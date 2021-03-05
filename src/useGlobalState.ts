@@ -43,19 +43,18 @@ const { getPersistentStorage } = (() => {
         const { key } = params;
 
         return {
-            "getItem": () => {
-                return document.cookie
+            "getItem": () =>
+                document.cookie
                     .split("; ")
                     .find(row => row.startsWith(`${key}=`))
-                    ?.split("=")?.[1] ?? null;
-            },
+                    ?.split("=")?.[1] ?? null,
             "setItem": value => {
 
-                let newCookie = `${key}=${value}`;
+                let newCookie = `${key}=${value};path=/;max-age=31536000`;
 
                 //We do not set the domain if we are on localhost or an ip
                 if (window.location.hostname.match(/\.[a-zA-Z]{2,}$/)) {
-                    newCookie += `; domain=${window.location.hostname.split(".").length >= 3 ?
+                    newCookie += `;domain=${window.location.hostname.split(".").length >= 3 ?
                         window.location.hostname.replace(/^[^.]+\./, "") :
                         window.location.hostname
                         }`;
@@ -71,7 +70,7 @@ const { getPersistentStorage } = (() => {
     function getPersistentStorage(
         params: {
             key: string;
-            mechanism: "localStorage" | "cookies"
+            mechanism: "localStorage" | "cookie"
         }
     ): PersistentStorage {
 
@@ -79,7 +78,7 @@ const { getPersistentStorage } = (() => {
 
         switch (mechanism) {
             case "localStorage": return getLocalStorageImplementationOfPersistantStorage({ key });
-            case "cookies": return getCookieImplementationOfPersistantStorage({ key });
+            case "cookie": return getCookieImplementationOfPersistantStorage({ key });
         }
     }
 
@@ -107,14 +106,14 @@ export function createUseGlobalState<T, Name extends string>(
     /** If function called only if not in local storage */
     initialState: T | (() => T),
     params?: {
-        persistance?: false | "localStorage" | "cookies"
+        persistance?: false | "localStorage" | "cookie"
     }
 ): Record<
     `use${Capitalize<Name>}`,
     () => UseNamedStateReturnType<T, Name>
 > {
 
-    const { persistance = "cookies" } = params ?? {};
+    const { persistance = "cookie" } = params ?? {};
 
     const persistentStorage = persistance === false ?
         undefined :
@@ -169,7 +168,7 @@ export function createUseGlobalState<T, Name extends string>(
 
     function useGlobalState() {
 
-        const { evtValue } = getEvtValue();
+        const { evtValue } = getEvtValue();
 
         const [state, setState] = useState(evtValue.state);
 

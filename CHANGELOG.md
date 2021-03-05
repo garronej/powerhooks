@@ -1,3 +1,11 @@
+### **0.0.17** (2021-03-05)  
+  
+- Fix cookie based persistance  
+- update  
+- update  
+- update  
+- update    
+  
 ### **0.0.16** (2021-03-01)  
   
 - useGlobalState initialization done when first used    
