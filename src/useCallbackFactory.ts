@@ -9,6 +9,8 @@ export type CallbackFactory<
     > = (...factoryArgs: FactoryArgs) => (...args: Args) => R
 
 /**
+ * https://docs.powerhooks.dev/api-reference/usecallbackfactory
+ * 
  *  const callbackFactory= useCallbackFactory(
  *      ([key]: [string], [params]: [{ foo: number; }]) => {    
  *          ...
