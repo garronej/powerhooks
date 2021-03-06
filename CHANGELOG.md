@@ -1,3 +1,7 @@
+### **0.0.19** (2021-03-06)  
+  
+- Implement useScopedState    
+  
 ### **0.0.18** (2021-03-06)  
   
 - Expose the underlying evt in useGlobalState  
