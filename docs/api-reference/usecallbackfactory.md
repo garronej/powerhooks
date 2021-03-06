@@ -1,5 +1,9 @@
 # useCallbackFactory
 
+
+
+
+
 ```jsx
 import { useCallbackFactory } from "powerhooks/useCallbackFactory";
 import React, {useState, memo, useCallback} from "react";
