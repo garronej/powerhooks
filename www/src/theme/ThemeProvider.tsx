@@ -6,8 +6,13 @@ import { useMemo } from "react";
 import CssBaseline from '@material-ui/core/CssBaseline';
 import { createTheme } from "./createTheme";
 import { ThemeProvider as MuiThemeProvider, StylesProvider } from "@material-ui/core/styles";
-import { ZoomProvider } from "powerhooks";
+//import { ZoomProvider } from "powerhooks";
 import { useIsDarkModeEnabled } from "./useIsDarkModeEnabled";
+
+window.addEventListener("scroll", ()=>{
+    console.log("scroll");
+})
+
 
 export function ThemeProvider(
     props: {
@@ -28,9 +33,7 @@ export function ThemeProvider(
         <MuiThemeProvider theme={theme}>
             <CssBaseline />
             <StylesProvider injectFirst>
-                <ZoomProvider referenceWidth={theme.custom.referenceWidth}>
                     {children}
-                </ZoomProvider>
             </StylesProvider>
         </MuiThemeProvider>
     );

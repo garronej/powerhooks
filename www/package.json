@@ -6,6 +6,7 @@
   "dependencies": {
     "@material-ui/core": "^4.11.3",
     "@material-ui/icons": "^4.11.2",
+    "embla-carousel": "^4.1.5",
     "evt": "2.0.0-beta.13",
     "powerhooks": "^0.0.13",
     "react": "^17.0.1",
