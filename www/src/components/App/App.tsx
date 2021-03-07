@@ -1,8 +1,9 @@
 import { createUseClassNames } from "theme/useClassesNames";
 import {Header} from "./Header";
 import {Usage} from "./Usage";
-import {useRef, useEffect} from "react";
 import {Examples} from "./Examples";
+import {ReviewSlider} from "./ReviewSlider";
+import {reviews} from "../../assets/reviews";
 
 
 
@@ -29,8 +30,9 @@ export function App() {
 
             <Header />
             <Usage />
-
             <Examples />
+            <ReviewSlider reviews={reviews} />
+
 
             
             
