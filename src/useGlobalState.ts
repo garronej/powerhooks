@@ -205,7 +205,7 @@ export function createUseGlobalState<T, Name extends string>(
         `evt${capitalize(name)}`,
         {
             "enumerable": true,
-            "get": ()=> getEvtValue()
+            "get": ()=> getEvtValue().evtValue
         }
     );
 
