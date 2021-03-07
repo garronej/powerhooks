@@ -50,6 +50,13 @@ const {useClassNames} = createUseClassNames()(
                 "position": "relative",
                 "bottom": 20
             }
+        },
+
+        "arrows": {
+            "transition": "transform 300ms",
+            ":hover": {
+                "transform": "scale(1.2)"
+            }
         }
 
         
@@ -80,7 +87,7 @@ export const ReviewSlider = (props: Props)=>{
 
     return (
         <div className={classNames.root}>
-            <ArrowBackIosIcon onClick={onClickPrev}/>
+                <ArrowBackIosIcon className={classNames.arrows} onClick={onClickPrev}/>
             <div className={classNames.viewport} ref={emblaRef}>
                 <div className={classNames.container}>
                         {
@@ -102,7 +109,9 @@ export const ReviewSlider = (props: Props)=>{
 
                 </div>
             </div>
-            <ArrowForwardIosIcon onClick={onClickNext}/>
+
+                <ArrowForwardIosIcon className={classNames.arrows} onClick={onClickNext}/>
+
         </div>
     )
 }
