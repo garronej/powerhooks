@@ -1,3 +1,17 @@
+### **0.0.20** (2021-03-07)  
+  
+- Update evt    
+  
+### **0.0.19** (2021-03-06)  
+  
+- Implement useScopedState    
+  
+### **0.0.18** (2021-03-06)  
+  
+- Expose the underlying evt in useGlobalState  
+- update  
+- update    
+  
 ### **0.0.17** (2021-03-05)  
   
 - Fix cookie based persistance  

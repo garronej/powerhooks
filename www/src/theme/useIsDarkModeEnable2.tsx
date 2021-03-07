@@ -1,21 +1,23 @@
 
-import { useContext, createContext, useState } from "react";
-import { ReactNode } from "react";
+import { useContext, useMemo, createContext, useState } from "react";
+import { ReactNode } from "react";
 
-const Context = createContext<{
+
+const context = createContext<{
     setIsDarkModeEnabled(value: boolean): void;
     isDarkModeEnabled: boolean;
 } | undefined>(undefined);
 
 export type Props = {
     children: ReactNode;
+    initialValue: boolean | (()=>boolean);
 };
 
 
-export function useIsDarkModeEnabled2(){
-    const out =  useContext(Context);
+export function useIsDarkModeEnabled2() {
+    const out = useContext(context);
 
-    if( out === undefined ){
+    if (out === undefined) {
         throw new Error("Must be used in a component wrapped in <IsDarkModeEnabledProvider2 />");
     }
 
@@ -25,19 +27,48 @@ export function useIsDarkModeEnabled2(){
 
 export function IsDarkModeEnabledProvider2(props: Props) {
 
-    const { children } = props;
+    const { children, initialValue } = props;
 
-    const [isDarkModeEnabled, setIsDarkModeEnabled] = useState<boolean>(
-        () =>
-            window.matchMedia &&
-            window.matchMedia("(prefers-color-scheme: dark)").matches
+    const [isDarkModeEnabled, setIsDarkModeEnabled] = useState<boolean>(initialValue);
+
+    const value = useMemo(
+        () => ({
+            isDarkModeEnabled,
+            setIsDarkModeEnabled
+        }),
+        [isDarkModeEnabled]
     );
 
-    return(
-        <Context.Provider value={{ isDarkModeEnabled, setIsDarkModeEnabled}}>
+    return (
+        <context.Provider value={value}>
             {children}
-        </Context.Provider>
+        </context.Provider>
     );
 
 }
 
+
+
+function App() {
+
+    return (
+        <>
+            <IsDarkModeEnabledProvider2 initialValue={true}>
+                <MyComponent />
+            </IsDarkModeEnabledProvider2>
+            <IsDarkModeEnabledProvider2 initialValue={false}>
+                <MyComponent />
+            </IsDarkModeEnabledProvider2>
+        </>
+    );
+
+}
+
+function MyComponent() {
+
+    const { isDarkModeEnabled, setIsDarkModeEnabled } = useIsDarkModeEnabled2();
+
+    return null;
+
+
+}

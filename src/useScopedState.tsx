@@ -1,50 +1,95 @@
 
-//TODO:
+
+import type { ReactNode } from "react";
+import { useContext, createContext, useMemo } from "react";
+import type { UseNamedStateReturnType } from "./useNamedState";
+import { capitalize } from "./tools/capitalize";
+import { useNamedState } from "./useNamedState";
+import { overwriteReadonlyProp } from "evt/tools/typeSafety/overwriteReadonlyProp";
+
+/** https://docs.powerhooks.dev/api-reference/usescopedstate */
+export function createUseScopedState<T, Name extends string>(
+    name: Name,
+    initialState: T | (() => T)
+): Record<
+    `use${Capitalize<Name>}`,
+    () => UseNamedStateReturnType<T, Name>
+> & Record<
+    `${Capitalize<Name>}Provider`,
+    (props: {
+        children: ReactNode;
+        initialState?: T | (() => T);
+    }) => JSX.Element
+>;
+export function createUseScopedState<T, Name extends string>(
+    name: Name
+): Record<
+    `use${Capitalize<Name>}`,
+    () => UseNamedStateReturnType<T, Name>
+> & Record<
+    `${Capitalize<Name>}Provider`,
+    (props: {
+        children: ReactNode;
+        initialState: T | (() => T);
+    }) => JSX.Element
+>;
+export function createUseScopedState<T, Name extends string>(
+    name: Name,
+    initialState?: T | (() => T)
+): any {
+
+    const context = createContext<UseNamedStateReturnType<T, Name> | undefined>(undefined);
+
+    const useXyz = function () {
+
+        const out = useContext(context);
+
+        if (out === undefined) {
+            throw new Error(
+                `Must be used in a component wrapped in <${capitalize(name)}Provider />`
+            );
+        }
+
+        return out;
+
+    };
+
+    overwriteReadonlyProp(useXyz as any, "name", `use${capitalize(name)}`);
 
 
-import { useContext, useMemo ,createContext, useState } from "react";
-import { ReactNode } from "react";
+    const XyzProvider = function (
+        props: {
+            children: ReactNode;
+            initialState?: T | (() => T);
+        }
+    ) {
 
-const context = createContext<{
-    setIsDarkModeEnabled(value: boolean): void;
-    isDarkModeEnabled: boolean;
-} | undefined>(undefined);
+        const { children, initialState: initialStateFromProps  } = props;
 
-export type Props = {
-    children: ReactNode;
-};
+        const useNamedStateReturnedWrapper = useNamedState(name,(
+            initialStateFromProps !== undefined ? 
+            initialStateFromProps : initialState
+        )!);
 
+        const value = useMemo(
+            () => useNamedStateReturnedWrapper,
+            [useNamedStateReturnedWrapper[name]]
+        );
 
-export function useIsDarkModeEnabled2(){
-    const out =  useContext(context);
+        return (
+            <context.Provider value={value}>
+                {children}
+            </context.Provider>
+        );
 
-    if( out === undefined ){
-        throw new Error("Must be used in a component wrapped in <IsDarkModeEnabledProvider2 />");
     }
 
-    return out;
+    overwriteReadonlyProp(useXyz as any, "name", `${capitalize(name)}Provider`);
 
-}
+    return {
+        [useXyz.name]: useXyz,
+        [XyzProvider.name]: XyzProvider
+    };
 
-export function IsDarkModeEnabledProvider2(props: Props) {
-
-    const { children } = props;
-
-    const [isDarkModeEnabled, setIsDarkModeEnabled] = useState<boolean>(
-        () =>
-            window.matchMedia &&
-            window.matchMedia("(prefers-color-scheme: dark)").matches
-    );
-
-    const value = useMemo(
-        () => ({ isDarkModeEnabled, setIsDarkModeEnabled }), 
-        [isDarkModeEnabled]
-    );
-
-    return(
-        <context.Provider value={value}>
-            {children}
-        </context.Provider>
-    );
 
 }

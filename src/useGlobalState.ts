@@ -1,6 +1,7 @@
 
 import { useState } from "react";
 import { Evt } from "evt";
+import type { StatefulEvt } from "evt";
 import { useEvt } from "evt/hooks";
 import { useConstCallback } from "./useConstCallback";
 import { assert } from "evt/tools/typeSafety/assert";
@@ -111,6 +112,9 @@ export function createUseGlobalState<T, Name extends string>(
 ): Record<
     `use${Capitalize<Name>}`,
     () => UseNamedStateReturnType<T, Name>
+> & Record<
+    `evt${Capitalize<Name>}`,
+    StatefulEvt<T>
 > {
 
     const { persistance = "cookie" } = params ?? {};
@@ -192,8 +196,19 @@ export function createUseGlobalState<T, Name extends string>(
     }
 
     const out = {
-        [`use${capitalize(name)}`]: useGlobalState
-    }
+        [`use${capitalize(name)}`]: useGlobalState,
+    };
+
+
+    Object.defineProperty(
+        out,
+        `evt${capitalize(name)}`,
+        {
+            "enumerable": true,
+            "get": ()=> getEvtValue()
+        }
+    );
+
 
     try {
         overwriteReadonlyProp(useGlobalState as any, "name", Object.keys(out)[0]);
@@ -202,4 +217,5 @@ export function createUseGlobalState<T, Name extends string>(
     return out as any;
 
 }
+
 
