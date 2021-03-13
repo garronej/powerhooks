@@ -1,3 +1,8 @@
+### **0.0.22** (2021-03-13)  
+  
+- Implement mechanism to transfer global state via URL  
+- Update README.md    
+  
 ### **0.0.21** (2021-03-07)  
   
 - Fix export evt  
