@@ -1,0 +1,18 @@
+on:
+  push:
+    branches:
+      - www
+
+jobs:
+
+  deploy_on_gh_pages:
+    runs-on: ubuntu-latest
+    steps:
+    - uses: actions/checkout@v2
+    - uses: actions/setup-node@v2-beta
+    - run: yarn install --frozen-lockfile
+    - run: git remote set-url origin https://git:${GITHUB_TOKEN}@github.com/${{github.repository}}.git
+      env:
+        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+    - run: yarn deploy -u "github-actions-bot <support+actions@github.com>"
+
