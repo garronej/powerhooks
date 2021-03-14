@@ -16,7 +16,7 @@ export function useEffectOnValueChange<T extends readonly [value: any, ...moreVa
 
         return effect(...values);
 
-        // eslint-disable-next-line react-hooks/exhaustive-deps
+    // eslint-disable-next-line react-hooks/exhaustive-deps
     }, values);
 
 }
