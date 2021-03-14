@@ -1,3 +1,8 @@
+### **0.0.23** (2021-03-14)  
+  
+- Rename useValueChangeEffect to useEffectOnValueChange  
+- Remove useEffectButSkipFirstRender    
+  
 ### **0.0.22** (2021-03-13)  
   
 - Implement mechanism to transfer global state via URL  
