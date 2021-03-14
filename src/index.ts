@@ -6,7 +6,7 @@ export * from "./useDomRect";
 export * from "./useGlobalState";
 export * from "./useGuaranteedMemo";
 export * from "./useNamedState";
-export * from "./useValueChangeEffect";
+export * from "./useEffectOnValueChange";
 export * from "./useWindowInnerSize";
 export * from "./useWithProps";
 export * from "./withProps";
