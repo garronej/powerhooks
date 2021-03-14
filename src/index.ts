@@ -3,7 +3,6 @@ export * from "./useCallbackFactory";
 export * from "./useClick";
 export * from "./useConstCallback";
 export * from "./useDomRect";
-export * from "./useEffectButSkipFirstRender";
 export * from "./useGlobalState";
 export * from "./useGuaranteedMemo";
 export * from "./useNamedState";
