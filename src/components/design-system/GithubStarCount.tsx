@@ -2,12 +2,13 @@ import {css} from "tss-react";
 
 type Props = {
     size: "normal" | "large";
+    repoUrl: string;
 }
 
 
 export const GithubStarCount = (props: Props)=>{
 
-    const {size} = props;
+    const {size, repoUrl} = props;
 
 
 
@@ -22,7 +23,7 @@ export const GithubStarCount = (props: Props)=>{
         })}>
             <a 
                 className="github-button" 
-                href="https://github.com/garronej/powerhooks" 
+                href={repoUrl} 
                 data-color-scheme={
                     `
                         no-preference: light; 

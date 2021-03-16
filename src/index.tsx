@@ -1,14 +1,13 @@
 
 import * as reactDom from "react-dom";
-import { App } from "components/App/App";
 import { ThemeProvider } from "theme/ThemeProvider";
-import "./main.scss";
+import {App} from "./components/App/App";
 
 console.log("Welcome");
 
 reactDom.render(
     <ThemeProvider >
-            <App />
+        <App/>
     </ThemeProvider>,
     document.getElementById("root")
 );

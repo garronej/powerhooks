@@ -1,86 +1,122 @@
 import {TopBar} from "./TopBar";
-import Typography from "@material-ui/core/Typography";
+import {ReactComponent as Logo} from "../../assets/SVG/physics.svg";
 import {createUseClassNames} from "theme/useClassesNames";
-import gifUrl from "../../assets/img/todo.gif";
-import {useRef} from "react";
-import Divider from "@material-ui/core/Divider";
-import {css} from "tss-react";
+import Typography from "@material-ui/core/Typography";
+import Button from "@material-ui/core/Button";
+
 
 const {useClassNames} = createUseClassNames()(
     (theme)=>({
         "root": {
+            "width": "100vw",
+            "backgroundColor": 
+            theme.palette.type === "dark" ? 
+            "#05052b" : 
+            theme.custom.typeScriptBlue,
             "display": "flex",
             "flexDirection": "column",
-            "justifyContent": "center",
-            "textAlign": "center",
-            "alignItems": "center"
+            "alignItems": "center",
+            "& img": {
+                "width": 800,
+                "marginBottom": 100
 
-        },
-
-        "title": {
-            "textTransform": "uppercase",
-            "marginTop": 50
-
-
-        },
-        "installation":{
-            "width": 400,
-            "border": `solid ${theme.palette.type === "dark" ? "white" : "black"} 1px`,
-            "marginTop": 50,
-            "padding": 30,
-            "& h5": {
-                "marginBottom": 30
             },
-            "& p": {
-                "margin" : "20px 0 20px 0"
-            }
+            "& h3": {
+                "marginTop": 50
+
+            },
+            "color": "white"
+        
+            
+        },
+        "button": {
+            "color": "white",
+            "margin": 15
 
         },
-        "gif": {
-            "width": 800,
-            "boxShadow": theme.palette.type === "light" ? "-4px 2px 41px 1px rgba(0,0,0,0.75)" : "",
-            "marginTop": 70
+        "buttonWrapper":{
+            "marginBottom": 50
         }
-
     })
 )
 
+type Props = {
+    title: string;
+    subTitle: string;
+    headerImageUrl?: string;
+    buttons?: {
+        title: string;
+        linkUrl: string;
 
-export const Header = ()=>{
+    }[]
+}
+
+export const Header = (props: Props)=>{
+    const {headerImageUrl, title, subTitle, buttons} = props;
+
+    const {classNames} = useClassNames({});
 
 
-    const {classNames} = useClassNames({})
-    const gifRef = useRef<HTMLImageElement>(null);
-
-
-
-    return(
+    return (
         <header className={classNames.root}>
-            <TopBar/>
-            <Typography className={classNames.title} variant="h2">powerhooks</Typography>
-            <Divider className={css({
-                "width": 50,
-                "margin": 20
-            })}/>
-            <Typography variant="h4">A collection of essential React hooks<br/>that will enhance the developers experience</Typography>
-            <Divider className={css({
-                "width": 200,
-                "marginTop": 50
-            })} />
-
-
-            <img 
-                className={classNames.gif} 
-                ref={gifRef} 
-                src={gifUrl} 
-                alt="gif of todo list with code extract"
+            <TopBar 
+                Logo={Logo}
+                items={
+                    [
+                        {
+                            "name": "documentation",
+                            "url": "https://docs.powerhooks.dev/"
+                        },
+                        {
+                            "name": "github",
+                            "url": "https://github.com/garronej/powerhooks"
+                        }
+                    ]
+                }
+                githubRepoUrl="https://github.com/garronej/powerhooks"
             />
 
-            
+            <Typography variant="h3">
+                {
+                    title
+                }
+            </Typography>
+            <Typography variant="h5">
+                {
+                    subTitle
+                }
+            </Typography>
+
+            {
+                buttons === undefined ? "" : <div className={classNames.buttonWrapper}>
+                    {
+                        buttons.map(
+                            button => <Button 
+                                variant="outlined" 
+                                href={button.linkUrl}
+                                className={classNames.button}
+                            >
+                                {
+                                    button.title
+                                }
+                            </Button>
+                        )
+                    }
+
+                </div>
+
+            }
 
             
+
+            {
+                headerImageUrl === undefined ? "" : 
+                <img src={headerImageUrl} alt=""/>
+            }
+
+            
+
         </header>
 
-        
-    );
+    )
 }

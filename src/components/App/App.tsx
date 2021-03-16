@@ -1,76 +1,32 @@
-import { createUseClassNames } from "theme/useClassesNames";
 import {Header} from "./Header";
-import {Usage} from "./Usage";
-import {Examples} from "./Examples";
-import {ReviewSlider} from "./ReviewSlider";
-import {reviews} from "../../assets/reviews";
+import headerImg from "../../assets/img/todo.gif";
 
 
+export const App = ()=>{
 
+    return(
+        <>
 
+            <Header
+                headerImageUrl={headerImg}
+                title="Powerhooks"
+                subTitle="Enhance your React experience"
+                buttons={[
+                    {
+                        "title": "try it",
+                        "linkUrl": "https://stackblitz.com/edit/react-ts-jkxthr"
+                    },
+                    {
+                        "title": "learn more",
+                        "linkUrl": "https://docs.powerhooks.dev/"
+                    }
 
-const { useClassNames } = createUseClassNames<{}>()(
-    theme => ({
-        "root": {
-            "backgroundColor": theme.palette.background.default,
-        },
-        "text": {
-            "color": theme.palette.text.primary
-        }
-    })
-);
-
-export function App() {
-
-    const { classNames } = useClassNames({});
-
-    return (
-        <div className={classNames.root}>
-
-
-            <Header />
-            <Usage />
-            <Examples />
-            <ReviewSlider reviews={reviews} />
-
+                ]}
+            />
+        
 
             
-            
-
-        </div>
-    );
-
-
+        
+        </>
+    )
 }
-
-/*const { Label } = (() => {
-
-    type Props = {
-        text: string;
-        className?: string;
-    };
-
-    const Label = memo((props: Props) => {
-
-        const { text, className } = props;
-
-        return (
-            <span
-                className={cx(
-                    css({
-                        "&:hover": {
-                            "backgroundColor": "pink"
-                        }
-                    }),
-                    className
-                )}>
-                {text}
-            </span>
-        );
-
-    });
-
-    return { Label };
-
-
-})();*/

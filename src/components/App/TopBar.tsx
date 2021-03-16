@@ -1,77 +1,101 @@
+import List from "@material-ui/core/List";
+import Link from "@material-ui/core/Link";
 import {createUseClassNames} from "theme/useClassesNames";
-import {DarkModeSwitch} from "../designSystem/DarkModeSwitch";
-import {ReactComponent as SvgLogo} from "assets/SVG/physics.svg";
-import Button from "@material-ui/core/Button";
-import GitHubIcon from '@material-ui/icons/GitHub';
-import {GithubStarCount} from "../designSystem/GithubStarCount";
-import Divider from "@material-ui/core/Divider";
-import {css} from "tss-react";
+import {DarkModeSwitch} from "../design-system/DarkModeSwitch";
+import {GithubStarCount} from "../design-system/GithubStarCount";
+
 
 const {useClassNames} = createUseClassNames()(
     ()=>({
         "root": {
-            "position": "relative",
             "display": "flex",
-            "alignItems": "center",
             "justifyContent": "space-between",
-            "padding": "0 20px 0 20px",
-            "width": "100%",
-            "height": 120
-            
-        },
+            "alignItems": "center",
+            "padding": 20,
+            "width": 1200,
+            "@media (max-width: 1250px)":{
+                "width": "100%"
+            }
 
+
+
+        },
         "logo": {
-            "height": 100,
-            "width": 100,
-            "position": "absolute",
-            "left": "50%",
-            "marginLeft": -50,
-            "top": 10
-
+            "width": 50,
+            "height": 50
         },
-
-        "DocButtons": {
+        "link": {
+            "color": "white",
+            "textTransform": "uppercase",
+            "margin": "0 15px 0 15px"
+        },
+        "linkWrapper": {
+            "display": "flex",
+            "alignItems": "center"
+        },
+        "githubAndDarkModeSwitch": {
             "display": "flex",
             "alignItems": "center",
-
+            "margin-left": 20,
+            "& button": {
+                "marginLeft": 20
+            }
         }
-        
 
     })
 )
 
-export const TopBar = ()=>{
+type Props = {
+    Logo: React.FunctionComponent<React.SVGProps<SVGSVGElement> & {
+        title?: string | undefined;
+    }>
+    items: {
+        name: string;
+        url: string;
+    }[];
+    githubRepoUrl?: string;
+
+};
+
+
+export const TopBar = (props: Props)=>{
+    const {items, Logo, githubRepoUrl} = props;
 
     const {classNames} = useClassNames({});
+    return (
 
+        <List className={classNames.root} component="nav">
+            <Logo className={classNames.logo}/>
+            <div className={classNames.linkWrapper}>
+                {
+                    items.map(
+                        item => 
+                            <Link className={classNames.link} href={item.url}>
+                                {item.name}
+                            </Link>
 
-
-    return(
-        <>
-        <nav className={classNames.root}>
-            <DarkModeSwitch/>
-
-            <SvgLogo className={classNames.logo} />
-
-            <div className={classNames.DocButtons}>
-                <Button href="https://github.com/garronej/powerhooks">documentation</Button>
-                <Button className={css({
-                    "marginRight": 10
-                })} href="https://github.com/garronej/powerhooks">
+                    )
+                }
+                <div className={classNames.githubAndDarkModeSwitch}>
                     {
-                        <GitHubIcon/>
+                        githubRepoUrl === undefined ? 
+                            "" : 
+                            <GithubStarCount
+                                repoUrl={githubRepoUrl}
+                                size="large"
+                            />
                     }
+                    <DarkModeSwitch/>
+                </div>
 
-                </Button>
-                <GithubStarCount 
-                    size="large"
-                />
+
+
             </div>
+        </List>
 
-        </nav>
-        <Divider className={css({
-            "width": "100%"
-        })}/>
-        </>
     )
 }
+
+
+
+
