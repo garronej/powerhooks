@@ -203,7 +203,7 @@ export function createUseGlobalState<T, Name extends string>(
             [`set${capitalize(name)}`]:
                 useConstCallback((setStateAction: T | ((prevState: T) => T)) =>
                     evtXyz.state =
-                    typeGuard<(prevState: T) => T>(setStateAction, typeof initialState === "function") ?
+                    typeGuard<(prevState: T) => T>(setStateAction, typeof setStateAction === "function") ?
                         setStateAction(xyz) :
                         setStateAction
                 )
