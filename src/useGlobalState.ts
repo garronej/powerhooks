@@ -96,6 +96,9 @@ export { injectGlobalStatesInSearchParams };
  * });
  *
  * const { foo, setFoo  } = useFoo();
+ * 
+ * By default persistance is enabled using localStorage.
+ * 
  */
 export function createUseGlobalState<T, Name extends string>(
     name: Name,
@@ -112,12 +115,12 @@ export function createUseGlobalState<T, Name extends string>(
     StatefulEvt<T>
 > {
 
-    const { persistance = "cookie" } = params ?? {};
+    const { persistance = "localStorage" } = params ?? {};
 
     const persistentStorage = persistance === false ?
         undefined :
         getPersistentStorage({
-            "mechanism": persistance ?? "localStorage",
+            "mechanism": persistance,
             "key": (
                 assert(Object.keys(globalStates).indexOf(name) < 0, `${name} already in use`),
                 `useGlobalState_${name}`
