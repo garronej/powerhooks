@@ -22,9 +22,9 @@ function parse<T>(str: string): T {
     return JSON.parse(str)[0];
 }
 
-const { injectGlobalStatesInSearchParams, getStatesFromUrlSearchParams } = (() => {
+const prefix = "powerhooks_useGlobalState_";
 
-    const paramPrefix = "powerhooks_useGlobalState_";
+const { injectGlobalStatesInSearchParams, getStatesFromUrlSearchParams } = (() => {
 
     /** Returns the modified url */
     function injectGlobalStatesInSearchParams(url: string): string {
@@ -36,7 +36,7 @@ const { injectGlobalStatesInSearchParams, getStatesFromUrlSearchParams } = (() =
                 newUrl = urlSearchParams
                     .add({
                         "url": newUrl,
-                        "name": paramPrefix + name,
+                        "name": `${prefix}${name}`,
                         "value": stringify(globalStates[name])
                     })
                     .newUrl
@@ -54,7 +54,7 @@ const { injectGlobalStatesInSearchParams, getStatesFromUrlSearchParams } = (() =
 
         const popResult = urlSearchParams.pop({
             "locationSearch": window.location.search,
-            "name": paramPrefix + name
+            "name": prefix + name
         });
 
         if (!popResult.wasPresent) {
@@ -123,7 +123,7 @@ export function createUseGlobalState<T, Name extends string>(
             "mechanism": persistance,
             "key": (
                 assert(Object.keys(globalStates).indexOf(name) < 0, `${name} already in use`),
-                `useGlobalState_${name}`
+                `${prefix}${name}`
             )
         });
 
