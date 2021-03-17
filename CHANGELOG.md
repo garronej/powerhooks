@@ -1,3 +1,7 @@
+### **0.0.26** (2021-03-17)  
+  
+- Use localStorage by default for persistance    
+  
 ### **0.0.25** (2021-03-17)  
   
 - Fix useGlobalState    
