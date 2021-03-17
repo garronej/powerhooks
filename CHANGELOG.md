@@ -1,3 +1,7 @@
+### **0.0.25** (2021-03-17)  
+  
+- Fix useGlobalState    
+  
 ### **0.0.24** (2021-03-17)  
   
 - useEffectOnValueChange does not support cleanup  
