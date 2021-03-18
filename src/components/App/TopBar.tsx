@@ -3,49 +3,86 @@ import Link from "@material-ui/core/Link";
 import {createUseClassNames} from "theme/useClassesNames";
 import {DarkModeSwitch} from "../design-system/DarkModeSwitch";
 import {GithubStarCount} from "../design-system/GithubStarCount";
+import UnfoldIcon from '@material-ui/icons/Dehaze';
+import {useNamedState} from "powerhooks/useNamedState";
+import {useConstCallback} from "powerhooks/useConstCallback";
+import {cx} from "tss-react";
+import {useRef} from "react";
+import {useClickOut} from "customHooks/useClickOut";
 
 
-const {useClassNames} = createUseClassNames()(
-    ()=>({
+
+const {useClassNames} = createUseClassNames<{
+    mobileMenuHeight: number;
+}>()(
+    (...[, {mobileMenuHeight}])=>({
         "root": {
             "display": "flex",
-            "justifyContent": "space-between",
+            "justifyContent": "flex-end",
+            "flexWrap": "wrap",
             "alignItems": "center",
             "padding": 20,
             "width": 1200,
             "@media (max-width: 1250px)":{
                 "width": "100%"
-            }
-
+            },
 
 
         },
         "logo": {
             "width": 50,
-            "height": 50
+            "height": 50,
+            "marginRight": "auto"
+        },
+        "itemWrapper": {
+            "@media (max-width: 530px)": {
+                "transition": "height 400ms",
+                "order": 3,
+                "flex": "1 0 100%",
+                "textAlign": "left",
+                "marginTop": 20,
+                "height": mobileMenuHeight,
+                "overflow": "hidden",
+                "display": "flex",
+                "flexDirection": "column"
+
+
+            }
         },
         "link": {
             "color": "white",
             "textTransform": "uppercase",
-            "margin": "0 15px 0 15px"
+            "margin": "0 15px 0 15px",
+            "@media (max-width:530px)": {
+                "margin": "5px 0 5px 0",
+            }
         },
-        "linkWrapper": {
-            "display": "flex",
-            "alignItems": "center"
-        },
+        
         "githubAndDarkModeSwitch": {
             "display": "flex",
             "alignItems": "center",
-            "margin-left": 20,
+            "marginLeft": 20,
             "& button": {
                 "marginLeft": 20
             }
+        },
+        "unfold": {
+            "order": 2,
+            "marginLeft": 10,
+            "display": "none",
+            "@media (max-width: 530px)": {
+                "display": "flex",
+                "alignItems": "center"
+
+            },
         }
 
     })
 )
 
-type Props = {
+
+
+export type Props = {
     Logo: React.FunctionComponent<React.SVGProps<SVGSVGElement> & {
         title?: string | undefined;
     }>
@@ -61,21 +98,96 @@ type Props = {
 export const TopBar = (props: Props)=>{
     const {items, Logo, githubRepoUrl} = props;
 
-    const {classNames} = useClassNames({});
+    const {mobileMenuHeight, setMobileMenuHeight} = useNamedState("mobileMenuHeight", 0);
+    
+
+    const unfoldIconRef = useRef<HTMLDivElement>(null);
+
+
+
+
+    /*const mobileMenuHeight = useMemo(()=>{
+        const menuItems = document.getElementsByClassName("menu-item");
+
+    
+        let out = 0;
+    
+        for(let i = 0; i < menuItems.length; i++){
+            const style = getComputedStyle(menuItems[i]);
+            const marginTop = parseInt(style.marginTop.replace("px", ""));
+            const marginBottom = parseInt(style.marginBottom.replace("px", ""));
+            out += menuItems[i].clientHeight + marginTop + marginBottom;
+        };
+
+
+        return out;
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+    },[hasReRenderedOnce]);*/
+
+    const toggleMobileMenu = useConstCallback(()=>{
+        if(mobileMenuHeight !== 0){
+            setMobileMenuHeight(0);
+            return;
+        }
+
+        const menuItems = document.getElementsByClassName("menu-item");
+
+        let newHeight = 0;
+
+        for(let i = 0; i < menuItems.length; i++){
+            const style = getComputedStyle(menuItems[i]);
+            const marginTop = parseInt(style.marginTop.replace("px", ""));
+            const marginBottom = parseInt(style.marginBottom.replace("px", ""));
+            newHeight += menuItems[i].clientHeight + marginTop + marginBottom;
+        };
+
+        setMobileMenuHeight(newHeight);
+
+    });
+    
+
+    useClickOut({
+        "refs": [unfoldIconRef],
+        "onClickOut": () => setMobileMenuHeight(0)
+    })
+    
+
+
+    const {classNames} = useClassNames(
+        {   
+            mobileMenuHeight
+        }
+    );
     return (
 
         <List className={classNames.root} component="nav">
             <Logo className={classNames.logo}/>
-            <div className={classNames.linkWrapper}>
-                {
-                    items.map(
-                        item => 
-                            <Link className={classNames.link} href={item.url}>
-                                {item.name}
-                            </Link>
+                <div className={classNames.itemWrapper}>
+                    
 
-                    )
-                }
+                    {
+                        items.map(
+                            item => 
+                                <Link 
+                                    className={cx(classNames.link, "menu-item")} 
+                                    href={item.url}
+                                    key={JSON.stringify(item.name + item.url)}
+                                >
+                                    {item.name}
+                                </Link>
+
+                        )
+                    }
+
+                </div>
+
+                <div ref={unfoldIconRef} className={classNames.unfold}>
+                    <UnfoldIcon 
+                        onClick={toggleMobileMenu}
+                    />
+                </div>
+
+
                 <div className={classNames.githubAndDarkModeSwitch}>
                     {
                         githubRepoUrl === undefined ? 
@@ -88,9 +200,6 @@ export const TopBar = (props: Props)=>{
                     <DarkModeSwitch/>
                 </div>
 
-
-
-            </div>
         </List>
 
     )

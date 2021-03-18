@@ -9,10 +9,6 @@ import { ThemeProvider as MuiThemeProvider, StylesProvider } from "@material-ui/
 //import { ZoomProvider } from "powerhooks";
 import { useIsDarkModeEnabled } from "./useIsDarkModeEnabled";
 
-window.addEventListener("scroll", ()=>{
-    console.log("scroll");
-})
-
 
 export function ThemeProvider(
     props: {

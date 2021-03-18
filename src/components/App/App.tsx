@@ -1,5 +1,7 @@
 import {Header} from "./Header";
-import headerImg from "../../assets/img/todo.gif";
+import {headerData} from "assets/header-data/index";
+import {MainSection} from "./MainSection";
+import {mainSectionData} from "assets/main-section-data/index";
 
 
 export const App = ()=>{
@@ -8,20 +10,11 @@ export const App = ()=>{
         <>
 
             <Header
-                headerImageUrl={headerImg}
-                title="Powerhooks"
-                subTitle="Enhance your React experience"
-                buttons={[
-                    {
-                        "title": "try it",
-                        "linkUrl": "https://stackblitz.com/edit/react-ts-jkxthr"
-                    },
-                    {
-                        "title": "learn more",
-                        "linkUrl": "https://docs.powerhooks.dev/"
-                    }
+                {...headerData}
+            />
 
-                ]}
+            <MainSection 
+                dataBlocks={mainSectionData}
             />
         
 

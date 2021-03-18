@@ -1,26 +1,73 @@
 import {TopBar} from "./TopBar";
-import {ReactComponent as Logo} from "../../assets/SVG/physics.svg";
 import {createUseClassNames} from "theme/useClassesNames";
 import Typography from "@material-ui/core/Typography";
 import Button from "@material-ui/core/Button";
+import type {Props as TopBarProps} from "./TopBar";
 
 
-const {useClassNames} = createUseClassNames()(
-    (theme)=>({
+
+
+export type Props = {
+    title: string;
+    subTitle: string;
+    headerImageUrl?: string;
+    background?: {
+        type: "color" | "image";
+        colorOrUrlDark: string;
+        colorOrUrlLight: string;
+    };
+    buttons?: {
+        title: string;
+        linkUrl: string;
+
+    }[];
+    topBarProps: TopBarProps;
+}
+
+
+
+const {useClassNames} = createUseClassNames<{background: Props["background"]}>()(
+    (theme, {background})=>({
         "root": {
             "width": "100vw",
-            "backgroundColor": 
-            theme.palette.type === "dark" ? 
-            "#05052b" : 
-            theme.custom.typeScriptBlue,
+            "background": (()=>{
+                if(background === undefined){
+                    return theme.palette.type === "dark" ? 
+                        "#05052b" : 
+                        theme.custom.typeScriptBlue
+                }
+
+                if(background.type === "color"){
+                    return theme.palette.type === "dark" ?
+                        background.colorOrUrlDark : 
+                        background.colorOrUrlLight;
+                };
+
+                return `
+                    url("${
+                        theme.palette.type === "dark" ?
+                        background.colorOrUrlDark : 
+                        background.colorOrUrlLight
+                    }")
+                `;
+
+            })(),
+            "backgroundRepeat": "no-repeat",
+            "backgroundSize": "cover",
+            "backgroundPosition": "center",
             "display": "flex",
             "flexDirection": "column",
             "alignItems": "center",
             "& img": {
                 "width": 800,
-                "marginBottom": 100
+                "marginBottom": 100,
+                "opacity": "0.8",
+                "@media (max-width: 880px)":{
+                    "width": "90%"
+                }
 
             },
+            "textAlign": "center",
             "& h3": {
                 "marginTop": 50
 
@@ -40,40 +87,24 @@ const {useClassNames} = createUseClassNames()(
     })
 )
 
-type Props = {
-    title: string;
-    subTitle: string;
-    headerImageUrl?: string;
-    buttons?: {
-        title: string;
-        linkUrl: string;
 
-    }[]
-}
 
 export const Header = (props: Props)=>{
-    const {headerImageUrl, title, subTitle, buttons} = props;
+    const {
+        headerImageUrl, 
+        title, 
+        subTitle, 
+        buttons, 
+        background,
+        topBarProps
+    } = props;
 
-    const {classNames} = useClassNames({});
-
+    const {classNames} = useClassNames({background});
 
     return (
         <header className={classNames.root}>
             <TopBar 
-                Logo={Logo}
-                items={
-                    [
-                        {
-                            "name": "documentation",
-                            "url": "https://docs.powerhooks.dev/"
-                        },
-                        {
-                            "name": "github",
-                            "url": "https://github.com/garronej/powerhooks"
-                        }
-                    ]
-                }
-                githubRepoUrl="https://github.com/garronej/powerhooks"
+                {...topBarProps}
             />
 
             <Typography variant="h3">
@@ -95,6 +126,7 @@ export const Header = (props: Props)=>{
                                 variant="outlined" 
                                 href={button.linkUrl}
                                 className={classNames.button}
+                                key={JSON.stringify(button.linkUrl + button.title)}
                             >
                                 {
                                     button.title
