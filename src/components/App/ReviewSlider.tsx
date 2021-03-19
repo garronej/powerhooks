@@ -4,23 +4,34 @@ import {useConstCallback} from "powerhooks";
 import ArrowBackIosIcon from '@material-ui/icons/ArrowBackIos';
 import ArrowForwardIosIcon from '@material-ui/icons/ArrowForwardIos';
 import Paper from "@material-ui/core/Paper";
+import Typography from "@material-ui/core/Typography";
 
 const {useClassNames} = createUseClassNames()(
-    ()=>({
+    (theme)=>({
         "root": {
             "position": "relative",
-            "width": 860,
+            "width": 1200,
             "marginLeft": "auto",
             "marginRight": "auto",
             "display": "flex",
-            "alignItems": "center"
+            "alignItems": "center",
+            "@media (max-width: 1280px)": {
+                "width": "92%"
+            },
+            "@media (max-width: 650px)": {
+                "width": "98%"
+            }
 
         },
         "viewport":{
             "width": "100%",
             "overflow": "hidden",
             "userSelect": "none",
-            "margin": "0 30px 0 30px"
+            "margin": "0 30px 0 30px",
+            "@media (max-width: 650px)": {
+                "margin": 0
+
+            }
 
         },
         "container": {
@@ -31,24 +42,60 @@ const {useClassNames} = createUseClassNames()(
         "slide": {
             "position": "relative",
             "minWidth": "100%",
-            "padding": "0 30px 0 30px"
+            "padding": "0 30px 0 30px",
+            "@media (max-width: 650px)": {
+                "padding": "0 2px 0 2px"
+            }
            
 
 
         },
         "paper": {
             "display": "flex",
-            "flexDirection": "column",
-            "justifyContent": "center",
-
-            "& p": {
-                "textAlign": "center",
-                "margin": 40
+            "flexDirection": "row",
+            "alignItems": "center",
+            "justifyContent": "space-between",
+            "position": "relative",
+            "@media (max-width: 1000px)": {
+                "flexDirection": "column",
             },
-            "& img": {
-                "height": 50,
-                "position": "relative",
-                "bottom": 20
+
+            "& div p": {
+                "margin": 40,
+                "@media (max-width: 1000px)": {
+                    "textAlign": "center"
+                },
+                "@media (max-width: 650px)": {
+                    "margin": "40px 5px 40px 5px"
+                }
+            },
+
+            "& div p:nth-of-type(2)":{
+                "textAlign": "right",
+                "paddingRight": 40,
+                "fontStyle": "italic",
+                "@media (max-width: 1000px)": {
+                    "textAlign": "center",
+                    "paddingRight": 0
+                    
+                }
+
+            
+
+            },
+            
+            "& svg": {
+                "height": 150,
+                "width": 150,
+                "marginLeft": 40,
+                "fill": theme.palette.type === "dark"? "white": "unset",
+                "@media (max-width: 1000px)":{
+                    "width": 70,
+                    "height": 70,
+                    "marginLeft": 0,
+                    "marginTop": 40
+
+                }
             }
         },
 
@@ -56,7 +103,7 @@ const {useClassNames} = createUseClassNames()(
             "transition": "transform 300ms",
             ":hover": {
                 "transform": "scale(1.2)"
-            }
+            },
         }
 
         
@@ -66,7 +113,11 @@ const {useClassNames} = createUseClassNames()(
 export type Props = {
     reviews: {
         description: string;
-        logoUrl?: string;
+        signature: string;
+        Logo?: React.FunctionComponent<React.SVGProps<SVGSVGElement> & {
+            title?: string | undefined;
+        }>;
+
     }[];
     
 }
@@ -87,19 +138,23 @@ export const ReviewSlider = (props: Props)=>{
 
     return (
         <div className={classNames.root}>
-                <ArrowBackIosIcon className={classNames.arrows} onClick={onClickPrev}/>
+            <ArrowBackIosIcon className={classNames.arrows} onClick={onClickPrev}/>
             <div className={classNames.viewport} ref={emblaRef}>
                 <div className={classNames.container}>
                         {
                             reviews.map(
                                 review => 
-                                <div className={classNames.slide}>
+                                <div key={review.signature} className={classNames.slide}>
                                     <Paper className={classNames.paper}>
-                                        <p>{review.description}</p>
                                         {
-                                            review.logoUrl !== undefined ? 
-                                            <img src={review.logoUrl} alt="logo"/>: ""
+                                            review.Logo !== undefined ? 
+                                            <review.Logo/> : ""
                                         }
+                                        <div>
+                                            <Typography>{review.description}</Typography>
+                                            <Typography>{review.signature}</Typography>
+                                        </div>
+                                        
                                     </Paper>
                                 </div>
                             )
@@ -110,7 +165,7 @@ export const ReviewSlider = (props: Props)=>{
                 </div>
             </div>
 
-                <ArrowForwardIosIcon className={classNames.arrows} onClick={onClickNext}/>
+            <ArrowForwardIosIcon className={classNames.arrows} onClick={onClickNext}/>
 
         </div>
     )
