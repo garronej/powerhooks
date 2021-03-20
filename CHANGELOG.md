@@ -1,3 +1,7 @@
+### **0.0.31** (2021-03-20)  
+  
+- Remove unessesary log    
+  
 ### **0.0.29** (2021-03-20)  
   
 - Pass in url only persistant states    
