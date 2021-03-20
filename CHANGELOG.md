@@ -1,3 +1,7 @@
+### **0.0.27** (2021-03-17)  
+  
+- Same prefix for urlParams, localStorage and cookies    
+  
 ### **0.0.26** (2021-03-17)  
   
 - Use localStorage by default for persistance    
