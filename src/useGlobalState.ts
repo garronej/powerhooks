@@ -46,30 +46,40 @@ const { injectGlobalStatesInSearchParams, getStatesFromUrlSearchParams } = (() =
 
     }
 
-    function getStatesFromUrlSearchParams<T>(
-        params: { name: string; }
-    ): { wasPresent: false; } | { wasPresent: true; state: T; } {
+    const getUnparsedStatesFromUrlSearchParams = memoize(() => {
 
-        const { name } = params;
-
-        const popResult = urlSearchParams.pop({
-            "locationSearch": window.location.search,
-            "name": prefix + name
-        });
-
-        if (!popResult.wasPresent) {
-            return { "wasPresent": false };
-        }
+        const { 
+            newLocationSearch, 
+            values: unparsedStates
+        } = urlSearchParams.retrieve({ "locationSearch": location.search, prefix })
 
         window.history.replaceState(
             "",
             "",
-            `${location.href.split("?")[0]}${popResult.newLocationSearch}`
+            `${location.href.split("?")[0]}${newLocationSearch}`
         );
+
+        return { unparsedStates };
+
+    })
+
+    function getStatesFromUrlSearchParams<T>(
+        params: {
+            name: string;
+        }
+    ): { wasPresent: false; } | { wasPresent: true; state: T; } {
+
+        const { name } = params;
+
+        const { unparsedStates } = getUnparsedStatesFromUrlSearchParams();
+
+        if (!( name in unparsedStates)) {
+            return { "wasPresent": false };
+        }
 
         return {
             "wasPresent": true,
-            "state": parse(popResult.value)
+            "state": parse(unparsedStates[name])
         };
 
     }
@@ -127,6 +137,10 @@ export function createUseGlobalState<T, Name extends string>(
             )
         });
 
+    //NOTE: We want to clean the url asap so we don't put it in the 
+    // evt getter.
+    const urlSearchParam = getStatesFromUrlSearchParams<T>({ name });
+
     const getEvtXyz = memoize(() => {
 
         const storeStateInPersistentStorage =
@@ -138,6 +152,16 @@ export function createUseGlobalState<T, Name extends string>(
         const evtXyz = Evt.create(
             (() => {
 
+                if (urlSearchParam.wasPresent) {
+
+                    const { state } = urlSearchParam;
+
+                    storeStateInPersistentStorage?.(state);
+
+                    return state;
+
+                }
+
                 if (persistentStorage !== undefined) {
 
                     const serializedState = persistentStorage.getItem();
@@ -147,18 +171,6 @@ export function createUseGlobalState<T, Name extends string>(
                         return parse<T>(serializedState);
 
                     }
-
-                }
-
-                const urlSearchParam = getStatesFromUrlSearchParams<T>({ name });
-
-                if (urlSearchParam.wasPresent) {
-
-                    const { state } = urlSearchParam;
-
-                    storeStateInPersistentStorage?.(state);
-
-                    return state;
 
                 }
 

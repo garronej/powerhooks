@@ -16,16 +16,16 @@ function add(
 
 }
 
-function pop(
+export function retrieve(
     params: {
         locationSearch: string;
-        name: string;
+        prefix: string;
     }
-): { wasPresent: false; } | { wasPresent: true; newLocationSearch: string; value: string; } {
+): { newLocationSearch: string; values: Record<string, string>; } {
 
-    const { locationSearch, name } = params;
+    const { locationSearch, prefix } = params;
 
-    let value: string | undefined = undefined;
+    const values: Record<string, string> = {};
 
     const { newLocationSearch } = (() => {
 
@@ -33,7 +33,10 @@ function pop(
             .replace(/^\?/, "")
             .split("&")
             .map(part => part.split("=") as [string, string])
-            .filter(([key, value_i]) => key !== name ? true : (value = decodeURI(value_i), false))
+            .filter(([key, value_i]) =>
+                !key.startsWith(prefix) ?
+                    true :
+                    (values[key.substring(prefix.length)] = decodeURI(value_i), false))
             .map(entry => entry.join("="))
             .join("&")
             ;
@@ -45,18 +48,13 @@ function pop(
 
     })();
 
-    if (value === undefined) {
-        return { "wasPresent": false };
-    }
-
     return {
-        "wasPresent": true,
         newLocationSearch,
-        value
+        values
     };
 
 }
 
-export const urlSearchParams = { add, pop };
+export const urlSearchParams = { add, retrieve };
 
 
