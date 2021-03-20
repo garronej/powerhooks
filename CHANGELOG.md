@@ -1,3 +1,8 @@
+### **0.0.28** (2021-03-20)  
+  
+- Enable the workflow on master  
+- Fix url parsing    
+  
 ### **0.0.27** (2021-03-17)  
   
 - Same prefix for urlParams, localStorage and cookies    
