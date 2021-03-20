@@ -14,6 +14,8 @@ import { urlSearchParams } from "./tools/urlSearchParams";
 
 export const globalStates: Readonly<Record<string, unknown>> = {};
 
+const persistedGlobalStateNames= new Set<string>();
+
 function stringify(obj: unknown): string {
     return JSON.stringify([obj]);
 }
@@ -32,6 +34,7 @@ const { injectGlobalStatesInSearchParams, getStatesFromUrlSearchParams } = (() =
         let newUrl = url;
 
         Object.keys(globalStates)
+            .filter(name => persistedGlobalStateNames.has(name))
             .forEach(name =>
                 newUrl = urlSearchParams
                     .add({
@@ -136,6 +139,8 @@ export function createUseGlobalState<T, Name extends string>(
                 `${prefix}${name}`
             )
         });
+
+    persistedGlobalStateNames.add(name);
 
     //NOTE: We want to clean the url asap so we don't put it in the 
     // evt getter.
