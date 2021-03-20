@@ -12,6 +12,8 @@ import { capitalize } from "./tools/capitalize";
 import memoize from "memoizee";
 import { urlSearchParams } from "./tools/urlSearchParams";
 
+console.log("on powerhooks");
+
 export const globalStates: Readonly<Record<string, unknown>> = {};
 
 const persistedGlobalStateNames= new Set<string>();
@@ -140,7 +142,11 @@ export function createUseGlobalState<T, Name extends string>(
             )
         });
 
-    persistedGlobalStateNames.add(name);
+    if( persistentStorage !== undefined ){
+
+        persistedGlobalStateNames.add(name);
+
+    }
 
     //NOTE: We want to clean the url asap so we don't put it in the 
     // evt getter.
