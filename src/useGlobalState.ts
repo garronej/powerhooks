@@ -12,8 +12,6 @@ import { capitalize } from "./tools/capitalize";
 import memoize from "memoizee";
 import { urlSearchParams } from "./tools/urlSearchParams";
 
-console.log("on powerhooks");
-
 export const globalStates: Readonly<Record<string, unknown>> = {};
 
 const persistedGlobalStateNames= new Set<string>();
