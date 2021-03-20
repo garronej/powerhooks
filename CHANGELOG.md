@@ -1,3 +1,7 @@
+### **0.0.29** (2021-03-20)  
+  
+- Pass in url only persistant states    
+  
 ### **0.0.28** (2021-03-20)  
   
 - Enable the workflow on master  
