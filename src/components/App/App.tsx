@@ -4,6 +4,9 @@ import {MainSection} from "./MainSection";
 import {mainSectionData} from "assets/main-section-data/index";
 import {reviewSliderData} from "assets/review-slider-data/index";
 import {ReviewSlider} from "./ReviewSlider";
+import {Footer} from "./Footer";
+import {footerData} from "assets/footer-data/index";
+
 
 
 export const App = ()=>{
@@ -22,6 +25,10 @@ export const App = ()=>{
              <ReviewSlider
 
                 reviews={reviewSliderData}
+            />
+
+            <Footer
+                {...footerData}
             />
         
 

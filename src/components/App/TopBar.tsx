@@ -103,27 +103,6 @@ export const TopBar = (props: Props)=>{
 
     const unfoldIconRef = useRef<HTMLDivElement>(null);
 
-
-
-
-    /*const mobileMenuHeight = useMemo(()=>{
-        const menuItems = document.getElementsByClassName("menu-item");
-
-    
-        let out = 0;
-    
-        for(let i = 0; i < menuItems.length; i++){
-            const style = getComputedStyle(menuItems[i]);
-            const marginTop = parseInt(style.marginTop.replace("px", ""));
-            const marginBottom = parseInt(style.marginBottom.replace("px", ""));
-            out += menuItems[i].clientHeight + marginTop + marginBottom;
-        };
-
-
-        return out;
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-    },[hasReRenderedOnce]);*/
-
     const toggleMobileMenu = useConstCallback(()=>{
         if(mobileMenuHeight !== 0){
             setMobileMenuHeight(0);

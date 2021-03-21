@@ -13,6 +13,8 @@ declare module "@material-ui/core/styles/createMuiTheme" {
         custom: {
             referenceWidth?: number;
             typeScriptBlue: string;
+            backgroundLight: string;
+            backgroundDark: string;
         }
     }
 
@@ -40,7 +42,9 @@ export function createTheme(
         },
         "custom": {
             "referenceWidth": 1920,
-            "typeScriptBlue": "#0076C6"
+            "typeScriptBlue": "#0076C6",
+            "backgroundDark": "#070224",
+            "backgroundLight": "#a6d8f5"
         }
     });
 
