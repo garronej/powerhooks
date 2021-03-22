@@ -10,8 +10,7 @@
     "types": "dist/index.d.ts",
     "scripts": {
         "test": "echo PASS",
-        "build": "tsc",
-        "enable_short_import_path": "npm run build && denoify_enable_short_npm_import_path"
+        "build": "tsc"
     },
     "author": "u/garronej & u/thieryw",
     "license": "MIT",
