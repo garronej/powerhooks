@@ -1,30 +1,44 @@
-import img1 from "./img1.webp";
-import img2 from "./img2.webp";
-import img3 from "./img3.webp";
 import type {Props} from "components/App/MainSection";
-
+import useCallbackFactoryCodeSnippet from "./useCallbackFactory.png";
+import useConstCallbackSnippet from "./useConstCallback.png";
+import useGlobalStateSnippet from "./useGlobalState.png";
+import {} from "./useNamedState.png";
 
 export const mainSectionData: Props["dataBlocks"] = [
     {
-        "imageUrl": img1,
+        "imageUrl": useCallbackFactoryCodeSnippet,
         "text": {
-            "title": "How can we double our sales revenue?",
-            "paragraph": "Hydra learns your business. By analyzing your sales data, Hydra optimizes your sales process and show you where you should be spending your resources.",
+            "title": "useCallbackFactory",
+            "paragraph": `Even if <TodoItem> uses React.memo, each time a 
+            item of the list is set to completed every <TodoItem> is 
+            re-rendered because of onComplete that changes at every render for every item. 
+            Whereas the value returned by onCompleteFactory is always the same for 
+            a specific todo. Here we can set an element of the list to 
+            completed without re-rendering every items.`,
         }
     },
     {
-        "imageUrl": img2,
+        "imageUrl": useConstCallbackSnippet,
         "text": {
-            "title": "How can I keep track of my sales team?",
-            "paragraph": "Hydra learns your business. By analyzing your sales data, Hydra optimizes your sales process and show you where you should be spending your resources.",
+            "title": "useConstCallback",
+            "paragraph": `Each time x and/or y have changed since the previous render onClick gets a new reference. 
+            Witch is a pain when using React.memo.
+            On top of that if an involved state is forgotten in the dependency array
+            the callback will encapsulate states that are out of date.
+            With useConstCallback, the value of onClick never changes across renders
+            yet the values of x ant y are always up to date.`,
         }
     },
     {
-        "imageUrl": img3,
+        "imageUrl": useGlobalStateSnippet,
         "text": {
-            "title": "How can I forecast the next 90 days?",
-            "paragraph": "Hydra learns your business. By analyzing your sales data, Hydra optimizes your sales process and show you where you should be spending your resources."
+            "title": "useGlobalState",
+            "paragraph": `
+                This hook enables us to have a state that is accessible through out 
+                the entire app. It is useful for implementing a dark mode easily as
+                you shall see in the code snippet.
+            `
         }
 
-    }
+    },
 ]
