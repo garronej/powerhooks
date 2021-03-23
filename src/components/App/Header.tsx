@@ -40,7 +40,8 @@ const {useClassNames} = createUseClassNames<{background: Props["background"]}>()
                 "marginBottom": 100,
                 "@media (max-width: 650px)":{
                     "width": "90%"
-                }
+                },
+                "borderRadius": "5px"
 
             },
             "textAlign": "center",
