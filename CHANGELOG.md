@@ -1,3 +1,9 @@
+### **0.0.32** (2021-03-23)  
+  
+- Add some snipets examples  
+- Make the zoom provider conscistent  
+- Update package.json    
+  
 ### **0.0.31** (2021-03-20)  
   
 - Remove unessesary log    
