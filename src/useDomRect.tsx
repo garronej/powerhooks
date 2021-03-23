@@ -33,7 +33,7 @@ export function useDomRect<T extends HTMLElement = any>() {
         [ref.current ?? {}]
     );
 
-    const { referenceWidth } = useContext(zoomContext);
+    const { referenceWidth } = useContext(context);
 
     useEvt(
         ctx => {
@@ -89,7 +89,7 @@ export function useDomRect<T extends HTMLElement = any>() {
 
 }
 
-const zoomContext = createContext<{ referenceWidth?: number; }>({});
+const context = createContext<{ referenceWidth?: number; }>({});
 
 export type Props = {
     referenceWidth: number | undefined;
@@ -104,29 +104,38 @@ export function ZoomProvider(props: Props) {
 
     const value = useMemo(() => ({ referenceWidth }), [referenceWidth]);
 
-    if (referenceWidth === undefined) {
-        return <>{children}</>;
-    }
-
-    const zoomFactor = windowInnerWidth / referenceWidth;
+    const zoomFactor = referenceWidth !== undefined ?
+        windowInnerWidth / referenceWidth :
+        undefined;
 
     return (
-        <zoomContext.Provider value={value}>
-            <div style={{
-                "height": "100vh",
-                "overflow": "hidden"
-            }}>
-                <div style={{
-                    "transform": `scale(${zoomFactor})`,
-                    "transformOrigin": "0 0",
-                    "width": referenceWidth,
-                    "height": windowInnerHeight / zoomFactor,
+        <context.Provider value={value}>
+            <div
+                about={`powerhooks ZoomProvider${zoomFactor === undefined ? " (disabled)" : ""}`}
+                style={{
+                    "height": "100vh",
                     "overflow": "hidden"
-                }}>
-                    {children}
-                </div>
+                }}
+            >
+                {
+                    zoomFactor !== undefined ?
+                        <div
+                            about={`powerhooks ZoomProvider inner`}
+                            style={{
+                                "transform": `scale(${zoomFactor})`,
+                                "transformOrigin": "0 0",
+                                "width": referenceWidth,
+                                "height": windowInnerHeight / zoomFactor,
+                                "overflow": "hidden"
+                            }}
+                        >
+                            {children}
+                        </div>
+                        :
+                        children
+                }
             </div>
-        </zoomContext.Provider>
+        </context.Provider>
     );
 
 }
