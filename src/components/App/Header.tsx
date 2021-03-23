@@ -36,10 +36,9 @@ const {useClassNames} = createUseClassNames<{background: Props["background"]}>()
             "flexDirection": "column",
             "alignItems": "center",
             "& img": {
-                "width": 800,
+                "width": 600,
                 "marginBottom": 100,
-                "opacity": "0.8",
-                "@media (max-width: 880px)":{
+                "@media (max-width: 650px)":{
                     "width": "90%"
                 }
 

@@ -2,7 +2,7 @@ import type {Props as HeaderProps} from "components/App/Header";
 import backgroundUrlDark from "./background-dark.jpg";
 import backgroundUrlLight from "./background-light.jpg";
 import {ReactComponent as Logo} from "./logo.svg";
-import bannerUrl from "./banner.jpeg";
+import bannerUrl from "./useNamedState.gif";
 
 
 export const headerData: HeaderProps = {
