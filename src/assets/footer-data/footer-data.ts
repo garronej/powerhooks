@@ -1,6 +1,8 @@
 import type {Props} from "components/App/Footer";
-import FacebookIcon from '@material-ui/icons/Facebook';
 import RedditIcon from '@material-ui/icons/Reddit';
+import TwitterIcon from '@material-ui/icons/Twitter';
+import YouTubeIcon from '@material-ui/icons/YouTube';
+
 export const footerData: Props = {
     "items": [
         {
@@ -15,14 +17,20 @@ export const footerData: Props = {
 
     "socialMediaItems": [
         {
-            "logo": FacebookIcon,
-            "name": "Facebook",
-            "url": "https://www.facebook.com/"
+            "logo": TwitterIcon,
+            "name": "Twitter",
+            "url": "https://twitter.com/?lang=en"
         },
         {
             "logo": RedditIcon,
             "name": "Reddit",
             "url": "https://www.reddit.com/"
+        },
+        {
+            "logo": YouTubeIcon,
+            "name": "YouTube",
+            "url": "https://www.youtube.com/"
+
         }
     ],
 

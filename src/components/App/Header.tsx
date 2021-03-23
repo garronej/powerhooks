@@ -29,7 +29,31 @@ export type Props = {
 const {useClassNames} = createUseClassNames<{background: Props["background"]}>()(
     (theme, {background})=>({
         "root": {
+            "position": "relative",
             "width": "100vw",
+            
+            "display": "flex",
+            "flexDirection": "column",
+            "alignItems": "center",
+            "& img": {
+                "width": 800,
+                "marginBottom": 100,
+                "opacity": "0.8",
+                "@media (max-width: 880px)":{
+                    "width": "90%"
+                }
+
+            },
+            "textAlign": "center",
+            "& h3": {
+                "marginTop": 50
+
+            },
+            "color": theme.palette.type === "dark" ? "white" : "black"
+        
+            
+        },
+        "backgroundDiv": {
             "background": (()=>{
                 if(background === undefined){
                     return theme.palette.type === "dark" ? 
@@ -55,29 +79,16 @@ const {useClassNames} = createUseClassNames<{background: Props["background"]}>()
             "backgroundRepeat": "no-repeat",
             "backgroundSize": "cover",
             "backgroundPosition": "center",
-            "display": "flex",
-            "flexDirection": "column",
-            "alignItems": "center",
-            "& img": {
-                "width": 800,
-                "marginBottom": 100,
-                "opacity": "0.8",
-                "@media (max-width: 880px)":{
-                    "width": "90%"
-                }
-
-            },
-            "textAlign": "center",
-            "& h3": {
-                "marginTop": 50
-
-            },
-            "color": "white"
-        
-            
+            "width": "100%",
+            "height": "100%",
+            "position": "absolute",
+            "top": 0,
+            "left": 0,
+            "zIndex": -1,
+            "filter": theme.palette.type === "dark" ? "brightness(0.4)" : "unset"
         },
         "button": {
-            "color": "white",
+            "color": theme.palette.type === "dark" ? "white" : "black",
             "margin": 15
 
         },
@@ -103,11 +114,12 @@ export const Header = (props: Props)=>{
 
     return (
         <header className={classNames.root}>
+            <div className={classNames.backgroundDiv}></div>
             <TopBar 
                 {...topBarProps}
             />
 
-            <Typography variant="h3">
+            <Typography variant="h4">
                 {
                     title
                 }

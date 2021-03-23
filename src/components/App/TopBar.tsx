@@ -15,7 +15,7 @@ import {useClickOut} from "customHooks/useClickOut";
 const {useClassNames} = createUseClassNames<{
     mobileMenuHeight: number;
 }>()(
-    (...[, {mobileMenuHeight}])=>({
+    (theme, {mobileMenuHeight})=>({
         "root": {
             "display": "flex",
             "justifyContent": "flex-end",
@@ -50,7 +50,7 @@ const {useClassNames} = createUseClassNames<{
             }
         },
         "link": {
-            "color": "white",
+            "color": theme.palette.type === "dark" ? "white" : "black",
             "textTransform": "uppercase",
             "margin": "0 15px 0 15px",
             "@media (max-width:530px)": {

@@ -1,6 +1,6 @@
 import type {Props as HeaderProps} from "components/App/Header";
-import backgroundUrlDark from "./background-dark.jpeg";
-import backgroundUrlLight from "./background-light.jpeg";
+import backgroundUrlDark from "./background-dark.jpg";
+import backgroundUrlLight from "./background-light.jpg";
 import {ReactComponent as Logo} from "./logo.svg";
 import bannerUrl from "./banner.jpeg";
 
@@ -22,8 +22,8 @@ export const headerData: HeaderProps = {
         }
     ],
     "headerImageUrl": bannerUrl,
-    "title": "powerHooks",
-    "subTitle": "Enhance your React experience",
+    "title": "POWERHOOKS",
+    "subTitle": "The hooks that you wish where contained with in React",
     "topBarProps": {
         "Logo": Logo,
         "githubRepoUrl": "https://github.com/garronej/powerhooks",
