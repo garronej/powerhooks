@@ -85,7 +85,7 @@ const {useClassNames} = createUseClassNames<{background: Props["background"]}>()
             "top": 0,
             "left": 0,
             "zIndex": -1,
-            "filter": theme.palette.type === "dark" ? "brightness(0.4)" : "unset"
+            "filter": theme.palette.type === "dark" ? "brightness(0.8)" : undefined
         },
         "button": {
             "color": theme.palette.type === "dark" ? "white" : "black",

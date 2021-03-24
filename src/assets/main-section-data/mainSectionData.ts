@@ -7,16 +7,28 @@ import useNamedStateSnippet from "./useNamedState.png";
 
 export const mainSectionData: Props["dataBlocks"] = [
     {
-        "imageUrl": useCallbackFactoryCodeSnippet,
+        "imageUrl": useNamedStateSnippet,
         "text": {
-            "title": "useCallbackFactory",
-            "paragraph": `Even if <TodoItem> uses React.memo, each time a 
-            item of the list is set to completed every <TodoItem> is 
-            re-rendered because of onComplete that changes at every render for every item. 
-            Whereas the value returned by onCompleteFactory is always the same for 
-            a specific todo. Here we can set an element of the list to 
-            completed without re-rendering every items.`,
+            "title": "useNamedState",
+            "paragraph": `
+                With the original React.useState hook,
+                you have to manually set the consistent names "xyz" and "useXyz”,
+                Whereas with useNameState you give the name of the state as a parameter
+                and deconstruct the value and setter using intellisense.
+            `
         }
+    },
+    {
+        "imageUrl": useGlobalStateSnippet,
+        "text": {
+            "title": "useGlobalState",
+            "paragraph": `
+                This hook enables to have a state persisted across
+                reloads that is accessible through out the entire app
+                ant this without involving a provider.
+            `
+        }
+
     },
     {
         "imageUrl": useConstCallbackSnippet,
@@ -31,27 +43,15 @@ export const mainSectionData: Props["dataBlocks"] = [
         }
     },
     {
-        "imageUrl": useGlobalStateSnippet,
+        "imageUrl": useCallbackFactoryCodeSnippet,
         "text": {
-            "title": "useGlobalState",
-            "paragraph": `
-                This hook enables us to have a state that is accessible through out 
-                the entire app. 
-            `
-        }
-
-    },
-    {
-        "imageUrl": useNamedStateSnippet,
-        "text": {
-            "title": "useNamedState",
-            "paragraph": `
-                With the original React useState hook,
-                you have to manually set the consistent names "xyz" and "useXyz”,
-                Whereas with useNameState you give the name of the state as a parameter
-                and deconstruct the value and setter using intellisense.
-            
-            `
+            "title": "useCallbackFactory",
+            "paragraph": `Even if <TodoItem> uses React.memo, each time a 
+            item of the list is set to completed every <TodoItem> is 
+            re-rendered because of onComplete that changes at every render for every item. 
+            Whereas the value returned by onCompleteFactory is always the same for 
+            a specific todo. Here we can set an element of the list to 
+            completed without re-rendering every items.`,
         }
     }
 ]
