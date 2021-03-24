@@ -1,15 +1,27 @@
 import {Header} from "./Header";
-import {headerData} from "assets/header-data/index";
 import {MainSection} from "./MainSection";
-import {mainSectionData} from "assets/main-section-data/index";
-/*import {reviewSliderData} from "assets/review-slider-data/index";
-import {ReviewSlider} from "./ReviewSlider";*/
+import {ReviewSlider} from "./ReviewSlider";
 import {Footer} from "./Footer";
-import {footerData} from "assets/footer-data/index";
+import type {Props as HeaderProps} from "./Header";
+import type {Props as MainSectionProps} from "./MainSection";
+import type {Props as FooterProps} from "./Footer";
+import type {Props as ReviewSliderProps} from "./ReviewSlider";
 
 
+export type Props = {
+    headerData: HeaderProps;
+    mainSectionData: MainSectionProps["dataBlocks"];
+    reviewSliderData?: ReviewSliderProps;
+    footerData: FooterProps;
+}
 
-export const App = ()=>{
+export const App = (props: Props)=>{
+
+    const {footerData, 
+        headerData, 
+        mainSectionData, 
+        reviewSliderData
+    } = props;
 
     return(
         <>
@@ -22,10 +34,10 @@ export const App = ()=>{
                 dataBlocks={mainSectionData}
             />
 
-            {/*<ReviewSlider
-
-                reviews={reviewSliderData}
-            />*/}
+            {
+                reviewSliderData === undefined ? <></> : <ReviewSlider {...reviewSliderData}/>
+            }
+            
 
             <Footer
                 {...footerData}
