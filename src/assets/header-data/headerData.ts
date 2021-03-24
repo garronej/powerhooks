@@ -23,7 +23,7 @@ export const headerData: HeaderProps = {
     ],
     "headerImageUrl": bannerUrl,
     "title": "POWERHOOKS",
-    "subTitle": "The hooks that you wish where contained with in React",
+    "subTitle": "The hooks you wish where React builtins",
     "topBarProps": {
         "Logo": Logo,
         "githubRepoUrl": "https://github.com/garronej/powerhooks",
