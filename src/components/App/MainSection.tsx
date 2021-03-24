@@ -76,9 +76,9 @@ export const MainSection = (props: Props)=>{
                     >
                         <div>
                             <Typography variant="h4">
-                                {
-                                    dataBlock.text.title
-                                }
+                                <code>
+                                        {dataBlock.text.title}
+                                </code>
                             </Typography>
                             <Typography>
                                 {
