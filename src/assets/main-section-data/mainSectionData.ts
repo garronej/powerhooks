@@ -50,7 +50,7 @@ export const mainSectionData: Props["dataBlocks"] = [
             item of the list is set to completed every <TodoItem> is 
             re-rendered because of onComplete that changes at every render for every item. 
             Whereas the value returned by onCompleteFactory is always the same for 
-            a specific todo. Here we can set an element of the list to 
+            a specific todo. With useCallbackFactory we can set an element of the list to 
             completed without re-rendering every items.`,
         }
     }
