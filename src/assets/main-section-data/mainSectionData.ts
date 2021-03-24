@@ -2,7 +2,8 @@ import type {Props} from "components/App/MainSection";
 import useCallbackFactoryCodeSnippet from "./useCallbackFactory.png";
 import useConstCallbackSnippet from "./useConstCallback.png";
 import useGlobalStateSnippet from "./useGlobalState.png";
-import {} from "./useNamedState.png";
+import useNamedStateSnippet from "./useNamedState.png";
+
 
 export const mainSectionData: Props["dataBlocks"] = [
     {
@@ -35,10 +36,22 @@ export const mainSectionData: Props["dataBlocks"] = [
             "title": "useGlobalState",
             "paragraph": `
                 This hook enables us to have a state that is accessible through out 
-                the entire app. It is useful for implementing a dark mode easily as
-                you shall see in the code snippet.
+                the entire app. 
             `
         }
 
     },
+    {
+        "imageUrl": useNamedStateSnippet,
+        "text": {
+            "title": "useNamedState",
+            "paragraph": `
+                With the original React useState hook,
+                you have to manually set the consistent names "xyz" and "useXyz”,
+                Whereas with useNameState you give the name of the state as a parameter
+                and deconstruct the value and setter using intellisense.
+            
+            `
+        }
+    }
 ]
