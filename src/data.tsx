@@ -9,10 +9,10 @@ import backgroundUrlDark from "assets/header/background-dark.jpg";
 import backgroundUrlLight from "assets/header/background-light.jpg";
 import {ReactComponent as Logo} from "assets/header/logo.svg";
 import bannerUrl from "assets/header/powerhooks_useNamesState.gif";
-import RedditIcon from '@material-ui/icons/Reddit';
-import TwitterIcon from '@material-ui/icons/Twitter';
-import YouTubeIcon from '@material-ui/icons/YouTube';
 import type {Props} from "components/App/App";
+import { ReactComponent as TwitterSvg } from "assets/svg/twitter.svg";
+import { ReactComponent as YouTubeSvg } from "assets/svg/youTube.svg";
+import { ReactComponent as RedditSvg } from "assets/svg/reddit.svg";
 
 export const appData: Props = {
     "headerData": {
@@ -57,7 +57,7 @@ export const appData: Props = {
             "text": {
                 "title": "useNamedState",
                 "paragraph": `
-                    With the original React.useState hook,
+                    With the original React.useState hook,  
                     you have to manually set the consistent names "xyz" and "useXyz”,
                     Whereas with useNameState you give the name of the state as a parameter
                     and deconstruct the value and setter using intellisense.
@@ -103,7 +103,7 @@ export const appData: Props = {
     ],
     "reviewSliderData": undefined,
     "footerData": {
-        "items": [
+        "leftItems": [
             {
                 "name": "Documentation",
                 "url": "https://docs.powerhooks.dev/"
@@ -114,19 +114,19 @@ export const appData: Props = {
             }
         ],
     
-        "socialMediaItems": [
+        "rightItems": [
             {
-                "logo": TwitterIcon,
+                "logoSvgComponent": TwitterSvg,
                 "name": "Twitter",
                 "url": "https://twitter.com/?lang=en"
             },
             {
-                "logo": RedditIcon,
+                "logoSvgComponent": RedditSvg,
                 "name": "Reddit",
                 "url": "https://www.reddit.com/"
             },
             {
-                "logo": YouTubeIcon,
+                "logoSvgComponent": YouTubeSvg,
                 "name": "YouTube",
                 "url": "https://www.youtube.com/"
     
@@ -138,6 +138,7 @@ export const appData: Props = {
     }
 
 }
+
 
 
 /*export const reviewSliderData: ReviewSliderProps["reviews"] = [
