@@ -54,50 +54,55 @@ export const appData: Props = {
     "mainSectionData": [
         {
             "imageUrl": useNamedStateSnippet,
+            "imageHasFrame": true,
             "text": {
                 "title": "useNamedState",
-                "paragraph": `
-                    With the original React.useState hook,  
-                    you have to manually set the consistent names "xyz" and "useXyz”,
-                    Whereas with useNameState you give the name of the state as a parameter
-                    and deconstruct the value and setter using intellisense.
+                "paragraph": `With the original **React.useState** hook,  
+you have to manually set the consistent names **"xyz"** and **"useXyz”**,
+Whereas with **useNameState** you give the name of the state as a parameter
+and deconstruct the value and setter using **intellisense**.
                 `
             }
         },
         {
             "imageUrl": useGlobalStateSnippet,
+            "imageHasFrame": true,
             "text": {
                 "title": "useGlobalState",
-                "paragraph": `
-                    This hook enables to have a state persisted across
-                    reloads that is accessible through out the entire app
-                    ant this without involving a provider.
+                "paragraph": `This hook enables us to have a state persisting across
+reloads that is accessible through out the entire app
+ant this without involving a provider.
                 `
             }
 
         },
         {
             "imageUrl": useConstCallbackSnippet,
+            "imageHasFrame": true,
             "text": {
                 "title": "useConstCallback",
-                "paragraph": `Each time x and/or y have changed since the previous render onClick gets a new reference. 
-                Witch is a pain when using React.memo.
-                On top of that if an involved state is forgotten in the dependency array
-                the callback will encapsulate states that are out of date.
-                With useConstCallback, the value of onClick never changes across renders
-                yet the values of x ant y are always up to date.`,
+                "paragraph": `Each time x 
+and/or y have changed since the previous render **onClick** gets a new reference. 
+Witch is a pain when using **React.memo**. 
+
+On top of that if an involved state is forgotten in the dependency array
+the callback will encapsulate states that are out of date.
+With **useConstCallback**, the value of onClick never changes across renders
+yet the values of x ant y are always up to date.`,
             }
         },
         {
             "imageUrl": useCallbackFactoryCodeSnippet,
+            "imageHasFrame": true,
             "text": {
                 "title": "useCallbackFactory",
-                "paragraph": `Even if <TodoItem> uses React.memo, each time a 
-                item of the list is set to completed every <TodoItem> is 
-                re-rendered because of onComplete that changes at every render for every item. 
-                Whereas the value returned by onCompleteFactory is always the same for 
-                a specific todo. With useCallbackFactory we can set an element of the list to 
-                completed without re-rendering every items.`,
+                "paragraph": `Even if **<TodoItem>** uses **React.memo**, each time a 
+item of the list is set to completed every **<TodoItem>** is 
+re-rendered because of onComplete that changes at every render for every item. 
+
+Whereas the value returned by **onCompleteFactory** is always the same for 
+a specific todo. With **useCallbackFactory** we can set an element of the list to 
+completed without re-rendering every items.`,
             }
         }
     ],
@@ -139,24 +144,5 @@ export const appData: Props = {
 
 }
 
-
-
-/*export const reviewSliderData: ReviewSliderProps["reviews"] = [
-    {
-        "description": "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Aliquam egestas justo nisl, nec dignissim odio pulvinar ut. Sed eget lacus velit. Aenean venenatis, turpis eget accumsan consectetur, tortor augue mattis odio, eget efficitur turpis sapien vel elit.",
-        "Logo": appStoreLogo,
-        "signature": "Boris Johnson"
-    },
-    {
-        "description": "Aliquam semper eget quam sed iaculis. Pellentesque vitae mollis velit. Maecenas ac odio et sapien viverra gravida vitae sit amet dui. Mauris convallis eros vitae nunc pharetra, non euismod erat lobortis.",
-        "Logo": photoLogo,
-        "signature": "Vladimir Putin"
-    },
-    {
-        "description": "Sed iaculis, lacus at eleifend porta, purus magna varius arcu, vel tincidunt lorem dolor at massa. Aenean semper et metus ut blandit. Duis finibus tortor in nulla sagittis, et maximus sapien lobortis.",
-        "Logo": twitterLogo,
-        "signature": "Donald Trump"
-    }
-];*/
 
 

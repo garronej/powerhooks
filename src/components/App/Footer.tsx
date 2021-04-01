@@ -25,9 +25,9 @@ const { useClassNames } = createUseClassNames()(
             "display": "flex",
             "flexDirection": "column",
             "alignItems": "center",
-            "color": theme.palette.type === "dark" ? "#a2a7ab" : "black",
+            "color": theme.palette.type === "dark" ? theme.custom.silverGray : "black",
             "& a": {
-                "color": theme.palette.type === "dark" ? "#a2a7ab" : "black"
+                "color": theme.palette.type === "dark" ? theme.custom.silverGray : "black"
             },
             "backgroundColor": theme.palette.type === "dark" ? theme.custom.backgroundDark : theme.custom.backgroundLight,
             "marginTop": 80
@@ -35,7 +35,7 @@ const { useClassNames } = createUseClassNames()(
         "socialMedia": {
             "margin": 40,
             "& svg": {
-                "fill": theme.palette.type === "dark" ? "#a2a7ab" : "black",
+                "fill": theme.palette.type === "dark" ? theme.custom.silverGray : "black",
                 "marginRight": 20,
                 "height": 40,
                 "width": 40,

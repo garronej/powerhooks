@@ -1,10 +1,13 @@
 import Typography from "@material-ui/core/Typography";
 import {createUseClassNames} from "theme/useClassesNames";
-import {css} from "tss-react";
-
+import {css, cx} from "tss-react";
+import ReactMarkdown from "react-markdown";
+import RoundedIcon from '@material-ui/icons/Brightness1Rounded';
+import {useTheme} from "@material-ui/core/styles";
 export type Props = {
     dataBlocks: {
         imageUrl: string;
+        imageHasFrame: boolean;
         text: {
             title: string;
             paragraph: string;
@@ -14,26 +17,19 @@ export type Props = {
 };
 
 const {useClassNames} = createUseClassNames()(
-    ()=>({
+    (theme)=>({
         "root": {
             "padding": "40px 0 40px 0",
-            "& article": {
+            "& >article": {
                 "display": "flex",
                 "justifyContent": "center",
                 "alignItems": "center",
                 "padding": "40px 0 40px 0",
                 "& img": {
-                    "width": 550,
-                    "margin": "0 40px 0 40px",
-                    "@media (max-width: 1215px)": {
-                        "width": "45%"
-                    },
-                    "@media (max-width: 895px)": {
-                        "width": "80%"
-                    }
+                    
 
                 },
-                "& div": {
+                "& >div": {
                     "width": 500,
                     "margin": "0 40px 0 40px",
                     "& h4": {
@@ -45,6 +41,42 @@ const {useClassNames} = createUseClassNames()(
                     }
                 }
             }
+        },
+        "imageWrapper": {
+            "position": "relative",
+            "width": 550,
+            "margin": "0 40px 0 40px",
+            "box-shadow": theme.palette.type === "dark" ? "" : "0px 1px 58px 17px rgba(0,0,0,0.75)",
+            "@media (max-width: 1215px)": {
+                "width": "45%"
+            },
+            "@media (max-width: 895px)": {
+                "width": "80%"
+            },
+            "& >img":{
+                "width": "100%",
+                "height": "100%",
+                "objectFit": "cover",
+                "verticalAlign": "middle"
+            }
+        },
+
+        "roundedIcons": {
+            "position": "absolute",
+            "top": -20,
+            "left": -15,
+            "display": "flex",
+            "& >svg": {
+                "width": 15,
+                "margin": "0 2px 0 2px"
+
+
+
+
+            }
+
+
+
         }
 
     })
@@ -57,6 +89,9 @@ export const MainSection = (props: Props)=>{
 
     const {classNames} = useClassNames({});
 
+    const theme = useTheme();
+
+
     return (
         <section className={classNames.root}>
 
@@ -67,7 +102,8 @@ export const MainSection = (props: Props)=>{
                         key={dataBlock.text.title}
                         className={
                             css({
-                                "flexDirection": index % 2 !== 0 ? "row-reverse" : "row",
+                                "flexDirection": index % 2 !== 0 ? 
+                                "row-reverse" : "row",
                                 "@media (max-width: 895px)": {
                                     "flexDirection": "column"
                                 }
@@ -81,12 +117,32 @@ export const MainSection = (props: Props)=>{
                                 </code>
                             </Typography>
                             <Typography>
-                                {
-                                    dataBlock.text.paragraph
-                                }
+                                <ReactMarkdown children={dataBlock.text.paragraph} />
                             </Typography>
                         </div>
-                        <img src={dataBlock.imageUrl} alt="source code"/>
+                        <div className={cx(classNames.imageWrapper, css({
+                            "borderRadius": dataBlock.imageHasFrame ? 5 : "",
+                            "border": dataBlock.imageHasFrame ? 
+                                `solid ${theme.custom.visualStudioCodeColor} 20px` : ""
+                        }))}>
+                            {
+                                dataBlock.imageHasFrame && 
+                                <div className={classNames.roundedIcons}>
+                                    {
+                                        ["red", "yellow", "green"].map(color => 
+                                            <RoundedIcon className={css({
+                                                "fill": color
+                                            })}/>
+                                            )
+
+                                    }
+                                </div>
+                            }
+                            
+
+                            <img src={dataBlock.imageUrl} alt="source code"/>
+                        </div>
+
 
                     </article>
                 )

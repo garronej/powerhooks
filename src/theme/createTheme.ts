@@ -15,6 +15,8 @@ declare module "@material-ui/core/styles/createMuiTheme" {
             typeScriptBlue: string;
             backgroundLight: string;
             backgroundDark: string;
+            silverGray: string;
+            visualStudioCodeColor: string
         }
     }
 
@@ -44,7 +46,9 @@ export function createTheme(
             "referenceWidth": 1920,
             "typeScriptBlue": "#0076C6",
             "backgroundDark": "#070224",
-            "backgroundLight": "#a6d8f5"
+            "backgroundLight": "#a6d8f5",
+            "silverGray": "#a2a7ab",
+            "visualStudioCodeColor": "#1e1e1e"
         }
     });
 
