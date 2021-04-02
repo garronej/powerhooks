@@ -25,10 +25,11 @@ const {useClassNames} = createUseClassNames()(
                 "justifyContent": "center",
                 "alignItems": "center",
                 "padding": "40px 0 40px 0",
-                "& img": {
-                    
+                "@media (max-width: 895px)": {
+                    "padding": 0
 
                 },
+
                 "& >div": {
                     "width": 500,
                     "margin": "0 40px 0 40px",
@@ -116,9 +117,12 @@ export const MainSection = (props: Props)=>{
                                         {dataBlock.text.title}
                                 </code>
                             </Typography>
-                            <Typography>
+                            {/*<Typography>
                                 <ReactMarkdown children={dataBlock.text.paragraph} />
-                            </Typography>
+                            </Typography>*/}
+                            <ReactMarkdown>
+                                {dataBlock.text.paragraph}
+                            </ReactMarkdown>
                         </div>
                         <div className={cx(classNames.imageWrapper, css({
                             "borderRadius": dataBlock.imageHasFrame ? 5 : "",
@@ -129,11 +133,13 @@ export const MainSection = (props: Props)=>{
                                 dataBlock.imageHasFrame && 
                                 <div className={classNames.roundedIcons}>
                                     {
-                                        ["red", "yellow", "green"].map(color => 
-                                            <RoundedIcon className={css({
+                                        Object.values(theme.custom.vsCodeTopLeftButtonColors).map(color => 
+                                            <RoundedIcon key={color} className={css({
+
                                                 "fill": color
                                             })}/>
-                                            )
+                                            
+                                        )
 
                                     }
                                 </div>

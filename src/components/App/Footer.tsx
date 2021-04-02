@@ -30,7 +30,10 @@ const { useClassNames } = createUseClassNames()(
                 "color": theme.palette.type === "dark" ? theme.custom.silverGray : "black"
             },
             "backgroundColor": theme.palette.type === "dark" ? theme.custom.backgroundDark : theme.custom.backgroundLight,
-            "marginTop": 80
+            "marginTop": 80,
+            "@media (max-width: 895px)": {
+                "marginTop": 0
+            }
         },
         "socialMedia": {
             "margin": 40,

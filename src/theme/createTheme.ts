@@ -16,7 +16,12 @@ declare module "@material-ui/core/styles/createMuiTheme" {
             backgroundLight: string;
             backgroundDark: string;
             silverGray: string;
-            visualStudioCodeColor: string
+            visualStudioCodeColor: string;
+            vsCodeTopLeftButtonColors: {
+                tomatoRed: string;
+                goldenRod: string;
+                limeGreen: string;
+            }
         }
     }
 
@@ -48,7 +53,12 @@ export function createTheme(
             "backgroundDark": "#070224",
             "backgroundLight": "#a6d8f5",
             "silverGray": "#a2a7ab",
-            "visualStudioCodeColor": "#1e1e1e"
+            "visualStudioCodeColor": "#1e1e1e",
+            "vsCodeTopLeftButtonColors": {
+                "tomatoRed": "#f85b52",
+                "goldenRod": "#e1bb2a",
+                "limeGreen": "#54bd2b",
+            }
         }
     });
 
