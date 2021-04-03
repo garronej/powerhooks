@@ -18,7 +18,7 @@ type OnMouseUpOrDown = (mouseEvent: ReactMouseEvent) => void;
  * Because it down is fired event when a double click is pending.
  * NOTE: callback does not need to be constant.
  */
-export function useClick<ExtraArg>(
+export function useClick<ExtraArg = void>(
     params: {
         doubleClickDelayMs: number;
         callback(params: {
