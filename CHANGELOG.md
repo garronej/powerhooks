@@ -1,3 +1,7 @@
+### **0.0.34** (2021-04-03)  
+  
+- Fix UseScoppedState    
+  
 ### **0.0.33** (2021-04-03)  
   
 - Extra arg param should be void    
