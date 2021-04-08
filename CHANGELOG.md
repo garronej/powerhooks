@@ -1,3 +1,7 @@
+### **0.0.35** (2021-04-03)  
+  
+- useConstCallback type argument dosen't require NonNullable() for optional callback    
+  
 ### **0.0.34** (2021-04-03)  
   
 - Fix UseScoppedState    
