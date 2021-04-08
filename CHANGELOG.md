@@ -1,3 +1,7 @@
+### **0.0.36** (2021-04-08)  
+  
+- Do not remove the states from the url for the cases multiples version of powerhook would cohabit    
+  
 ### **0.0.35** (2021-04-03)  
   
 - useConstCallback type argument dosen't require NonNullable() for optional callback    
