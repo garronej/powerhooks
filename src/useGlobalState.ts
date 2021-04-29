@@ -52,15 +52,17 @@ const { injectGlobalStatesInSearchParams, getStatesFromUrlSearchParams } = (() =
     const getUnparsedStatesFromUrlSearchParams = memoize(() => {
 
         const { 
-            newLocationSearch, 
+            //newLocationSearch, 
             values: unparsedStates
         } = urlSearchParams.retrieve({ "locationSearch": location.search, prefix })
 
+        /*
         window.history.replaceState(
             "",
             "",
             `${location.href.split("?")[0]}${newLocationSearch}`
         );
+        */
 
         return { unparsedStates };
 

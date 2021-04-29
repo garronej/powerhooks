@@ -56,7 +56,6 @@ export function createUseScopedState<T, Name extends string>(
 
     overwriteReadonlyProp(useXyz as any, "name", `use${capitalize(name)}`);
 
-
     const XyzProvider = function (
         props: {
             children: ReactNode;
@@ -68,7 +67,7 @@ export function createUseScopedState<T, Name extends string>(
 
         const useNamedStateReturnedWrapper = useNamedState(name,(
             initialStateFromProps !== undefined ? 
-            initialStateFromProps : initialState
+                initialStateFromProps : initialState
         )!);
 
         const value = useMemo(
@@ -84,7 +83,7 @@ export function createUseScopedState<T, Name extends string>(
 
     }
 
-    overwriteReadonlyProp(useXyz as any, "name", `${capitalize(name)}Provider`);
+    overwriteReadonlyProp(XyzProvider as any, "name", `${capitalize(name)}Provider`);
 
     return {
         [useXyz.name]: useXyz,

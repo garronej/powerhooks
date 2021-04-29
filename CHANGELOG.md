@@ -1,3 +1,19 @@
+### **0.0.36** (2021-04-08)  
+  
+- Do not remove the states from the url for the cases multiples version of powerhook would cohabit    
+  
+### **0.0.35** (2021-04-03)  
+  
+- useConstCallback type argument dosen't require NonNullable() for optional callback    
+  
+### **0.0.34** (2021-04-03)  
+  
+- Fix UseScoppedState    
+  
+### **0.0.33** (2021-04-03)  
+  
+- Extra arg param should be void    
+  
 ### **0.0.32** (2021-03-23)  
   
 - Add some snipets examples  
