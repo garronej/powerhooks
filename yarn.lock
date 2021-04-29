@@ -5159,18 +5159,18 @@ evp_bytestokey@^1.0.0, evp_bytestokey@^1.0.3:
     md5.js "^1.3.4"
     safe-buffer "^5.1.1"
 
-evt@2.0.0-beta.12:
-  version "2.0.0-beta.12"
-  resolved "https://registry.yarnpkg.com/evt/-/evt-2.0.0-beta.12.tgz#d24724ea4c70e78af3eb73dbbf3ece81d295a1e7"
-  integrity sha512-KoDNXD73aKIGhylvFVYyEjoTTHKWofi0ozaRrvW4rjXZ1XbSUEat+iGSsy/S387v3ZkKB9UI499hT7WtNGzSrw==
-  dependencies:
-    minimal-polyfills "^2.1.5"
-    run-exclusive "^2.2.14"
-
 evt@2.0.0-beta.13:
   version "2.0.0-beta.13"
   resolved "https://registry.yarnpkg.com/evt/-/evt-2.0.0-beta.13.tgz#a84828cc15b535fabdeaf551982d0705ed428a6f"
   integrity sha512-Y71l8BU1r/hs7MOyaNb5PTf8Jp+5h8Vt6T8ixvJSqDmKhwCjjCVKP2b1E3UE+Qlr1bZnCOWnVTucTeTeJghWEQ==
+  dependencies:
+    minimal-polyfills "^2.1.5"
+    run-exclusive "^2.2.14"
+
+evt@2.0.0-beta.15:
+  version "2.0.0-beta.15"
+  resolved "https://registry.yarnpkg.com/evt/-/evt-2.0.0-beta.15.tgz#a34ef224c827152c06f29157a9af5a41644e1a36"
+  integrity sha512-AZIuA8ujBsDX/rPC9mJ2sGvrBJAvV2OGj/yzACbuT4pRLKii5PMjYPitNk4xJMKuXSDwvwCsQzuGPDCcbRc60A==
   dependencies:
     minimal-polyfills "^2.1.5"
     run-exclusive "^2.2.14"
@@ -9737,12 +9737,12 @@ postcss@^8.1.0:
     nanoid "^3.1.20"
     source-map "^0.6.1"
 
-powerhooks@^0.0.13:
-  version "0.0.13"
-  resolved "https://registry.yarnpkg.com/powerhooks/-/powerhooks-0.0.13.tgz#4c58da69ada231fe579d6d2f22957490579e4c5f"
-  integrity sha512-++fJro/8kauc9mgwS2FPhuWFobMAsNNRkOu55OxgUtGEsHmImKAkqk+Qu/YIxggMWHmmdjs+zNzCGyOi/VoZ4A==
+powerhooks@^0.0.37:
+  version "0.0.37"
+  resolved "https://registry.yarnpkg.com/powerhooks/-/powerhooks-0.0.37.tgz#b36f40dc4300477f9c3cf49d4a0e43d626eace2d"
+  integrity sha512-wwPHsGHTRKY4gEdY+LMAEGNSDi9dsJa+6pYElPhPa6ZnwzdG1nmGKa+Cck4xijzE6IfV8KuJLcXITdIew89c0A==
   dependencies:
-    evt "2.0.0-beta.12"
+    evt "2.0.0-beta.15"
     memoizee "^0.4.15"
     resize-observer-polyfill "^1.5.1"
 

@@ -1,21 +1,22 @@
 import List from "@material-ui/core/List";
 import Link from "@material-ui/core/Link";
-import {createUseClassNames} from "theme/useClassesNames";
-import {DarkModeSwitch} from "../design-system/DarkModeSwitch";
-import {GithubStarCount} from "../design-system/GithubStarCount";
+import { createUseClassNames } from "theme/useClassesNames";
+import { DarkModeSwitch } from "../design-system/DarkModeSwitch";
+import { GithubStarCount } from "../design-system/GithubStarCount";
 import UnfoldIcon from '@material-ui/icons/Dehaze';
-import {useNamedState} from "powerhooks/useNamedState";
-import {useConstCallback} from "powerhooks/useConstCallback";
-import {cx} from "tss-react";
-import {useRef} from "react";
-import {useClickOut} from "customHooks/useClickOut";
+import { useNamedState } from "powerhooks/useNamedState";
+import { useConstCallback } from "powerhooks/useConstCallback";
+import { cx } from "tss-react";
+import { useRef } from "react";
+import { useClickOut } from "customHooks/useClickOut";
+import { useClickAway } from "powerhooks/useClickAway";
 
 
 
-const {useClassNames} = createUseClassNames<{
+const { useClassNames } = createUseClassNames<{
     mobileMenuHeight: number;
 }>()(
-    (theme, {mobileMenuHeight})=>({
+    (theme, { mobileMenuHeight }) => ({
         "root": {
             "display": "flex",
             "justifyContent": "flex-end",
@@ -23,7 +24,7 @@ const {useClassNames} = createUseClassNames<{
             "alignItems": "center",
             "padding": 20,
             "width": 1200,
-            "@media (max-width: 1250px)":{
+            "@media (max-width: 1250px)": {
                 "width": "100%"
             },
 
@@ -57,7 +58,7 @@ const {useClassNames} = createUseClassNames<{
                 "margin": "5px 0 5px 0",
             }
         },
-        
+
         "githubAndDarkModeSwitch": {
             "display": "flex",
             "alignItems": "center",
@@ -95,16 +96,18 @@ export type Props = {
 };
 
 
-export const TopBar = (props: Props)=>{
-    const {items, Logo, githubRepoUrl} = props;
+export const TopBar = (props: Props) => {
+    const { items, Logo, githubRepoUrl } = props;
 
-    const {mobileMenuHeight, setMobileMenuHeight} = useNamedState("mobileMenuHeight", 0);
-    
+    const { mobileMenuHeight, setMobileMenuHeight } = useNamedState("mobileMenuHeight", 0);
 
-    const unfoldIconRef = useRef<HTMLDivElement>(null);
+    const { rootRef } = useClickAway(() => setMobileMenuHeight(0));
 
-    const toggleMobileMenu = useConstCallback(()=>{
-        if(mobileMenuHeight !== 0){
+
+    //const unfoldIconRef = useRef<HTMLDivElement>(null);
+
+    const toggleMobileMenu = useConstCallback(() => {
+        if (mobileMenuHeight !== 0) {
             setMobileMenuHeight(0);
             return;
         }
@@ -113,7 +116,7 @@ export const TopBar = (props: Props)=>{
 
         let newHeight = 0;
 
-        for(let i = 0; i < menuItems.length; i++){
+        for (let i = 0; i < menuItems.length; i++) {
             const style = getComputedStyle(menuItems[i]);
             const marginTop = parseInt(style.marginTop.replace("px", ""));
             const marginBottom = parseInt(style.marginBottom.replace("px", ""));
@@ -123,61 +126,63 @@ export const TopBar = (props: Props)=>{
         setMobileMenuHeight(newHeight);
 
     });
-    
 
+
+    /*
     useClickOut({
         "refs": [unfoldIconRef],
         "onClickOut": () => setMobileMenuHeight(0)
     })
-    
+    */
 
 
-    const {classNames} = useClassNames(
-        {   
+    const { classNames } = useClassNames(
+        {
             mobileMenuHeight
         }
     );
+
     return (
 
         <List className={classNames.root} component="nav">
-            <Logo className={classNames.logo}/>
-                <div className={classNames.itemWrapper}>
-                    
-
-                    {
-                        items.map(
-                            item => 
-                                <Link 
-                                    className={cx(classNames.link, "menu-item")} 
-                                    href={item.url}
-                                    key={JSON.stringify(item.name + item.url)}
-                                >
-                                    {item.name}
-                                </Link>
-
-                        )
-                    }
-
-                </div>
-
-                <div ref={unfoldIconRef} className={classNames.unfold}>
-                    <UnfoldIcon 
-                        onClick={toggleMobileMenu}
-                    />
-                </div>
+            <Logo className={classNames.logo} />
+            <div className={classNames.itemWrapper}>
 
 
-                <div className={classNames.githubAndDarkModeSwitch}>
-                    {
-                        githubRepoUrl === undefined ? 
-                            "" : 
-                            <GithubStarCount
-                                repoUrl={githubRepoUrl}
-                                size="large"
-                            />
-                    }
-                    <DarkModeSwitch/>
-                </div>
+                {
+                    items.map(
+                        item =>
+                            <Link
+                                className={cx(classNames.link, "menu-item")}
+                                href={item.url}
+                                key={JSON.stringify(item.name + item.url)}
+                            >
+                                {item.name}
+                            </Link>
+
+                    )
+                }
+
+            </div>
+
+            <div ref={rootRef} className={classNames.unfold}>
+                <UnfoldIcon
+                    onClick={toggleMobileMenu}
+                />
+            </div>
+
+
+            <div className={classNames.githubAndDarkModeSwitch}>
+                {
+                    githubRepoUrl === undefined ?
+                        "" :
+                        <GithubStarCount
+                            repoUrl={githubRepoUrl}
+                            size="large"
+                        />
+                }
+                <DarkModeSwitch />
+            </div>
 
         </List>
 
