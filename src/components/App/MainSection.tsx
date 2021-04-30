@@ -112,14 +112,10 @@ export const MainSection = (props: Props)=>{
                         }
                     >
                         <div>
-                            <Typography variant="h4">
-                                <code>
-                                        {dataBlock.text.title}
-                                </code>
+                            <Typography variant="h5">
+                                {dataBlock.text.title}
                             </Typography>
-                            {/*<Typography>
-                                <ReactMarkdown children={dataBlock.text.paragraph} />
-                            </Typography>*/}
+                            
                             <ReactMarkdown>
                                 {dataBlock.text.paragraph}
                             </ReactMarkdown>

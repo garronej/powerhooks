@@ -29,7 +29,7 @@ export const appData: Props = {
             {
                 "title": "try it",
                 "linkUrl": "https://stackblitz.com/edit/react-ts-jkxthr"
-            }
+            },
         ],
         "headerImageUrl": bannerUrl,
         "title": "POWERHOOKS",

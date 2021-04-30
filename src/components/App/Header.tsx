@@ -19,7 +19,6 @@ export type Props = {
     buttons?: {
         title: string;
         linkUrl: string;
-
     }[];
     topBarProps: TopBarProps;
 }
@@ -124,6 +123,7 @@ export const Header = (props: Props)=>{
                     title
                 }
             </Typography>
+
             <Typography variant="h5">
                 {
                     subTitle
