@@ -1,3 +1,7 @@
+### **0.0.37** (2021-04-29)  
+  
+- new version with useClickAway    
+  
 ### **0.0.36** (2021-04-08)  
   
 - Do not remove the states from the url for the cases multiples version of powerhook would cohabit    
