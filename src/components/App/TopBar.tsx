@@ -7,8 +7,6 @@ import UnfoldIcon from '@material-ui/icons/Dehaze';
 import { useNamedState } from "powerhooks/useNamedState";
 import { useConstCallback } from "powerhooks/useConstCallback";
 import { cx } from "tss-react";
-import { useRef } from "react";
-import { useClickOut } from "customHooks/useClickOut";
 import { useClickAway } from "powerhooks/useClickAway";
 
 
@@ -103,9 +101,6 @@ export const TopBar = (props: Props) => {
 
     const { rootRef } = useClickAway(() => setMobileMenuHeight(0));
 
-
-    //const unfoldIconRef = useRef<HTMLDivElement>(null);
-
     const toggleMobileMenu = useConstCallback(() => {
         if (mobileMenuHeight !== 0) {
             setMobileMenuHeight(0);
@@ -126,14 +121,6 @@ export const TopBar = (props: Props) => {
         setMobileMenuHeight(newHeight);
 
     });
-
-
-    /*
-    useClickOut({
-        "refs": [unfoldIconRef],
-        "onClickOut": () => setMobileMenuHeight(0)
-    })
-    */
 
 
     const { classNames } = useClassNames(
