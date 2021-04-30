@@ -11,3 +11,4 @@ export * from "./useWindowInnerSize";
 export * from "./useWithProps";
 export * from "./withProps";
 export * from "./useScopedState";
+export * from "./useClickAway";
