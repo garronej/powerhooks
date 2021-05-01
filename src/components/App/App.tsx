@@ -9,10 +9,10 @@ import type {Props as ReviewSliderProps} from "./ReviewSlider";
 
 
 export type Props = {
-    headerData: HeaderProps;
-    mainSectionData: MainSectionProps["dataBlocks"];
+    headerData?: HeaderProps;
+    mainSectionData?: MainSectionProps["dataBlocks"];
     reviewSliderData?: ReviewSliderProps;
-    footerData: FooterProps;
+    footerData?: FooterProps;
 }
 
 export const App = (props: Props)=>{
@@ -26,25 +26,21 @@ export const App = (props: Props)=>{
     return(
         <>
 
-            <Header
-                {...headerData}
-            />
-
-            <MainSection 
-                dataBlocks={mainSectionData}
-            />
+            {
+                headerData !== undefined && <Header {...headerData} />
+            }
 
             {
-                reviewSliderData === undefined ? <></> : <ReviewSlider {...reviewSliderData}/>
+                mainSectionData !== undefined && <MainSection dataBlocks={mainSectionData} />
             }
-            
 
-            <Footer
-                {...footerData}
-            />
-        
+            {
+                reviewSliderData !== undefined && <ReviewSlider {...reviewSliderData}/>
+            }
 
-            
+            {
+                footerData !== undefined && <Footer {...footerData}/>
+            }
         
          </>
     )
