@@ -1,15 +1,10 @@
 
 import * as reactDom from "react-dom";
-import { ThemeProvider } from "theme/ThemeProvider";
-import {App} from "./components/App/App";
 import {appData} from "data";
+import {HomepageTemplate} from "homepage-template";
 
 
 reactDom.render(
-    <ThemeProvider >
-        <App
-            {...appData}
-        />
-    </ThemeProvider>,
+    <HomepageTemplate {...appData}/>,
     document.getElementById("root")
 );

@@ -9,13 +9,13 @@ import backgroundUrlDark from "assets/header/background-dark.jpg";
 import backgroundUrlLight from "assets/header/background-light.jpg";
 import {ReactComponent as Logo} from "assets/header/logo.svg";
 import bannerUrl from "assets/header/powerhooks_useNamesState.gif";
-import type {Props} from "components/App/App";
+import type {Data} from "homepage-template";
 import { ReactComponent as TwitterSvg } from "assets/svg/twitter.svg";
 import { ReactComponent as YouTubeSvg } from "assets/svg/youTube.svg";
 import { ReactComponent as RedditSvg } from "assets/svg/reddit.svg";
 
-export const appData: Props = {
-    "headerData": {
+export const appData: Data = {
+    "header": {
         "background": {
             "type": "image",
             "colorOrUrlDark": backgroundUrlDark,
@@ -23,39 +23,43 @@ export const appData: Props = {
         },
         "buttons": [
             {
-                "title": "learn more",
-                "linkUrl": "https://docs.powerhooks.dev/"
+                "name": "learn more",
+                "url": "https://docs.powerhooks.dev/"
             },
             {
-                "title": "try it",
-                "linkUrl": "https://stackblitz.com/edit/react-ts-jkxthr"
+                "name": "try it",
+                "url": "https://stackblitz.com/edit/react-ts-jkxthr"
             },
         ],
-        "headerImageUrl": bannerUrl,
+        "imageUrl": bannerUrl,
         "title": "POWERHOOKS",
         "subTitle": "The hooks you wish where React builtins",
         "topBarProps": {
-            "Logo": Logo,
+            "logo": {
+                "LogoSvg": Logo,
+            },
             "githubRepoUrl": "https://github.com/garronej/powerhooks",
-            "items": [
-                {
-                    "name": "documentation",
-                    "url": "https://docs.powerhooks.dev/"
-                },
-                {
-                    "name": "github",
-                    "url": "https://github.com/garronej/powerhooks"
-                }
-
-            ],
+            "menu": {
+                "items": [
+                    {
+                        "name": "documentation",
+                        "url": "https://docs.powerhooks.dev/"
+                    },
+                    {
+                        "name": "github",
+                        "url": "https://github.com/garronej/powerhooks"
+                    }
+                ],
+                "smallDeviceBreakPointPx": 520
+            }
         }
     },
 
-    "mainSectionData": [
+    "mainSection": [
         {
             "imageUrl": useNamedStateSnippet,
             "imageHasFrame": true,
-            "text": {
+            "article": {
                 "title": "useNamedState",
                 "paragraph": `With the original **React.useState** hook,  
 you have to manually set the consistent names **"xyz"** and **"useXyz”**,
@@ -67,7 +71,7 @@ and deconstruct the value and setter using **intellisense**.
         {
             "imageUrl": useGlobalStateSnippet,
             "imageHasFrame": true,
-            "text": {
+            "article": {
                 "title": "useGlobalState",
                 "paragraph": `This hook enables us to have a state persisting across
 reloads that is accessible through out the entire app
@@ -79,7 +83,7 @@ ant this without involving a provider.
         {
             "imageUrl": useConstCallbackSnippet,
             "imageHasFrame": true,
-            "text": {
+            "article": {
                 "title": "useConstCallback",
                 "paragraph": `Each time x 
 and/or y have changed since the previous render **onClick** gets a new reference. 
@@ -94,7 +98,7 @@ yet the values of x ant y are always up to date.`,
         {
             "imageUrl": useCallbackFactoryCodeSnippet,
             "imageHasFrame": true,
-            "text": {
+            "article": {
                 "title": "useCallbackFactory",
                 "paragraph": `Even if **<TodoItem>** uses **React.memo**, each time a 
 item of the list is set to completed every **<TodoItem>** is 
@@ -106,8 +110,8 @@ completed without re-rendering every items.`,
             }
         }
     ],
-    "reviewSliderData": undefined,
-    "footerData": {
+    
+    "footer": {
         "leftItems": [
             {
                 "name": "Documentation",
