@@ -3,7 +3,7 @@ import type React from "react";
 import { useState } from "react";
 import { Evt } from "evt";
 import { useEvt } from "evt/hooks";
-import { id } from "evt/tools/typeSafety/id";
+import { id } from "tsafe/id";
 import { useConstCallback } from "./useConstCallback";
 import memoizeWithNonExportableTypings from "memoizee";
 const memoize: <F extends (...args: any[]) => any>(f: F)=> F = memoizeWithNonExportableTypings;

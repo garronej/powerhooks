@@ -1,6 +1,6 @@
 
 import { useGuaranteedMemo } from "./useGuaranteedMemo";
-import { objectKeys } from "evt/tools/typeSafety/objectKeys";
+import { objectKeys } from "tsafe/objectKeys";
 import { withProps } from "./withProps";
 
 /**

@@ -1,6 +1,6 @@
 import { useRef, useState } from "react";
 import memoize from "memoizee";
-import { id } from "evt/tools/typeSafety/id";
+import { id } from "tsafe/id";
 
 export type CallbackFactory<
     FactoryArgs extends unknown[],
