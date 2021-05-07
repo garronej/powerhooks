@@ -4,7 +4,6 @@ import { Evt } from "evt";
 import type { StatefulEvt } from "evt";
 import { useEvt } from "evt/hooks";
 import { useConstCallback } from "./useConstCallback";
-import { assert } from "evt/tools/typeSafety/assert";
 import { overwriteReadonlyProp } from "evt/tools/typeSafety/overwriteReadonlyProp";
 import type { UseNamedStateReturnType } from "./useNamedState";
 import { typeGuard } from "evt/tools/typeSafety/typeGuard";
@@ -136,10 +135,15 @@ export function createUseGlobalState<T, Name extends string>(
         undefined :
         getPersistentStorage({
             "mechanism": persistance,
-            "key": (
-                assert(Object.keys(globalStates).indexOf(name) < 0, `${name} already in use`),
-                `${prefix}${name}`
-            )
+            "key": (()=>{
+
+                if( Object.keys(globalStates).includes(name) ){
+                    console.warn(`${name} already in use`);
+                }
+
+                return `${prefix}${name}`;
+
+            })()
         });
 
     if( persistentStorage !== undefined ){
