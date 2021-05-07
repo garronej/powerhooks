@@ -1,3 +1,9 @@
+### **0.0.38** (2021-05-07)  
+  
+- Use tsafe  
+- Do not throw when global state already in use, juste console.warn  
+- indexed useClickAway    
+  
 ### **0.0.37** (2021-04-29)  
   
 - new version with useClickAway    
