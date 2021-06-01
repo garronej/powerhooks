@@ -1,3 +1,7 @@
+### **0.0.39** (2021-06-01)  
+  
+- Export reference to type StatefulEvt    
+  
 ### **0.0.38** (2021-05-07)  
   
 - Use tsafe  
