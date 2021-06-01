@@ -11,6 +11,8 @@ import { capitalize } from "./tools/capitalize";
 import memoize from "memoizee";
 import { urlSearchParams } from "./tools/urlSearchParams";
 
+export type { StatefulEvt };
+
 export const globalStates: Readonly<Record<string, unknown>> = {};
 
 const persistedGlobalStateNames= new Set<string>();
