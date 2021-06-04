@@ -1,3 +1,8 @@
+### **0.0.40** (2021-06-04)  
+  
+- ZoomProvider: Attempt at not forcing reload when portrait to landscape  
+- ZoomProvider: Optional force screen rotation in portrait mode    
+  
 ### **0.0.39** (2021-06-01)  
   
 - Export reference to type StatefulEvt    
