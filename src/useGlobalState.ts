@@ -198,6 +198,9 @@ export function createUseGlobalState<T, Name extends string>(
             })()
         );
 
+        //Susceptible to have one handler attached for every component.
+        evtXyz.setMaxHandlers(Infinity);
+
         if (storeStateInPersistentStorage !== undefined) {
 
             evtXyz.attach(storeStateInPersistentStorage);
@@ -207,6 +210,7 @@ export function createUseGlobalState<T, Name extends string>(
         return evtXyz;
 
     });
+
 
     Object.defineProperty(
         globalStates,
