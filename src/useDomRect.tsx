@@ -6,7 +6,7 @@ import { useEvt } from "evt/hooks";
 import { useWindowInnerSize } from "./useWindowInnerSize";
 import { Evt } from "evt";
 import ResizeObserver from "./tools/ResizeObserver";
-import { id } from "tsafe/id";
+import { pick } from "./tools/pick";
 
 //TODO: only re-renders when width or height change.
 
@@ -50,15 +50,17 @@ export function useDomRect<T extends HTMLElement = any>() {
                 .attach(
                     () => {
 
-                        const factor = referenceWidth === undefined ? 1 : (referenceWidth / window.innerWidth);
+                        const domRect = pick(htmlElement.getBoundingClientRect(), domRectKeys);
 
-                        setDomRect(
-                            Object.fromEntries(
-                                Object.entries(htmlElement.getBoundingClientRect())
-                                    .filter(([key]) => id<readonly string[]>(domRectKeys).includes(key))
-                                    .map(([key, value]) => [key, value * factor])
-                            ) as any
-                        );
+                        if (referenceWidth !== undefined) {
+
+                            const factor = referenceWidth === undefined ? 1 : (referenceWidth / window.innerWidth);
+
+                            domRectKeys.forEach(key => domRect[key] *= factor);
+
+                        }
+
+                        setDomRect(domRect);
 
                     }
                 );
