@@ -6,11 +6,13 @@ import { useEvt } from "evt/hooks";
 import { useWindowInnerSize } from "./useWindowInnerSize";
 import { Evt } from "evt";
 import ResizeObserver from "./tools/ResizeObserver";
-import { useEffectOnValueChange } from "./useEffectOnValueChange";
+import { id } from "tsafe/id";
 
 //TODO: only re-renders when width or height change.
 
-export type PartialDomRect = Pick<DOMRectReadOnly, "bottom" | "right" | "top" | "left" | "height" | "width">;
+const domRectKeys= ["bottom", "right", "top", "left", "height", "width"] as const;
+
+export type PartialDomRect = Pick<DOMRectReadOnly, typeof domRectKeys[number]>;
 
 // https://gist.github.com/morajabi/523d7a642d8c0a2f71fcfa0d8b3d2846
 // https://developer.mozilla.org/en-US/docs/Web/API/Element/getBoundingClientRect
@@ -53,7 +55,7 @@ export function useDomRect<T extends HTMLElement = any>() {
                         setDomRect(
                             Object.fromEntries(
                                 Object.entries(htmlElement.getBoundingClientRect())
-                                    .filter(([key]) => ["bottom", "right", "top", "left", "height", "width"].includes(key))
+                                    .filter(([key]) => id<readonly string[]>(domRectKeys).includes(key))
                                     .map(([key, value]) => [key, value * factor])
                             ) as any
                         );
@@ -108,18 +110,6 @@ export function ZoomProvider(props: ZoomProviderProps) {
 
     const isDeviceScreenInLandscapeMode = windowInnerWidth > windowInnerHeight;
 
-    useEffectOnValueChange(
-        () => {
-
-            if (portraitModeUnsupportedMessage === undefined) {
-                return;
-            }
-
-            window.location.reload();
-
-        },
-        [isDeviceScreenInLandscapeMode]
-    );
 
     const zoomFactor = referenceWidth !== undefined ?
         windowInnerWidth / referenceWidth :
@@ -127,36 +117,35 @@ export function ZoomProvider(props: ZoomProviderProps) {
 
     return (
         <context.Provider value={value}>
-            <div
-                about={`powerhooks ZoomProvider${zoomFactor === undefined ? " (disabled)" : ""}`}
-                style={{
-                    "height": "100vh",
-                    "overflow": "hidden"
-                }}
-            >
-                {
-                    zoomFactor !== undefined ?
-                        <div
-                            about={`powerhooks ZoomProvider inner`}
-                            style={{
-                                "transform": `scale(${zoomFactor})`,
-                                "transformOrigin": "0 0",
-                                "width": referenceWidth,
-                                "height": windowInnerHeight / zoomFactor,
-                                "overflow": "hidden"
-                            }}
-                        >
-
-                            {
-                                !isDeviceScreenInLandscapeMode && portraitModeUnsupportedMessage !== undefined ?
-                                    portraitModeUnsupportedMessage :
-                                    children
-                            }
-                        </div>
-                        :
-                        children
-                }
-            </div>
+            {
+                !isDeviceScreenInLandscapeMode && portraitModeUnsupportedMessage !== undefined ?
+                    portraitModeUnsupportedMessage :
+                    <div
+                        about={`powerhooks ZoomProvider${zoomFactor === undefined ? " (disabled)" : ""}`}
+                        style={{
+                            "height": "100vh",
+                            "overflow": "hidden"
+                        }}
+                    >
+                        {
+                            zoomFactor !== undefined ?
+                                <div
+                                    about={`powerhooks ZoomProvider inner`}
+                                    style={{
+                                        "transform": `scale(${zoomFactor})`,
+                                        "transformOrigin": "0 0",
+                                        "width": referenceWidth,
+                                        "height": windowInnerHeight / zoomFactor,
+                                        "overflow": "hidden"
+                                    }}
+                                >
+                                    {children}
+                                </div>
+                                :
+                                children
+                        }
+                    </div>
+            }
         </context.Provider>
     );
 
