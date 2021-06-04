@@ -1,4 +1,4 @@
-
+import "minimal-polyfills/Object.fromEntries";
 import { useMemo, createContext } from "react";
 import type { ReactNode } from "react";
 import { useState, useRef, useContext, useEffect } from "react";
@@ -6,6 +6,7 @@ import { useEvt } from "evt/hooks";
 import { useWindowInnerSize } from "./useWindowInnerSize";
 import { Evt } from "evt";
 import ResizeObserver from "./tools/ResizeObserver";
+import { useEffectOnValueChange } from "./useEffectOnValueChange";
 
 //TODO: only re-renders when width or height change.
 
@@ -47,36 +48,15 @@ export function useDomRect<T extends HTMLElement = any>() {
                 .attach(
                     () => {
 
-                        /*
-                        const { ...boundingClientRect } = htmlElement.getBoundingClientRect();
-                        if (referenceWidth !== undefined) {
-                            (["bottom", "right", "top", "left", "height", "width"] as const)
-                                .forEach(key => boundingClientRect[key] = (boundingClientRect[key] / ( window.innerWidth / referenceWidth)));
-                        }
-                        setDomRect(boundingClientRect);
-                        */
+                        const factor = referenceWidth === undefined ? 1 : (referenceWidth / window.innerWidth);
 
-
-                        const { bottom, right, top, left, height, width } = htmlElement.getBoundingClientRect();
-
-                        if (referenceWidth === undefined) {
-
-                            setDomRect({ bottom, right, top, left, height, width });
-
-                        } else {
-
-                            const factor = window.innerWidth / referenceWidth;
-
-                            setDomRect({
-                                "bottom": bottom / factor,
-                                "right": right / factor,
-                                "top": top / factor,
-                                "left": left / factor,
-                                "height": height / factor,
-                                "width": width / factor
-                            });
-
-                        }
+                        setDomRect(
+                            Object.fromEntries(
+                                Object.entries(htmlElement.getBoundingClientRect())
+                                    .filter(([key]) => ["bottom", "right", "top", "left", "height", "width"].includes(key))
+                                    .map(([key, value]) => [key, value * factor])
+                            ) as any
+                        );
 
                     }
                 );
@@ -91,18 +71,55 @@ export function useDomRect<T extends HTMLElement = any>() {
 
 const context = createContext<{ referenceWidth?: number; }>({});
 
-export type Props = {
-    referenceWidth: number | undefined;
-    children: ReactNode;
-};
+export type ZoomProviderProps = ZoomProviderProps.Enabled | ZoomProviderProps.Disabled;
+export declare namespace ZoomProviderProps {
 
-export function ZoomProvider(props: Props) {
+    type WithChildren = {
+        children: ReactNode;
+    };
+
+    type Enabled = {
+        referenceWidth: number;
+        /** 
+         * Message to display when portrait mode, example: 
+         *    This app isn't compatible with landscape mode yet,
+         *    please enable the rotation sensor and flip your phone.
+         */
+        portraitModeUnsupportedMessage?: ReactNode;
+    } & WithChildren;
+
+    type Disabled = {
+        referenceWidth?: undefined;
+    } & WithChildren;
+
+}
+
+export function ZoomProvider(props: ZoomProviderProps) {
 
     const { referenceWidth, children } = props;
 
     const { windowInnerWidth, windowInnerHeight } = useWindowInnerSize();
 
-    const value = useMemo(() => ({ referenceWidth }), [referenceWidth]);
+    const { portraitModeUnsupportedMessage } = "portraitModeUnsupportedMessage" in props ?
+        props :
+        { "portraitModeUnsupportedMessage": undefined };
+
+    const value = useMemo(() => ({ referenceWidth }), [referenceWidth ?? Object]);
+
+    const isDeviceScreenInLandscapeMode = windowInnerWidth > windowInnerHeight;
+
+    useEffectOnValueChange(
+        () => {
+
+            if (portraitModeUnsupportedMessage === undefined) {
+                return;
+            }
+
+            window.location.reload();
+
+        },
+        [isDeviceScreenInLandscapeMode]
+    );
 
     const zoomFactor = referenceWidth !== undefined ?
         windowInnerWidth / referenceWidth :
@@ -129,7 +146,12 @@ export function ZoomProvider(props: Props) {
                                 "overflow": "hidden"
                             }}
                         >
-                            {children}
+
+                            {
+                                !isDeviceScreenInLandscapeMode && portraitModeUnsupportedMessage !== undefined ?
+                                    portraitModeUnsupportedMessage :
+                                    children
+                            }
                         </div>
                         :
                         children

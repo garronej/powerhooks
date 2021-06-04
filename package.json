@@ -1,6 +1,6 @@
 {
     "name": "powerhooks",
-    "version": "0.0.39",
+    "version": "0.0.40",
     "description": "A collection of powerful react hooks",
     "repository": {
         "type": "git",
@@ -36,6 +36,7 @@
         "evt": "2.0.0-beta.15",
         "memoizee": "^0.4.15",
         "resize-observer-polyfill": "^1.5.1",
-        "tsafe": "^0.1.0"
+        "tsafe": "^0.1.0",
+        "minimal-polyfills": "^2.2.1"
     }
 }
