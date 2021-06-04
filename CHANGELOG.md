@@ -1,3 +1,7 @@
+### **0.0.41** (2021-06-04)  
+  
+- Disable memory leak detection    
+  
 ### **0.0.40** (2021-06-04)  
   
 - ZoomProvider: Attempt at not forcing reload when portrait to landscape  
