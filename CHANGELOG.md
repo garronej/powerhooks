@@ -1,3 +1,7 @@
+### **0.0.42** (2021-06-04)  
+  
+- Fix useDomRect    
+  
 ### **0.0.41** (2021-06-04)  
   
 - Disable memory leak detection    
