@@ -1,7 +1,9 @@
 import { useEffect, useRef } from "react";
 
+export type Destructor = () => void;
+
 export function useEffectOnValueChange<T extends readonly [value: any, ...moreValues: any[]]>(
-    effect: (...args: T) => void,
+    effect: (...args: T) => (void | Destructor),
     values: T
 ): void {
 
@@ -14,9 +16,9 @@ export function useEffectOnValueChange<T extends readonly [value: any, ...moreVa
             return;
         }
 
-        effect(...values);
+        return effect(...values);
 
-    // eslint-disable-next-line react-hooks/exhaustive-deps
+        // eslint-disable-next-line react-hooks/exhaustive-deps
     }, values);
 
 }
