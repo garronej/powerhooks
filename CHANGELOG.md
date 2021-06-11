@@ -1,3 +1,7 @@
+## **0.1.0** (2021-06-11)  
+  
+  
+  
 ### **0.0.43** (2021-06-08)  
   
 - Allow destructor in useEffectOnValueChange    
