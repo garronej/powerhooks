@@ -6,11 +6,11 @@ import { useEvt } from "evt/hooks";
 import { useWindowInnerSize } from "./useWindowInnerSize";
 import { Evt } from "evt";
 import ResizeObserver from "./tools/ResizeObserver";
-import { pick } from "./tools/pick";
+import { pick } from "./tools/pick";
 
 //TODO: only re-renders when width or height change.
 
-const domRectKeys= ["bottom", "right", "top", "left", "height", "width"] as const;
+const domRectKeys = ["bottom", "right", "top", "left", "height", "width"] as const;
 
 export type PartialDomRect = Pick<DOMRectReadOnly, typeof domRectKeys[number]>;
 
@@ -120,7 +120,11 @@ export function ZoomProvider(props: ZoomProviderProps) {
     return (
         <context.Provider value={value}>
             {
-                !isDeviceScreenInLandscapeMode && portraitModeUnsupportedMessage !== undefined ?
+                (
+                    !isDeviceScreenInLandscapeMode &&
+                    portraitModeUnsupportedMessage !== undefined &&
+                    zoomFactor !== undefined
+                ) ?
                     portraitModeUnsupportedMessage :
                     <div
                         about={`powerhooks ZoomProvider${zoomFactor === undefined ? " (disabled)" : ""}`}
