@@ -16,6 +16,10 @@ export function useWindowInnerSize() {
 
     useRerenderOnStateChange(evtInnerWidth);
 
-    return evtInnerWidth.state;
+    const { windowInnerWidth, windowInnerHeight } = evtInnerWidth.state;
+
+    const isLandscapeOrientation = windowInnerWidth > windowInnerHeight;
+
+    return { windowInnerWidth, windowInnerHeight, isLandscapeOrientation };
 
 }

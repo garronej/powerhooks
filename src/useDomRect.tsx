@@ -102,16 +102,13 @@ export function ZoomProvider(props: ZoomProviderProps) {
 
     const { referenceWidth, children } = props;
 
-    const { windowInnerWidth, windowInnerHeight } = useWindowInnerSize();
+    const { windowInnerWidth, windowInnerHeight, isLandscapeOrientation } = useWindowInnerSize();
 
     const { portraitModeUnsupportedMessage } = "portraitModeUnsupportedMessage" in props ?
         props :
         { "portraitModeUnsupportedMessage": undefined };
 
     const value = useMemo(() => ({ referenceWidth }), [referenceWidth ?? Object]);
-
-    const isDeviceScreenInLandscapeMode = windowInnerWidth > windowInnerHeight;
-
 
     const zoomFactor = referenceWidth !== undefined ?
         windowInnerWidth / referenceWidth :
@@ -121,7 +118,7 @@ export function ZoomProvider(props: ZoomProviderProps) {
         <context.Provider value={value}>
             {
                 (
-                    !isDeviceScreenInLandscapeMode &&
+                    !isLandscapeOrientation &&
                     portraitModeUnsupportedMessage !== undefined &&
                     zoomFactor !== undefined
                 ) ?
