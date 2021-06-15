@@ -1,3 +1,7 @@
+### **0.1.2** (2021-06-15)  
+  
+- ZoomProvider, protrait mode message only if zoom provider enabled    
+  
 ### **0.1.1** (2021-06-11)  
   
   
