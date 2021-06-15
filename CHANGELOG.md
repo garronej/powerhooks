@@ -1,3 +1,7 @@
+### **0.1.3** (2021-06-15)  
+  
+- Add isLandscapeOrientation to useWindowInnerSize    
+  
 ### **0.1.2** (2021-06-15)  
   
 - ZoomProvider, protrait mode message only if zoom provider enabled    
