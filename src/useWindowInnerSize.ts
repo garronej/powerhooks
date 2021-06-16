@@ -1,25 +1,21 @@
-import { Evt } from "evt";
-import { useEvt } from "evt/hooks/useEvt";
-import { useRerenderOnStateChange } from "evt/hooks/useRerenderOnStateChange";
 
-export function useWindowInnerSize() {
+import { useWindowInnerSize as useWindowAbsoluteInnerSize } from "./tools/useWindowInnerSize";
 
-    const evtInnerWidth = useEvt(ctx =>
-        Evt.from(ctx, window, "resize")
-            .toStateful()
-            .pipe(() => [{
-                "windowInnerWidth": window.innerWidth,
-                "windowInnerHeight": window.innerHeight
-            }]),
-        []
-    );
+import { getZoomFactor, useZoomProviderReferenceWidth } from "./ZoomProvider";
 
-    useRerenderOnStateChange(evtInnerWidth);
 
-    const { windowInnerWidth, windowInnerHeight } = evtInnerWidth.state;
+/** Takes into account the ZoomProvider */
+export function useWindowInnerSize(){
 
-    const isLandscapeOrientation = windowInnerWidth > windowInnerHeight;
+	let { windowInnerWidth, windowInnerHeight, isLandscapeOrientation } = useWindowAbsoluteInnerSize();
 
-    return { windowInnerWidth, windowInnerHeight, isLandscapeOrientation };
+	const { referenceWidth } = useZoomProviderReferenceWidth();
+
+	const { zoomFactor } = getZoomFactor({ referenceWidth, windowInnerWidth });
+
+	windowInnerWidth /= zoomFactor;
+	windowInnerHeight /= zoomFactor;
+
+	return { windowInnerWidth, windowInnerHeight, isLandscapeOrientation };
 
 }

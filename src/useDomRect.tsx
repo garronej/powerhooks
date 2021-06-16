@@ -1,12 +1,9 @@
-import "minimal-polyfills/Object.fromEntries";
-import { useMemo, createContext } from "react";
-import type { ReactNode } from "react";
-import { useState, useRef, useContext, useEffect } from "react";
+import { useState, useRef, useEffect } from "react";
 import { useEvt } from "evt/hooks";
-import { useWindowInnerSize } from "./useWindowInnerSize";
 import { Evt } from "evt";
 import ResizeObserver from "./tools/ResizeObserver";
 import { pick } from "./tools/pick";
+import { useZoomProviderReferenceWidth, getZoomFactor } from "./ZoomProvider";
 
 //TODO: only re-renders when width or height change.
 
@@ -36,7 +33,7 @@ export function useDomRect<T extends HTMLElement = any>() {
         [ref.current ?? {}]
     );
 
-    const { referenceWidth } = useContext(context);
+    const { referenceWidth } = useZoomProviderReferenceWidth();
 
     useEvt(
         ctx => {
@@ -54,9 +51,12 @@ export function useDomRect<T extends HTMLElement = any>() {
 
                         if (referenceWidth !== undefined) {
 
-                            const factor = referenceWidth === undefined ? 1 : (referenceWidth / window.innerWidth);
+                            const { zoomFactor } = getZoomFactor({
+                                referenceWidth,
+                                "windowInnerWidth": window.innerWidth
+                            });
 
-                            domRectKeys.forEach(key => domRect[key] *= factor);
+                            domRectKeys.forEach(key => domRect[key] /= zoomFactor);
 
                         }
 
@@ -70,86 +70,5 @@ export function useDomRect<T extends HTMLElement = any>() {
     );
 
     return { domRect, ref };
-
-}
-
-const context = createContext<{ referenceWidth?: number; }>({});
-
-export type ZoomProviderProps = ZoomProviderProps.Enabled | ZoomProviderProps.Disabled;
-export declare namespace ZoomProviderProps {
-
-    type WithChildren = {
-        children: ReactNode;
-    };
-
-    type Enabled = {
-        referenceWidth: number;
-        /** 
-         * Message to display when portrait mode, example: 
-         *    This app isn't compatible with landscape mode yet,
-         *    please enable the rotation sensor and flip your phone.
-         */
-        portraitModeUnsupportedMessage?: ReactNode;
-    } & WithChildren;
-
-    type Disabled = {
-        referenceWidth?: undefined;
-    } & WithChildren;
-
-}
-
-export function ZoomProvider(props: ZoomProviderProps) {
-
-    const { referenceWidth, children } = props;
-
-    const { windowInnerWidth, windowInnerHeight, isLandscapeOrientation } = useWindowInnerSize();
-
-    const { portraitModeUnsupportedMessage } = "portraitModeUnsupportedMessage" in props ?
-        props :
-        { "portraitModeUnsupportedMessage": undefined };
-
-    const value = useMemo(() => ({ referenceWidth }), [referenceWidth ?? Object]);
-
-    const zoomFactor = referenceWidth !== undefined ?
-        windowInnerWidth / referenceWidth :
-        undefined;
-
-    return (
-        <context.Provider value={value}>
-            {
-                (
-                    !isLandscapeOrientation &&
-                    portraitModeUnsupportedMessage !== undefined &&
-                    zoomFactor !== undefined
-                ) ?
-                    portraitModeUnsupportedMessage :
-                    <div
-                        about={`powerhooks ZoomProvider${zoomFactor === undefined ? " (disabled)" : ""}`}
-                        style={{
-                            "height": "100vh",
-                            "overflow": "hidden"
-                        }}
-                    >
-                        {
-                            zoomFactor !== undefined ?
-                                <div
-                                    about={`powerhooks ZoomProvider inner`}
-                                    style={{
-                                        "transform": `scale(${zoomFactor})`,
-                                        "transformOrigin": "0 0",
-                                        "width": referenceWidth,
-                                        "height": windowInnerHeight / zoomFactor,
-                                        "overflow": "hidden"
-                                    }}
-                                >
-                                    {children}
-                                </div>
-                                :
-                                children
-                        }
-                    </div>
-            }
-        </context.Provider>
-    );
 
 }

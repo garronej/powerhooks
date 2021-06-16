@@ -12,3 +12,4 @@ export * from "./useWithProps";
 export * from "./withProps";
 export * from "./useScopedState";
 export * from "./useClickAway";
+export * from "./ZoomProvider";
