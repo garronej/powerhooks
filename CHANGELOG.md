@@ -1,3 +1,7 @@
+### **0.1.4** (2021-06-16)  
+  
+- Mesurement hooks takes into account the zoom provider    
+  
 ### **0.1.3** (2021-06-15)  
   
 - Add isLandscapeOrientation to useWindowInnerSize    
