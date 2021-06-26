@@ -155,8 +155,11 @@ export function createUseGlobalState<T, Name extends string>(
     }
 
     //NOTE: We want to clean the url asap so we don't put it in the 
-    // evt getter.
-    const urlSearchParam = getStatesFromUrlSearchParams<T>({ name });
+    // evt getter... but we don't clean it up because powerhooks version clash...TODO
+    const urlSearchParam =
+        typeof location === "undefined" ?
+            { "wasPresent": false as const } : 
+            getStatesFromUrlSearchParams<T>({ name });
 
     const getEvtXyz = memoize(() => {
 
