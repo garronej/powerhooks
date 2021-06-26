@@ -1,3 +1,7 @@
+### **0.1.5** (2021-06-26)  
+  
+- Node compat    
+  
 ### **0.1.4** (2021-06-16)  
   
 - Mesurement hooks takes into account the zoom provider    
