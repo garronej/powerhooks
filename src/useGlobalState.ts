@@ -11,11 +11,11 @@ import { capitalize } from "./tools/capitalize";
 import memoize from "memoizee";
 import { urlSearchParams } from "./tools/urlSearchParams";
 
-export type { StatefulEvt };
+export type { StatefulEvt };
 
 export const globalStates: Readonly<Record<string, unknown>> = {};
 
-const persistedGlobalStateNames= new Set<string>();
+const persistedGlobalStateNames = new Set<string>();
 
 function stringify(obj: unknown): string {
     return JSON.stringify([obj]);
@@ -52,7 +52,7 @@ const { injectGlobalStatesInSearchParams, getStatesFromUrlSearchParams } = (() =
 
     const getUnparsedStatesFromUrlSearchParams = memoize(() => {
 
-        const { 
+        const {
             //newLocationSearch, 
             values: unparsedStates
         } = urlSearchParams.retrieve({ "locationSearch": location.search, prefix })
@@ -65,7 +65,7 @@ const { injectGlobalStatesInSearchParams, getStatesFromUrlSearchParams } = (() =
         );
         */
 
-        return { unparsedStates };
+        return { unparsedStates };
 
     })
 
@@ -75,11 +75,11 @@ const { injectGlobalStatesInSearchParams, getStatesFromUrlSearchParams } = (() =
         }
     ): { wasPresent: false; } | { wasPresent: true; state: T; } {
 
-        const { name } = params;
+        const { name } = params;
 
         const { unparsedStates } = getUnparsedStatesFromUrlSearchParams();
 
-        if (!( name in unparsedStates)) {
+        if (!(name in unparsedStates)) {
             return { "wasPresent": false };
         }
 
@@ -133,22 +133,42 @@ export function createUseGlobalState<T, Name extends string>(
 
     const { persistance = "localStorage" } = params ?? {};
 
-    const persistentStorage = persistance === false ?
-        undefined :
-        getPersistentStorage({
-            "mechanism": persistance,
-            "key": (()=>{
+    const persistentStorage =
+        persistance === false ?
+            undefined :
+            (() => {
 
-                if( Object.keys(globalStates).includes(name) ){
-                    console.warn(`${name} already in use`);
+                const result = getPersistentStorage({
+                    "mechanism": persistance,
+                    "key": (() => {
+
+                        if (Object.keys(globalStates).includes(name)) {
+                            console.warn(`${name} already in use`);
+                        }
+
+                        return `${prefix}${name}`;
+
+                    })()
+                });
+
+                if( !result.isSupported ){
+
+                    console.warn([
+                        `powerhooks warning, persistance mechanism ${persistance}`,
+                        `is not supported by the current runtime, state of ${name}`,
+                        `will not be saved`
+                    ].join(" "));
+
+                    return undefined;
+
                 }
 
-                return `${prefix}${name}`;
+                return result.persistanceStorage;
 
-            })()
-        });
+            })();
 
-    if( persistentStorage !== undefined ){
+
+    if (persistentStorage !== undefined) {
 
         persistedGlobalStateNames.add(name);
 
@@ -158,7 +178,7 @@ export function createUseGlobalState<T, Name extends string>(
     // evt getter... but we don't clean it up because powerhooks version clash...TODO
     const urlSearchParam =
         typeof location === "undefined" ?
-            { "wasPresent": false as const } : 
+            { "wasPresent": false as const } :
             getStatesFromUrlSearchParams<T>({ name });
 
     const getEvtXyz = memoize(() => {
@@ -327,13 +347,31 @@ const { getPersistentStorage } = (() => {
             key: string;
             mechanism: "localStorage" | "cookie"
         }
-    ): PersistentStorage {
+    ): { isSupported: false } | { isSupported: true, persistanceStorage: PersistentStorage; } {
 
         const { key, mechanism } = params;
 
         switch (mechanism) {
-            case "localStorage": return getLocalStorageImplementationOfPersistantStorage({ key });
-            case "cookie": return getCookieImplementationOfPersistantStorage({ key });
+            case "localStorage":
+                return typeof localStorage === "undefined" ?
+                    { "isSupported": false } :
+                    {
+                        "isSupported": true,
+                        "persistanceStorage": getLocalStorageImplementationOfPersistantStorage({ key })
+                    };
+            case "cookie":
+                return (
+                    typeof document === "undefined" ||
+                    !(
+                        document instanceof Object &&
+                        "cookie" in document
+                    )
+                ) ?
+                    { "isSupported": false } :
+                    {
+                        "isSupported": true,
+                        "persistanceStorage": getCookieImplementationOfPersistantStorage({ key })
+                    };
         }
     }
 
