@@ -1,113 +1,124 @@
 
 
-import { useContext, useMemo, createContext } from "react";
+import { useEffect, useMemo } from "react";
 import type { ReactNode } from "react";
-import { useWindowInnerSize as useWindowAbsoluteInnerSize } from "./tools/useWindowInnerSize";
+import { useWindowInnerSize as useRealWindowInnerSize } from "./tools/useWindowInnerSize";
+import { useBrowserFontSizeFactor as useRealBrowserFontSizeFactor } from "./tools/useBrowserFontSizeFactor";
+import { createUseGlobalState } from "./useGlobalState";
+import { id } from "tsafe/id";
 
-const context = createContext<{ referenceWidth?: number; }>({});
+export type ZoomConfig = {
+	targetWindowInnerWidth: number;
+	targetWindowInnerHeight?: number;
+	targetBrowserFontSizeFactor: number;
+	fallbackNode?: ReactNode;
+};
 
-export type ZoomProviderProps = ZoomProviderProps.Enabled | ZoomProviderProps.Disabled;
-export declare namespace ZoomProviderProps {
+export type ZoomProviderProps = {
+	getConfig(
+		props: {
+			windowInnerWidth: number;
+			browserFontSizeFactor: number;
+		}
+	): ZoomConfig;
+	children: ReactNode;
+};
 
-	type WithChildren = {
-		children: ReactNode;
-	};
+export type ZoomState = ZoomConfig & {
+	targetWindowInnerHeight: number;
+	zoomFactor: number;
+};
 
-	type Enabled = {
-		referenceWidth: number;
-		/** 
-		 * Message to display when portrait mode, example: 
-		 *    This app isn't compatible with landscape mode yet,
-		 *    please enable the rotation sensor and flip your phone.
-		 */
-		portraitModeUnsupportedMessage?: ReactNode;
-	} & WithChildren;
+export const { useZoomState, evtZoomState } = createUseGlobalState(
+	"zoomState",
+	id<ZoomState | undefined>(undefined),
+	{ "persistance": false }
+);
 
-	type Disabled = {
-		referenceWidth?: undefined;
-	} & WithChildren;
-
-}
-
-export function useZoomProviderReferenceWidth() {
-
-	const { referenceWidth } = useContext(context);
-	return { referenceWidth };
-
-}
-
-export function getZoomFactor(
-	params: {
-		referenceWidth: number | undefined;
-		windowInnerWidth: number;
-	}
-) {
-
-	const { referenceWidth, windowInnerWidth } = params;
-
-
-	const zoomFactor = referenceWidth !== undefined ?
-		windowInnerWidth / referenceWidth :
-		1;
-
-	return { zoomFactor };
-
-}
-
+/**
+ * WARNING: We assumes that html element font-size is not defined
+ * or defined in percentages.
+ */
 export function ZoomProvider(props: ZoomProviderProps) {
 
-	const { referenceWidth, children } = props;
+	const { getConfig, children } = props;
 
-	const { 
-		windowInnerWidth, 
-		windowInnerHeight, 
-		isLandscapeOrientation 
-	} = useWindowAbsoluteInnerSize();
+	const {
+		windowInnerWidth,
+		windowInnerHeight,
+	} = useRealWindowInnerSize();
 
-	const { portraitModeUnsupportedMessage } = "portraitModeUnsupportedMessage" in props ?
-		props :
-		{ "portraitModeUnsupportedMessage": undefined };
+	const { browserFontSizeFactor } = useRealBrowserFontSizeFactor();
 
-	const value = useMemo(() => ({ referenceWidth }), [referenceWidth ?? Object]);
+	const { zoomState } = useMemo(
+		() => {
 
-	const { zoomFactor } = getZoomFactor({ referenceWidth, windowInnerWidth })
+			const zoomConfig = getConfig({ windowInnerWidth, browserFontSizeFactor });
+
+			const zoomFactor = windowInnerWidth / zoomConfig.targetWindowInnerWidth;
+
+			const zoomState: ZoomState = {
+				...zoomConfig,
+				zoomFactor,
+				"targetWindowInnerHeight":
+					zoomConfig.targetWindowInnerHeight ??
+					(windowInnerHeight / zoomFactor)
+			};
+
+			evtZoomState.state = zoomState;
+
+			return { zoomState };
+
+		},
+		[windowInnerWidth, windowInnerHeight, browserFontSizeFactor]
+	);
+
+	useEffect(
+		() => {
+
+			//NOTE: We assert the font size is defined in percent 
+			//or not defined. We have no way to check it so we make
+			//it a requirement to use the zoom provider.
+
+			const rootElement = document.querySelector("html")!;
+
+			const rootElementFontSizePx =
+				parseInt(
+					window.getComputedStyle(rootElement, null)
+						.getPropertyValue("font-size")
+						.replace(/px$/, "")
+				);
+
+			//Cross multiplication
+			//100     						16 * browserFontSizeFactor;
+			//rootElementFontSizeInPercent  rootElementFontSizePx
+
+			const rootElementFontSizeInPercent = (100 * rootElementFontSizePx) / (16 * browserFontSizeFactor);
+
+			rootElement.style.fontSize = `${16 * (rootElementFontSizeInPercent / 100) * zoomState.targetBrowserFontSizeFactor}px`;
+
+		},
+		[browserFontSizeFactor, zoomState.targetBrowserFontSizeFactor]
+	);
 
 	return (
-		<context.Provider value={value}>
-			{
-				(
-					!isLandscapeOrientation &&
-					portraitModeUnsupportedMessage !== undefined &&
-					referenceWidth !== undefined
-				) ?
-					portraitModeUnsupportedMessage :
-					<div
-						about={`powerhooks ZoomProvider${referenceWidth === undefined ? " (disabled)" : ""}`}
-						style={{
-							"height": "100vh",
-							"overflow": "hidden"
-						}}
-					>
-						{
-							referenceWidth !== undefined ?
-								<div
-									about={`powerhooks ZoomProvider inner`}
-									style={{
-										"transform": `scale(${zoomFactor})`,
-										"transformOrigin": "0 0",
-										"width": referenceWidth,
-										"height": windowInnerHeight / zoomFactor,
-										"overflow": "hidden"
-									}}
-								>
-									{children}
-								</div>
-								:
-								children
-						}
-					</div>
-			}
-		</context.Provider>
+		<div
+			about={`powerhooks ZoomProvider outer wrapper`}
+			style={{ "height": "100vh", "overflow": "hidden" }}
+		>
+			<div
+				about={`powerhooks ZoomProvider inner wrapper`}
+				style={{
+					"transform": `scale(${zoomState.zoomFactor})`,
+					"transformOrigin": "0 0",
+					"width": zoomState.targetWindowInnerWidth,
+					"height": zoomState.targetWindowInnerHeight,
+					"overflow": "hidden"
+				}}
+			>
+				{children}
+			</div>
+		</div>
 	);
 
 }

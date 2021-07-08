@@ -1,21 +1,47 @@
 
-import { useWindowInnerSize as useWindowAbsoluteInnerSize } from "./tools/useWindowInnerSize";
+import { useWindowInnerSize as useRealWindowInnerSize } from "./tools/useWindowInnerSize";
 
-import { getZoomFactor, useZoomProviderReferenceWidth } from "./ZoomProvider";
+import { useZoomState, evtZoomState } from "./ZoomProvider";
+import type { ZoomState } from "./ZoomProvider";
 
+function pure(
+	props: {
+		zoomState: ZoomState | undefined;
+		windowInnerWidth: number;
+		windowInnerHeight: number;
+	}
+) {
 
-/** Takes into account the ZoomProvider */
-export function useWindowInnerSize(){
+	const {
+		zoomState,
+		windowInnerWidth,
+		windowInnerHeight
+	} = props;
 
-	let { windowInnerWidth, windowInnerHeight, isLandscapeOrientation } = useWindowAbsoluteInnerSize();
+	return zoomState !== undefined ?
+		{
+			"windowInnerWidth": zoomState.targetWindowInnerWidth,
+			"windowInnerHeight": zoomState.targetWindowInnerHeight
+		} : {
+			windowInnerWidth, windowInnerHeight
+		};
 
-	const { referenceWidth } = useZoomProviderReferenceWidth();
+}
 
-	const { zoomFactor } = getZoomFactor({ referenceWidth, windowInnerWidth });
+export function useWindowInnerSize() {
 
-	windowInnerWidth /= zoomFactor;
-	windowInnerHeight /= zoomFactor;
+	const { zoomState } = useZoomState();
+	const { windowInnerWidth, windowInnerHeight } = useRealWindowInnerSize();
 
-	return { windowInnerWidth, windowInnerHeight, isLandscapeOrientation };
+	return pure({ zoomState, windowInnerWidth, windowInnerHeight });
 
+}
+
+/** ...computed according to the ZoomProvider */
+export function getWindowInnerSize() {
+	return pure({
+		"zoomState": evtZoomState.state,
+		"windowInnerHeight": window.innerHeight,
+		"windowInnerWidth": window.innerWidth
+	});
 }

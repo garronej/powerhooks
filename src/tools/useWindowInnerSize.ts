@@ -20,8 +20,6 @@ export function useWindowInnerSize() {
 
 	const { windowInnerWidth, windowInnerHeight } = evtInnerWidth.state;
 
-	const isLandscapeOrientation = windowInnerWidth > windowInnerHeight;
-
-	return { windowInnerWidth, windowInnerHeight, isLandscapeOrientation };
+	return { windowInnerWidth, windowInnerHeight };
 
 }

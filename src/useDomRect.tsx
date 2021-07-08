@@ -3,7 +3,7 @@ import { useEvt } from "evt/hooks";
 import { Evt } from "evt";
 import ResizeObserver from "./tools/ResizeObserver";
 import { pick } from "./tools/pick";
-import { useZoomProviderReferenceWidth, getZoomFactor } from "./ZoomProvider";
+import { evtZoomState } from "./ZoomProvider";
 
 //TODO: only re-renders when width or height change.
 
@@ -33,8 +33,6 @@ export function useDomRect<T extends HTMLElement = any>() {
         [ref.current ?? {}]
     );
 
-    const { referenceWidth } = useZoomProviderReferenceWidth();
-
     useEvt(
         ctx => {
 
@@ -49,14 +47,13 @@ export function useDomRect<T extends HTMLElement = any>() {
 
                         const domRect = pick(htmlElement.getBoundingClientRect(), domRectKeys);
 
-                        if (referenceWidth !== undefined) {
+                        {
 
-                            const { zoomFactor } = getZoomFactor({
-                                referenceWidth,
-                                "windowInnerWidth": window.innerWidth
-                            });
+                            const { zoomFactor } = evtZoomState.state ?? {};
 
-                            domRectKeys.forEach(key => domRect[key] /= zoomFactor);
+                            if (zoomFactor !== undefined) {
+                                domRectKeys.forEach(key => domRect[key] /= zoomFactor);
+                            }
 
                         }
 
@@ -66,7 +63,7 @@ export function useDomRect<T extends HTMLElement = any>() {
                 );
 
         },
-        [htmlElement, referenceWidth]
+        [htmlElement]
     );
 
     return { domRect, ref };
