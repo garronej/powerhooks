@@ -1,15 +1,14 @@
 
 
-import { useEffect, useMemo } from "react";
 import type { ReactNode } from "react";
-import { useWindowInnerSize as useRealWindowInnerSize } from "./tools/useWindowInnerSize";
-import { useBrowserFontSizeFactor as useRealBrowserFontSizeFactor } from "./tools/useBrowserFontSizeFactor";
-import { createUseGlobalState } from "./useGlobalState";
-import { id } from "tsafe/id";
+import { useRef } from "react";
+import { useGuaranteedMemo } from "./useGuaranteedMemo";
+import { useWindowInnerSize } from "./tools/useWindowInnerSize";
+import { useBrowserFontSizeFactor } from "./tools/useBrowserFontSizeFactor";
+import { useEffect, createContext, useContext } from "react";
 
 export type ZoomConfig = {
 	targetWindowInnerWidth: number;
-	targetWindowInnerHeight?: number;
 	targetBrowserFontSizeFactor: number;
 	fallbackNode?: ReactNode;
 };
@@ -18,6 +17,7 @@ export type ZoomProviderProps = {
 	getConfig(
 		props: {
 			windowInnerWidth: number;
+			windowInnerHeight: number;
 			browserFontSizeFactor: number;
 		}
 	): ZoomConfig;
@@ -29,11 +29,12 @@ export type ZoomState = ZoomConfig & {
 	zoomFactor: number;
 };
 
-export const { useZoomState, evtZoomState } = createUseGlobalState(
-	"zoomState",
-	id<ZoomState | undefined>(undefined),
-	{ "persistance": false }
-);
+const context = createContext<ZoomState | undefined>(undefined);
+
+export function useZoomState() {
+	const zoomState = useContext(context);
+	return { zoomState };
+}
 
 /**
  * WARNING: We assumes that html element font-size is not defined
@@ -46,32 +47,55 @@ export function ZoomProvider(props: ZoomProviderProps) {
 	const {
 		windowInnerWidth,
 		windowInnerHeight,
-	} = useRealWindowInnerSize();
+	} = useWindowInnerSize();
 
-	const { browserFontSizeFactor } = useRealBrowserFontSizeFactor();
+	const { browserFontSizeFactor } = useBrowserFontSizeFactor();
 
-	const { zoomState } = useMemo(
-		() => {
+	const { zoomState } = (function useClosure() {
 
-			const zoomConfig = getConfig({ windowInnerWidth, browserFontSizeFactor });
+		const zoomStateRef = useRef<ZoomState>();
 
-			const zoomFactor = windowInnerWidth / zoomConfig.targetWindowInnerWidth;
+		useGuaranteedMemo(
+			() => {
 
-			const zoomState: ZoomState = {
-				...zoomConfig,
-				zoomFactor,
-				"targetWindowInnerHeight":
-					zoomConfig.targetWindowInnerHeight ??
-					(windowInnerHeight / zoomFactor)
-			};
+				//We skip refresh when pinch and zoom
+				if (
+					zoomStateRef.current !== undefined &&
+					(
+						window.scrollY !== 0 ||
+						window.scrollX !== 0
+					)
+				) {
+					return;
+				}
 
-			evtZoomState.state = zoomState;
+				const zoomConfig = getConfig({
+					windowInnerWidth,
+					windowInnerHeight,
+					browserFontSizeFactor
+				});
 
-			return { zoomState };
+				const zoomFactor = windowInnerWidth / zoomConfig.targetWindowInnerWidth;
 
-		},
-		[windowInnerWidth, windowInnerHeight, browserFontSizeFactor]
-	);
+				const zoomState: ZoomState = {
+					...zoomConfig,
+					zoomFactor,
+					"targetWindowInnerHeight": windowInnerHeight / zoomFactor
+				};
+
+				zoomStateRef.current = zoomState;
+
+			},
+			[
+				windowInnerWidth,
+				windowInnerHeight,
+				browserFontSizeFactor
+			]
+		);
+
+		return { "zoomState": zoomStateRef.current! };
+
+	})();
 
 	useEffect(
 		() => {
@@ -93,32 +117,40 @@ export function ZoomProvider(props: ZoomProviderProps) {
 			//100     						16 * browserFontSizeFactor;
 			//rootElementFontSizeInPercent  rootElementFontSizePx
 
-			const rootElementFontSizeInPercent = (100 * rootElementFontSizePx) / (16 * browserFontSizeFactor);
+			const rootElementFontSizeInPercent = 
+				(100 * rootElementFontSizePx) / (16 * browserFontSizeFactor);
 
-			rootElement.style.fontSize = `${16 * (rootElementFontSizeInPercent / 100) * zoomState.targetBrowserFontSizeFactor}px`;
+			rootElement.style.fontSize = 
+				`${16 * (rootElementFontSizeInPercent / 100) * zoomState.targetBrowserFontSizeFactor}px`;
 
 		},
 		[browserFontSizeFactor, zoomState.targetBrowserFontSizeFactor]
 	);
 
 	return (
-		<div
-			about={`powerhooks ZoomProvider outer wrapper`}
-			style={{ "height": "100vh", "overflow": "hidden" }}
-		>
+		zoomState.fallbackNode !== undefined ?
+			<>{zoomState.fallbackNode}</> :
 			<div
-				about={`powerhooks ZoomProvider inner wrapper`}
-				style={{
-					"transform": `scale(${zoomState.zoomFactor})`,
-					"transformOrigin": "0 0",
-					"width": zoomState.targetWindowInnerWidth,
-					"height": zoomState.targetWindowInnerHeight,
-					"overflow": "hidden"
-				}}
+				about="powerhooks ZoomProvider outer wrapper"
+				style={{ "height": "100vh", "overflow": "hidden" }}
 			>
-				{children}
+				<div
+					about="powerhooks ZoomProvider inner wrapper"
+					style={{
+						"transform": `scale(${zoomState.zoomFactor})`,
+						"transformOrigin": "0 0",
+						"width": zoomState.targetWindowInnerWidth,
+						"height": zoomState.targetWindowInnerHeight,
+						"overflow": "hidden"
+					}}
+				>
+					<context.Provider value={zoomState}>
+						{children}
+					</context.Provider>
+				</div>
 			</div>
-		</div>
 	);
 
 }
+
+

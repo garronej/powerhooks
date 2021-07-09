@@ -15,6 +15,16 @@
   -
   <a href="https://docs.powerhooks.dev">Documentation</a>
 </p>
+
+# Development
+
+Start the test SPA
+
+```
+npx tsc -w
+yarn start
+```
+
 ## TODO: 
 
 https://github.com/testing-library/react-hooks-testing-library

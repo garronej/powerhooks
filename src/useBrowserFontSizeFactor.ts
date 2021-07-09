@@ -1,20 +1,11 @@
 
-import {
-	useBrowserFontSizeFactor as useRealBrowserFontSizeFactor,
-	getBrowserFontSizeFactor as getRealBrowserFontSizeFactor
-} from "./tools/useBrowserFontSizeFactor";
+import { useBrowserFontSizeFactor as useRealBrowserFontSizeFactor } from "./tools/useBrowserFontSizeFactor";
+import { useZoomState } from "./ZoomProvider";
 
-import { useZoomState, evtZoomState } from "./ZoomProvider";
-import type { ZoomState } from "./ZoomProvider";
+export function useBrowserFontSizeFactor() {
 
-function pure(
-	params: {
-		zoomState: ZoomState | undefined;
-		browserFontSizeFactor: number;
-	}
-) {
-
-	const { zoomState, browserFontSizeFactor } = params;
+	const { zoomState } = useZoomState();
+	const { browserFontSizeFactor } = useRealBrowserFontSizeFactor();
 
 	return {
 		"browserFontSizeFactor":
@@ -22,25 +13,5 @@ function pure(
 				zoomState.targetBrowserFontSizeFactor :
 				browserFontSizeFactor
 	};
-
-}
-
-export function useBrowserFontSizeFactor() {
-
-	const { zoomState } = useZoomState();
-	const { browserFontSizeFactor } = useRealBrowserFontSizeFactor();
-
-	return pure({ zoomState, browserFontSizeFactor });
-
-}
-
-export function getBrowserFontSizeFactor() {
-
-	const { browserFontSizeFactor } = pure({
-		"zoomState": evtZoomState.state,
-		"browserFontSizeFactor": getRealBrowserFontSizeFactor()
-	});
-
-	return browserFontSizeFactor;
 
 }

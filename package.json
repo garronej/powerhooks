@@ -9,16 +9,19 @@
     "main": "dist/index.js",
     "types": "dist/index.d.ts",
     "scripts": {
-        "test": "echo PASS",
-        "build": "tsc"
+        "build": "tsc",
+        "link": "node dist/bin/link",
+        "start": "yarn run link && cd src/test && yarn && yarn start"
     },
     "author": "u/garronej & u/thieryw",
     "license": "MIT",
     "files": [
         "src/",
         "!src/test/",
+        "!src/bin/",
         "dist/",
         "!dist/test/",
+        "!dist/bin/",
         "!dist/tsconfig.tsbuildinfo"
     ],
     "keywords": [],
@@ -27,8 +30,6 @@
         "@types/memoizee": "^0.4.5",
         "@types/node": "^10.0.0",
         "@types/react": "^17.0.2",
-        "denoify": "^0.5.10",
-        "lint-staged": "^10.4.2",
         "react": "^17.0.1",
         "typescript": "^4.1.5"
     },
