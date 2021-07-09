@@ -1,3 +1,11 @@
+### **0.1.6** (2021-06-28)  
+  
+- Warn if persistance mechanism is not supported by runtime but don't crash    
+  
+### **0.1.6** (2021-06-28)  
+  
+- Warn if persistance mechanism is not supported by runtime but don't crash    
+  
 ### **0.1.5** (2021-06-26)  
   
 - Node compat    
