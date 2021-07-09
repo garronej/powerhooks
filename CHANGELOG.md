@@ -1,3 +1,9 @@
+## **0.2.0** (2021-07-09)  
+  
+- The zoom provider, reimagined  
+- Refactor useDomRect  
+- Big update    
+  
 ### **0.1.6** (2021-06-28)  
   
 - Warn if persistance mechanism is not supported by runtime but don't crash    
