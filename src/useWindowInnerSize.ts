@@ -1,17 +1,17 @@
 
 import { useWindowInnerSize as useRealWindowInnerSize } from "./tools/useWindowInnerSize";
-import { useZoomState } from "./ZoomProvider";
+import { useViewPortState } from "./ViewPortTransformer";
 
 
 export function useWindowInnerSize() {
 
-	const { zoomState } = useZoomState();
+	const { viewPortState } = useViewPortState();
 	const { windowInnerWidth, windowInnerHeight } = useRealWindowInnerSize();
 
-	return zoomState !== undefined ?
+	return viewPortState !== undefined ?
 		{
-			"windowInnerWidth": zoomState.targetWindowInnerWidth,
-			"windowInnerHeight": zoomState.targetWindowInnerHeight
+			"windowInnerWidth": viewPortState.targetWindowInnerWidth,
+			"windowInnerHeight": viewPortState.targetWindowInnerHeight
 		} : {
 			windowInnerWidth, windowInnerHeight
 		};

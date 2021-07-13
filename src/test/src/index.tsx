@@ -1,12 +1,12 @@
 import React from "react";
 import ReactDOM from "react-dom";
-import { ZoomProvider } from "powerhooks/ZoomProvider";
+import { ViewPortTransformer } from "powerhooks/ViewPortTransformer";
 import "./main.css";
 
 function App() {
 
   return (
-    <ZoomProvider
+    <ViewPortTransformer
       getConfig={({
         browserFontSizeFactor,
         windowInnerWidth,
@@ -56,7 +56,7 @@ function App() {
           This is for scrolling <br />
         </div>
       </div>
-    </ZoomProvider>
+    </ViewPortTransformer>
   );
 
 

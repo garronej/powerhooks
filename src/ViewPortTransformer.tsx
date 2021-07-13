@@ -7,46 +7,46 @@ import { useWindowInnerSize } from "./tools/useWindowInnerSize";
 import { useBrowserFontSizeFactor } from "./tools/useBrowserFontSizeFactor";
 import { useEffect, createContext, useContext } from "react";
 
-export type ZoomConfig = {
+export type ViewPortConfig = {
 	targetWindowInnerWidth: number;
 	targetBrowserFontSizeFactor: number;
 };
 
-function matchZoomConfig(zoomConfig: ZoomConfig | ReactNode): zoomConfig is ZoomConfig {
+function matchViewPortConfig(viewPortConfig: ViewPortConfig | ReactNode): viewPortConfig is ViewPortConfig {
 	return (
-		zoomConfig instanceof Object &&
-		"targetWindowInnerWidth" in zoomConfig
+		viewPortConfig instanceof Object &&
+		"targetWindowInnerWidth" in viewPortConfig
 	);
 }
 
-export type ZoomProviderProps = {
+export type ViewPortTransformerProps = {
 	getConfig(
 		props: {
 			windowInnerWidth: number;
 			windowInnerHeight: number;
 			browserFontSizeFactor: number;
 		}
-	): ZoomConfig | ReactNode;
+	): ViewPortConfig | ReactNode;
 	children: ReactNode;
 };
 
-export type ZoomState = ZoomConfig & {
+export type ViewPortState = ViewPortConfig & {
 	targetWindowInnerHeight: number;
 	zoomFactor: number;
 };
 
-const context = createContext<ZoomState | undefined>(undefined);
+const context = createContext<ViewPortState | undefined>(undefined);
 
-export function useZoomState() {
-	const zoomState = useContext(context);
-	return { zoomState };
+export function useViewPortState() {
+	const viewPortState = useContext(context);
+	return { viewPortState };
 }
 
 /**
  * WARNING: We assumes that html element font-size is not defined
  * or defined in percentages.
  */
-export function ZoomProvider(props: ZoomProviderProps) {
+export function ViewPortTransformer(props: ViewPortTransformerProps) {
 
 	const { getConfig, children } = props;
 
@@ -58,16 +58,16 @@ export function ZoomProvider(props: ZoomProviderProps) {
 	const { browserFontSizeFactor } = useBrowserFontSizeFactor();
 
 
-	const { zoomState } = (function useClosure() {
+	const { viewPortState } = (function useClosure() {
 
-		const zoomStateRef = useRef<ZoomState | ReactNode>();
+		const viewPortStateRef = useRef<ViewPortState | ReactNode>();
 
 		useGuaranteedMemo(
 			() => {
 
 				//We skip refresh when pinch and zoom
 				if (
-					zoomStateRef.current !== undefined &&
+					viewPortStateRef.current !== undefined &&
 					(
 						window.scrollY !== 0 ||
 						window.scrollX !== 0
@@ -76,29 +76,29 @@ export function ZoomProvider(props: ZoomProviderProps) {
 					return;
 				}
 
-				const zoomConfig = getConfig({
+				const viewPortConfig = getConfig({
 					windowInnerWidth,
 					windowInnerHeight,
 					browserFontSizeFactor
 				});
 
-				if (!matchZoomConfig(zoomConfig)) {
+				if (!matchViewPortConfig(viewPortConfig)) {
 
-					zoomStateRef.current = zoomConfig;
+					viewPortStateRef.current = viewPortConfig;
 
 					return;
 
 				}
 
-				const zoomFactor = windowInnerWidth / zoomConfig.targetWindowInnerWidth;
+				const zoomFactor = windowInnerWidth / viewPortConfig.targetWindowInnerWidth;
 
-				const zoomState: ZoomState = {
-					...zoomConfig,
+				const viewPortState: ViewPortState = {
+					...viewPortConfig,
 					zoomFactor,
 					"targetWindowInnerHeight": windowInnerHeight / zoomFactor
 				};
 
-				zoomStateRef.current = zoomState;
+				viewPortStateRef.current = viewPortState;
 
 			},
 			[
@@ -108,20 +108,20 @@ export function ZoomProvider(props: ZoomProviderProps) {
 			]
 		);
 
-		return { "zoomState": zoomStateRef.current! };
+		return { "viewPortState": viewPortStateRef.current! };
 
 	})();
 
 	useEffect(
 		() => {
 
-			if (!matchZoomConfig(zoomState)) {
+			if (!matchViewPortConfig(viewPortState)) {
 				return;
 			}
 
 			//NOTE: We assert the font size is defined in percent 
 			//or not defined. We have no way to check it so we make
-			//it a requirement to use the zoom provider.
+			//it a requirement to use the view port transformer.
 
 			const rootElement = document.querySelector("html")!;
 
@@ -140,35 +140,35 @@ export function ZoomProvider(props: ZoomProviderProps) {
 				(100 * rootElementFontSizePx) / (16 * browserFontSizeFactor);
 
 			rootElement.style.fontSize =
-				`${16 * (rootElementFontSizeInPercent / 100) * zoomState.targetBrowserFontSizeFactor}px`;
+				`${16 * (rootElementFontSizeInPercent / 100) * viewPortState.targetBrowserFontSizeFactor}px`;
 
 		},
 		[
 			browserFontSizeFactor,
-			matchZoomConfig(zoomState) ?
-				zoomState.targetBrowserFontSizeFactor :
+			matchViewPortConfig(viewPortState) ?
+				viewPortState.targetBrowserFontSizeFactor :
 				Object
 		]
 	);
 
 	return (
-		!matchZoomConfig(zoomState) ?
-			<>{zoomState}</> :
+		!matchViewPortConfig(viewPortState) ?
+			<>{viewPortState}</> :
 			<div
-				about="powerhooks ZoomProvider outer wrapper"
+				about={`powerhooks ${ViewPortTransformer.name} outer wrapper`}
 				style={{ "height": "100vh", "overflow": "hidden" }}
 			>
 				<div
-					about="powerhooks ZoomProvider inner wrapper"
+					about={`powerhooks ${ViewPortTransformer.name} inner wrapper`}
 					style={{
-						"transform": `scale(${zoomState.zoomFactor})`,
+						"transform": `scale(${viewPortState.zoomFactor})`,
 						"transformOrigin": "0 0",
-						"width": zoomState.targetWindowInnerWidth,
-						"height": zoomState.targetWindowInnerHeight,
+						"width": viewPortState.targetWindowInnerWidth,
+						"height": viewPortState.targetWindowInnerHeight,
 						"overflow": "hidden"
 					}}
 				>
-					<context.Provider value={zoomState}>
+					<context.Provider value={viewPortState}>
 						{children}
 					</context.Provider>
 				</div>

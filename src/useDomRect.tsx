@@ -2,14 +2,14 @@
 import { useDomRect as useRealDomRect, domRectKeys } from "./tools/useDomRect";
 import type { PartialDomRect } from "./tools/useDomRect";
 import { pick } from "./tools/pick";
-import { useZoomState } from "./ZoomProvider";
+import { useViewPortState } from "./ViewPortTransformer";
 
 export { PartialDomRect };
 
 export function useDomRect<T extends HTMLElement = any>() {
 
     const { domRect, ref } = useRealDomRect<T>();
-    const { zoomState } = useZoomState();
+    const { viewPortState } = useViewPortState();
 
     return {
         ref,
@@ -22,7 +22,7 @@ export function useDomRect<T extends HTMLElement = any>() {
 
             {
 
-                const { zoomFactor } = zoomState ?? {};
+                const { zoomFactor } = viewPortState ?? {};
 
                 if (zoomFactor !== undefined) {
                     domRectKeys.forEach(key => writableDomRect[key] /= zoomFactor);

@@ -1,16 +1,16 @@
 
 import { useBrowserFontSizeFactor as useRealBrowserFontSizeFactor } from "./tools/useBrowserFontSizeFactor";
-import { useZoomState } from "./ZoomProvider";
+import { useViewPortState } from "./ViewPortTransformer";
 
 export function useBrowserFontSizeFactor() {
 
-	const { zoomState } = useZoomState();
+	const { viewPortState } = useViewPortState();
 	const { browserFontSizeFactor } = useRealBrowserFontSizeFactor();
 
 	return {
 		"browserFontSizeFactor":
-			zoomState !== undefined ?
-				zoomState.targetBrowserFontSizeFactor :
+			viewPortState !== undefined ?
+				viewPortState.targetBrowserFontSizeFactor :
 				browserFontSizeFactor
 	};
 
