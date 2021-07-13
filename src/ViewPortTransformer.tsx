@@ -12,7 +12,7 @@ export type ViewPortConfig = {
 	targetBrowserFontSizeFactor: number;
 };
 
-function matchViewPortConfig(viewPortConfig: ViewPortConfig | ReactNode): viewPortConfig is ViewPortConfig {
+export function matchViewPortConfig(viewPortConfig: ViewPortConfig | ReactNode): viewPortConfig is ViewPortConfig {
 	return (
 		viewPortConfig instanceof Object &&
 		"targetWindowInnerWidth" in viewPortConfig
@@ -25,7 +25,7 @@ export type ViewPortTransformerProps = {
 			windowInnerWidth: number;
 			windowInnerHeight: number;
 			browserFontSizeFactor: number;
-		}
+		 }
 	): ViewPortConfig | ReactNode;
 	children: ReactNode;
 };
