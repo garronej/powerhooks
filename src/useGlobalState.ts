@@ -273,7 +273,7 @@ export function createUseGlobalState<T, Name extends string>(
     overwriteReadonlyProp(useXyz as any, "name", `use${capitalize(name)}`);
 
     return Object.defineProperty(
-        { [useXyz.name]: useXyz },
+        { [useXyz.name]: useXyz } as any,
         `evt${capitalize(name)}`,
         {
             "enumerable": true,

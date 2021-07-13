@@ -1,9 +1,7 @@
 import React from "react";
 import ReactDOM from "react-dom";
-import { ZoomProvider } from "powerhooks";
+import { ZoomProvider } from "powerhooks/ZoomProvider";
 import "./main.css";
-
-console.log("sisi");
 
 function App() {
 
@@ -15,7 +13,7 @@ function App() {
         windowInnerHeight
       }) => {
 
-        const  isMobileInPortraitOrientation= (windowInnerWidth / windowInnerHeight) < 1 / 1.3;
+        const isMobileInPortraitOrientation = (windowInnerWidth / windowInnerHeight) < 1 / 1.3;
 
         console.log({ isMobileInPortraitOrientation });
 
@@ -31,11 +29,13 @@ function App() {
           "window.scrollY": window.scrollY,
         });
 
+        if (isMobileInPortraitOrientation) {
+          return <h1>Rotate your screen</h1>;
+        }
 
         return {
           "targetWindowInnerWidth": 1920,
           "targetBrowserFontSizeFactor": browserFontSizeFactor,
-          "fallbackNode": isMobileInPortraitOrientation ? <h1>Rotate your screen</h1> : undefined
         };
       }}
     >

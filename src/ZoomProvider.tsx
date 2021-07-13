@@ -10,8 +10,14 @@ import { useEffect, createContext, useContext } from "react";
 export type ZoomConfig = {
 	targetWindowInnerWidth: number;
 	targetBrowserFontSizeFactor: number;
-	fallbackNode?: ReactNode;
 };
+
+function matchZoomConfig(zoomConfig: ZoomConfig | ReactNode): zoomConfig is ZoomConfig {
+	return (
+		zoomConfig instanceof Object &&
+		"targetWindowInnerWidth" in zoomConfig
+	);
+}
 
 export type ZoomProviderProps = {
 	getConfig(
@@ -20,7 +26,7 @@ export type ZoomProviderProps = {
 			windowInnerHeight: number;
 			browserFontSizeFactor: number;
 		}
-	): ZoomConfig;
+	): ZoomConfig | ReactNode;
 	children: ReactNode;
 };
 
@@ -51,9 +57,10 @@ export function ZoomProvider(props: ZoomProviderProps) {
 
 	const { browserFontSizeFactor } = useBrowserFontSizeFactor();
 
+
 	const { zoomState } = (function useClosure() {
 
-		const zoomStateRef = useRef<ZoomState>();
+		const zoomStateRef = useRef<ZoomState | ReactNode>();
 
 		useGuaranteedMemo(
 			() => {
@@ -74,6 +81,14 @@ export function ZoomProvider(props: ZoomProviderProps) {
 					windowInnerHeight,
 					browserFontSizeFactor
 				});
+
+				if (!matchZoomConfig(zoomConfig)) {
+
+					zoomStateRef.current = zoomConfig;
+
+					return;
+
+				}
 
 				const zoomFactor = windowInnerWidth / zoomConfig.targetWindowInnerWidth;
 
@@ -100,6 +115,10 @@ export function ZoomProvider(props: ZoomProviderProps) {
 	useEffect(
 		() => {
 
+			if (!matchZoomConfig(zoomState)) {
+				return;
+			}
+
 			//NOTE: We assert the font size is defined in percent 
 			//or not defined. We have no way to check it so we make
 			//it a requirement to use the zoom provider.
@@ -117,19 +136,24 @@ export function ZoomProvider(props: ZoomProviderProps) {
 			//100     						16 * browserFontSizeFactor;
 			//rootElementFontSizeInPercent  rootElementFontSizePx
 
-			const rootElementFontSizeInPercent = 
+			const rootElementFontSizeInPercent =
 				(100 * rootElementFontSizePx) / (16 * browserFontSizeFactor);
 
-			rootElement.style.fontSize = 
+			rootElement.style.fontSize =
 				`${16 * (rootElementFontSizeInPercent / 100) * zoomState.targetBrowserFontSizeFactor}px`;
 
 		},
-		[browserFontSizeFactor, zoomState.targetBrowserFontSizeFactor]
+		[
+			browserFontSizeFactor,
+			matchZoomConfig(zoomState) ?
+				zoomState.targetBrowserFontSizeFactor :
+				Object
+		]
 	);
 
 	return (
-		zoomState.fallbackNode !== undefined ?
-			<>{zoomState.fallbackNode}</> :
+		!matchZoomConfig(zoomState) ?
+			<>{zoomState}</> :
 			<div
 				about="powerhooks ZoomProvider outer wrapper"
 				style={{ "height": "100vh", "overflow": "hidden" }}
