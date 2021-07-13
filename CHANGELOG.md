@@ -1,3 +1,7 @@
+## **0.3.0** (2021-07-13)  
+  
+- Update ZoomProvider API    
+  
 ## **0.2.0** (2021-07-09)  
   
 - The zoom provider, reimagined  
