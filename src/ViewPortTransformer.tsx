@@ -102,6 +102,7 @@ export function ViewPortTransformer(props: ViewPortTransformerProps) {
 
 			},
 			[
+				getConfig,
 				windowInnerWidth,
 				windowInnerHeight,
 				browserFontSizeFactor

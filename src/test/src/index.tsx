@@ -1,43 +1,46 @@
 import React from "react";
 import ReactDOM from "react-dom";
 import { ViewPortTransformer } from "powerhooks/ViewPortTransformer";
+import { ViewPortTransformerProps } from "powerhooks/ViewPortTransformer";
+import { useConstCallback } from "powerhooks/useConstCallback";
 import "./main.css";
 
 function App() {
 
-  return (
-    <ViewPortTransformer
-      getConfig={({
+  const getConfig = useConstCallback<ViewPortTransformerProps["getConfig"]>(
+    ({ browserFontSizeFactor, windowInnerWidth, windowInnerHeight }) => {
+
+      const isMobileInPortraitOrientation = (windowInnerWidth / windowInnerHeight) < 1 / 1.3;
+
+      console.log({ isMobileInPortraitOrientation });
+
+      console.log({
         browserFontSizeFactor,
         windowInnerWidth,
-        windowInnerHeight
-      }) => {
+        windowInnerHeight,
+        "window.outerWidth": window.outerWidth,
+        "window.pageXOffset": window.pageXOffset,
+        "window.pageYOffset": window.pageYOffset,
+        "window.screenLeft": window.screenLeft,
+        "window.scrollX": window.scrollX,
+        "window.scrollY": window.scrollY,
+      });
 
-        const isMobileInPortraitOrientation = (windowInnerWidth / windowInnerHeight) < 1 / 1.3;
+      if (isMobileInPortraitOrientation) {
+        return <h1>Rotate your screen</h1>;
+      }
 
-        console.log({ isMobileInPortraitOrientation });
+      return {
+        "targetWindowInnerWidth": 1920,
+        "targetBrowserFontSizeFactor": browserFontSizeFactor,
+      };
+    }
 
-        console.log({
-          browserFontSizeFactor,
-          windowInnerWidth,
-          windowInnerHeight,
-          "window.outerWidth": window.outerWidth,
-          "window.pageXOffset": window.pageXOffset,
-          "window.pageYOffset": window.pageYOffset,
-          "window.screenLeft": window.screenLeft,
-          "window.scrollX": window.scrollX,
-          "window.scrollY": window.scrollY,
-        });
+  );
 
-        if (isMobileInPortraitOrientation) {
-          return <h1>Rotate your screen</h1>;
-        }
-
-        return {
-          "targetWindowInnerWidth": 1920,
-          "targetBrowserFontSizeFactor": browserFontSizeFactor,
-        };
-      }}
+  return (
+    <ViewPortTransformer
+      getConfig={getConfig}
     >
       <div style={{ "backgroundColor": "cyan", "height": "100%", "border": "1px solid red", "boxSizing": "border-box" }} >
         <h1>Hello World</h1>
