@@ -1,3 +1,7 @@
+### **0.4.2** (2021-07-14)  
+  
+- When ViewPortTransformer getConfig uodate, re-evaluate    
+  
 ### **0.4.1** (2021-07-13)  
   
 - Exports matchViewPortConfig    
