@@ -66,6 +66,7 @@ export function ViewPortTransformer(props: ViewPortTransformerProps) {
 			() => {
 
 				//We skip refresh when pinch and zoom
+				/*
 				if (
 					viewPortStateRef.current !== undefined &&
 					(
@@ -75,6 +76,7 @@ export function ViewPortTransformer(props: ViewPortTransformerProps) {
 				) {
 					return;
 				}
+				*/
 
 				const viewPortConfig = getConfig({
 					windowInnerWidth,
