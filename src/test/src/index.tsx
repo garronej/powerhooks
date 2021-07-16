@@ -1,13 +1,13 @@
 import React from "react";
 import ReactDOM from "react-dom";
-import { ViewPortTransformer } from "powerhooks/ViewPortTransformer";
-import { ViewPortTransformerProps } from "powerhooks/ViewPortTransformer";
+import { ViewPortAdapter } from "powerhooks/ViewPortAdapter";
+import { ViewPortAdapterProps } from "powerhooks/ViewPortAdapter";
 import { useConstCallback } from "powerhooks/useConstCallback";
 import "./main.css";
 
 function App() {
 
-  const getConfig = useConstCallback<ViewPortTransformerProps["getConfig"]>(
+  const getConfig = useConstCallback<ViewPortAdapterProps["getConfig"]>(
     ({ browserFontSizeFactor, windowInnerWidth, windowInnerHeight }) => {
 
       const isMobileInPortraitOrientation = (windowInnerWidth / windowInnerHeight) < 1 / 1.3;
@@ -39,7 +39,7 @@ function App() {
   );
 
   return (
-    <ViewPortTransformer
+    <ViewPortAdapter
       getConfig={getConfig}
     >
       <div style={{ "backgroundColor": "cyan", "height": "100%", "border": "1px solid red", "boxSizing": "border-box" }} >
@@ -59,7 +59,7 @@ function App() {
           This is for scrolling <br />
         </div>
       </div>
-    </ViewPortTransformer>
+    </ViewPortAdapter>
   );
 
 

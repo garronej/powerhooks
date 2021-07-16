@@ -19,7 +19,7 @@ export function matchViewPortConfig(viewPortConfig: ViewPortConfig | ReactNode):
 	);
 }
 
-export type ViewPortTransformerProps = {
+export type ViewPortAdapterProps = {
 	getConfig(
 		props: {
 			windowInnerWidth: number;
@@ -46,7 +46,7 @@ export function useViewPortState() {
  * WARNING: We assumes that html element font-size is not defined
  * or defined in percentages.
  */
-export function ViewPortTransformer(props: ViewPortTransformerProps) {
+export function ViewPortAdapter(props: ViewPortAdapterProps) {
 
 	const { getConfig, children } = props;
 
@@ -122,7 +122,7 @@ export function ViewPortTransformer(props: ViewPortTransformerProps) {
 
 			//NOTE: We assert the font size is defined in percent 
 			//or not defined. We have no way to check it so we make
-			//it a requirement to use the view port transformer.
+			//it a requirement to use the view port adapter.
 
 			const rootElement = document.querySelector("html")!;
 
@@ -156,11 +156,11 @@ export function ViewPortTransformer(props: ViewPortTransformerProps) {
 		!matchViewPortConfig(viewPortState) ?
 			<>{viewPortState}</> :
 			<div
-				about={`powerhooks ${ViewPortTransformer.name} outer wrapper`}
+				about={`powerhooks ${ViewPortAdapter.name} outer wrapper`}
 				style={{ "height": "100vh", "overflow": "hidden" }}
 			>
 				<div
-					about={`powerhooks ${ViewPortTransformer.name} inner wrapper`}
+					about={`powerhooks ${ViewPortAdapter.name} inner wrapper`}
 					style={{
 						"transform": `scale(${viewPortState.zoomFactor})`,
 						"transformOrigin": "0 0",

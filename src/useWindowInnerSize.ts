@@ -1,6 +1,6 @@
 
 import { useWindowInnerSize as useRealWindowInnerSize } from "./tools/useWindowInnerSize";
-import { useViewPortState } from "./ViewPortTransformer";
+import { useViewPortState } from "./ViewPortAdapter";
 
 
 export function useWindowInnerSize() {

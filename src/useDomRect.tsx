@@ -3,7 +3,7 @@ import { useMemo, useEffect } from "react";
 import { useDomRect as useRealDomRect, domRectKeys } from "./tools/useDomRect";
 import type { PartialDomRect } from "./tools/useDomRect";
 import { pick } from "./tools/pick";
-import { useViewPortState } from "./ViewPortTransformer";
+import { useViewPortState } from "./ViewPortAdapter";
 import { id } from "tsafe/id";
 
 export { PartialDomRect };

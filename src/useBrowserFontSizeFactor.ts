@@ -1,6 +1,6 @@
 
 import { useBrowserFontSizeFactor as useRealBrowserFontSizeFactor } from "./tools/useBrowserFontSizeFactor";
-import { useViewPortState } from "./ViewPortTransformer";
+import { useViewPortState } from "./ViewPortAdapter";
 
 export function useBrowserFontSizeFactor() {
 

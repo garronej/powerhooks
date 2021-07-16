@@ -4,7 +4,7 @@ import { Evt } from "evt";
 import type { StatefulEvt } from "evt";
 import { useEvt } from "evt/hooks";
 import { useConstCallback } from "./useConstCallback";
-import { overwriteReadonlyProp } from "evt/tools/typeSafety/overwriteReadonlyProp";
+import { overwriteReadonlyProp } from "tsafe/lab/overwriteReadonlyProp";
 import type { UseNamedStateReturnType } from "./useNamedState";
 import { typeGuard } from "tsafe/typeGuard";
 import { capitalize } from "./tools/capitalize";

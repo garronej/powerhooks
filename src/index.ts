@@ -12,5 +12,5 @@ export * from "./useWithProps";
 export * from "./withProps";
 export * from "./useScopedState";
 export * from "./useClickAway";
-export * from "./ViewPortTransformer";
+export * from "./ViewPortAdapter";
 export * from "./useBrowserFontSizeFactor";

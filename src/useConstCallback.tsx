@@ -1,15 +1,15 @@
 
 
 import { useRef, useState } from "react";
-import { Parameters } from "evt/tools/typeSafety";
+import { Parameters } from "tsafe/Parameters";
 
 
 /** https://stackoverflow.com/questions/65890278/why-cant-usecallback-always-return-the-same-ref */
-export function useConstCallback<T extends ((...args: never[]) => unknown) | undefined | null>(
+export function useConstCallback<T extends ((...args: any[]) => unknown) | undefined | null>(
     callback: NonNullable<T>
 ): T {
 
-    const callbackRef = useRef(callback);
+    const callbackRef = useRef<typeof callback>(null as any);
 
     callbackRef.current = callback;
 

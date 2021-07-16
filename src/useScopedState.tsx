@@ -5,7 +5,7 @@ import { useContext, createContext, useMemo } from "react";
 import type { UseNamedStateReturnType } from "./useNamedState";
 import { capitalize } from "./tools/capitalize";
 import { useNamedState } from "./useNamedState";
-import { overwriteReadonlyProp } from "evt/tools/typeSafety/overwriteReadonlyProp";
+import { overwriteReadonlyProp } from "tsafe/lab/overwriteReadonlyProp";
 
 /** https://docs.powerhooks.dev/api-reference/usescopedstate */
 export function createUseScopedState<T, Name extends string>(
