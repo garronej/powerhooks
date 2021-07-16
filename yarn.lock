@@ -88,13 +88,14 @@ event-emitter@^0.3.5:
     d "1"
     es5-ext "~0.10.14"
 
-evt@2.0.0-beta.15:
-  version "2.0.0-beta.15"
-  resolved "https://registry.yarnpkg.com/evt/-/evt-2.0.0-beta.15.tgz#a34ef224c827152c06f29157a9af5a41644e1a36"
-  integrity sha512-AZIuA8ujBsDX/rPC9mJ2sGvrBJAvV2OGj/yzACbuT4pRLKii5PMjYPitNk4xJMKuXSDwvwCsQzuGPDCcbRc60A==
+evt@2.0.0-beta.21:
+  version "2.0.0-beta.21"
+  resolved "https://registry.yarnpkg.com/evt/-/evt-2.0.0-beta.21.tgz#3be2592566c2a99f9a4bc2b7f5d05d960463407d"
+  integrity sha512-8mBIrjyzOowmHfWKjaHBm9BBCs3s2iDD0gusmbBZAXmD0XL1g7gQ+wYt8kaSWSq9EVT9liX4H8Mx54jdk1cbRw==
   dependencies:
-    minimal-polyfills "^2.1.5"
+    minimal-polyfills "^2.2.1"
     run-exclusive "^2.2.14"
+    tsafe "^0.2.2"
 
 ext@^1.1.2:
   version "1.4.0"
@@ -141,7 +142,7 @@ memoizee@^0.4.15:
     next-tick "^1.1.0"
     timers-ext "^0.1.7"
 
-minimal-polyfills@^2.1.5:
+minimal-polyfills@^2.1.5, minimal-polyfills@^2.2.1:
   version "2.2.1"
   resolved "https://registry.yarnpkg.com/minimal-polyfills/-/minimal-polyfills-2.2.1.tgz#7249d7ece666d3b4e1ec1c1b8f949eb9d44e2308"
   integrity sha512-WLmHQrsZob4rVYf8yHapZPNJZ3sspGa/sN8abuSD59b0FifDEE7HMfLUi24z7mPZqTpBXy4Svp+iGvAmclCmXg==
@@ -188,6 +189,11 @@ timers-ext@^0.1.7:
   dependencies:
     es5-ext "~0.10.46"
     next-tick "1"
+
+tsafe@^0.2.2:
+  version "0.2.4"
+  resolved "https://registry.yarnpkg.com/tsafe/-/tsafe-0.2.4.tgz#f2cffb9b33e4d20c6f9800aa1c45bee02d917aa1"
+  integrity sha512-oS/0wJKgEv/iDow/6U51xjAascJVtUQfZQMCDdoOS+VnMlWZFdXGMKuoH47JYs6hEWHpO+Z5pC5oAFFHiPfTLg==
 
 tsafe@^0.4.1:
   version "0.4.1"

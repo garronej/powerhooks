@@ -1,39 +1,53 @@
 
+import { useMemo, useEffect } from "react";
 import { useDomRect as useRealDomRect, domRectKeys } from "./tools/useDomRect";
 import type { PartialDomRect } from "./tools/useDomRect";
 import { pick } from "./tools/pick";
-import { useViewPortState } from "./ViewPortTransformer";
+import { useViewPortState } from "./ViewPortTransformer";
+import { id } from "tsafe/id";
 
 export { PartialDomRect };
 
 export function useDomRect<T extends HTMLElement = any>() {
 
-    const { domRect, ref } = useRealDomRect<T>();
-    const { viewPortState } = useViewPortState();
+    const { domRect, ref, checkIfDomRectUpdated } = useRealDomRect<T>();
 
-    return {
-        ref,
-        "domRect": (() => {
+    const { zoomFactor } = (function useClosure() {
+
+        const { viewPortState } = useViewPortState();
+
+        const { zoomFactor } = viewPortState ?? {};
+
+        return { zoomFactor };
+
+    })();
+
+    useEffect(
+        ()=>{ checkIfDomRectUpdated(); },
+        [zoomFactor]
+    );
+
+    const fixedDomRect = useMemo(
+        () => {
 
             const writableDomRect = pick(
                 domRect,
                 domRectKeys
             );
 
-            {
-
-                const { zoomFactor } = viewPortState ?? {};
-
-                if (zoomFactor !== undefined) {
-                    domRectKeys.forEach(key => writableDomRect[key] /= zoomFactor);
-                }
-
+            if (zoomFactor !== undefined) {
+                domRectKeys.forEach(key => writableDomRect[key] /= zoomFactor);
             }
 
-            return writableDomRect;
+            return id<PartialDomRect>(writableDomRect);
 
+        },
+        [domRect, zoomFactor]
+    );
 
-        })()
+    return {
+        ref,
+        "domRect": fixedDomRect
     };
 
 }
