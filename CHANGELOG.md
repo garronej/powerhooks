@@ -1,3 +1,8 @@
+## **0.5.0** (2021-07-16)  
+  
+- Update deps  
+- Fix useDomRect to work better with ViewPortTransformer    
+  
 ### **0.4.4** (2021-07-14)  
   
   
