@@ -1,9 +1,9 @@
-import { useState, useRef, useEffect } from "react";
-import { useEvt } from "evt/hooks";
+import { useState } from "react";
 import { Evt } from "evt";
 import ResizeObserver from "./ResizeObserver";
 import memoize from "memoizee";
 import { useConstCallback } from "../useConstCallback";
+import { useElementEvt } from "evt/hooks";
 
 //TODO: only re-renders when width or height change.
 
@@ -29,16 +29,7 @@ const toMemoPartial = memoize(
 // https://developer.mozilla.org/en-US/docs/Web/API/Element/getBoundingClientRect
 export function useDomRect<T extends HTMLElement = any>() {
 
-    const ref = useRef<T>(null);
-
     const [domRect, setDomRect] = useState<PartialDomRect>(() => toMemoPartial(0, 0, 0, 0, 0, 0));
-
-    const [htmlElement, setHtmlElement] = useState<T | null>(null);
-
-    useEffect(
-        () => { setHtmlElement(ref.current); },
-        [ref.current ?? {}]
-    );
 
     const [evtForceUpdate] = useState(() => Evt.create());
 
@@ -47,15 +38,10 @@ export function useDomRect<T extends HTMLElement = any>() {
         () => evtForceUpdate.post()
     );
 
-    useEvt(
-        ctx => {
-
-            if (htmlElement === null) {
-                return;
-            }
-
+    const { ref } = useElementEvt<T>(
+        ({ ctx, element }) =>
             Evt.merge([
-                Evt.from(ctx, ResizeObserver, htmlElement),
+                Evt.from(ctx, ResizeObserver, element),
                 evtForceUpdate
             ])
                 .toStateful()
@@ -64,7 +50,7 @@ export function useDomRect<T extends HTMLElement = any>() {
                     const {
                         bottom, right, top,
                         left, height, width
-                    } = htmlElement.getBoundingClientRect();
+                    } = element.getBoundingClientRect();
 
                     setDomRect(
                         toMemoPartial(
@@ -73,10 +59,8 @@ export function useDomRect<T extends HTMLElement = any>() {
                         )
                     );
 
-                });
-
-        },
-        [htmlElement]
+                }),
+        []
     );
 
     return { domRect, ref, checkIfDomRectUpdated };
