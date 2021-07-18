@@ -1,3 +1,7 @@
+## **0.6.0** (2021-07-18)  
+  
+- Fix the ViewPortAdapter API    
+  
 ## **0.5.0** (2021-07-16)  
   
 - Update deps  
