@@ -1,3 +1,8 @@
+### **0.6.1** (2021-07-18)  
+  
+- Bump version (changelo ignore)  
+- Refactor useDomRect    
+  
 ## **0.6.0** (2021-07-18)  
   
 - Fix the ViewPortAdapter API    
