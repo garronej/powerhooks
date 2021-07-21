@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useState, useRef } from "react";
 import { Evt } from "evt";
 import ResizeObserver from "./ResizeObserver";
 import memoize from "memoizee";
@@ -27,7 +27,9 @@ const toMemoPartial = memoize(
 
 // https://gist.github.com/morajabi/523d7a642d8c0a2f71fcfa0d8b3d2846
 // https://developer.mozilla.org/en-US/docs/Web/API/Element/getBoundingClientRect
-export function useDomRect<T extends HTMLElement = any>() {
+export function useDomRect<T extends HTMLElement = any>(): { ref: React.RefObject<T>; domRect: PartialDomRect; checkIfDomRectUpdated: () => void; }
+export function useDomRect<T extends HTMLElement = any>(params: { ref: React.RefObject<T>; }): { domRect: PartialDomRect; checkIfDomRectUpdated: () => void; };
+export function useDomRect<T extends HTMLElement = any>(params?: { ref: React.RefObject<T>; }): { ref: React.RefObject<T>; domRect: PartialDomRect; checkIfDomRectUpdated: () => void; } {
 
     const [domRect, setDomRect] = useState<PartialDomRect>(() => toMemoPartial(0, 0, 0, 0, 0, 0));
 
@@ -38,14 +40,34 @@ export function useDomRect<T extends HTMLElement = any>() {
         () => evtForceUpdate.post()
     );
 
-    const { ref } = useElementEvt<T>(
+    const internallyCreatedRef = useRef<T>(null);
+
+    const ref = params?.ref ?? internallyCreatedRef;
+
+    useElementEvt<T>(
         ({ ctx, element }) =>
             Evt.merge([
                 Evt.from(ctx, ResizeObserver, element),
                 evtForceUpdate
             ])
                 .toStateful()
-                .attach(() => {
+                .attach(() => (async function callee(previousCallCount: number) {
+
+                    {
+
+                        let timer: ReturnType<typeof setTimeout>;
+
+                        const pr = new Promise(resolve => timer = setTimeout(resolve, 50));
+
+                        const internalCtx = Evt.newCtx();
+
+                        ctx.evtDetach.attachOnce(internalCtx, () => clearTimeout(timer));
+
+                        await pr;
+
+                        internalCtx.done();
+
+                    }
 
                     const {
                         bottom, right, top,
@@ -59,10 +81,16 @@ export function useDomRect<T extends HTMLElement = any>() {
                         )
                     );
 
-                }),
+                    if (previousCallCount < 6) {
+                        callee(previousCallCount + 1);
+                        return;
+                    }
+
+                })(0)),
+        ref,
         []
     );
 
-    return { domRect, ref, checkIfDomRectUpdated };
+    return { ref, domRect, checkIfDomRectUpdated };
 
 }
