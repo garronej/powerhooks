@@ -1,3 +1,7 @@
+### **0.6.2** (2021-07-21)  
+  
+- Allow to provide own ref in useDomRect    
+  
 ### **0.6.1** (2021-07-18)  
   
 - Bump version (changelo ignore)  
