@@ -1,3 +1,7 @@
+### **0.6.3** (2021-07-29)  
+  
+- Fixes on useDomRect    
+  
 ### **0.6.2** (2021-07-21)  
   
 - Allow to provide own ref in useDomRect    
