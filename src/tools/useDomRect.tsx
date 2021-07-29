@@ -11,25 +11,29 @@ export const domRectKeys = ["bottom", "right", "top", "left", "height", "width"]
 
 export type PartialDomRect = Pick<DOMRectReadOnly, typeof domRectKeys[number]>;
 
-const toMemoPartial = memoize(
-    (
-        bottom: number,
-        right: number,
-        top: number,
-        left: number,
-        height: number,
-        width: number
-    ): PartialDomRect => ({
-        bottom, right, top, left, height, width
-    }),
-    { "max": 1 }
-);
 
 // https://gist.github.com/morajabi/523d7a642d8c0a2f71fcfa0d8b3d2846
 // https://developer.mozilla.org/en-US/docs/Web/API/Element/getBoundingClientRect
 export function useDomRect<T extends HTMLElement = any>(): { ref: React.RefObject<T>; domRect: PartialDomRect; checkIfDomRectUpdated: () => void; }
 export function useDomRect<T extends HTMLElement = any>(params: { ref: React.RefObject<T>; }): { domRect: PartialDomRect; checkIfDomRectUpdated: () => void; };
 export function useDomRect<T extends HTMLElement = any>(params?: { ref: React.RefObject<T>; }): { ref: React.RefObject<T>; domRect: PartialDomRect; checkIfDomRectUpdated: () => void; } {
+
+    const [toMemoPartial] = useState(
+        () => memoize(
+            (
+                bottom: number,
+                right: number,
+                top: number,
+                left: number,
+                height: number,
+                width: number
+            ): PartialDomRect => ({
+                bottom, right, top, 
+                left, height, width
+            }),
+            { "max": 1 }
+        )
+    );
 
     const [domRect, setDomRect] = useState<PartialDomRect>(() => toMemoPartial(0, 0, 0, 0, 0, 0));
 

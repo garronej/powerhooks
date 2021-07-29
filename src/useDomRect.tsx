@@ -1,5 +1,5 @@
 
-import { useMemo, useRef ,useEffect } from "react";
+import { useMemo, useRef, useEffect } from "react";
 import { useDomRect as useRealDomRect, domRectKeys } from "./tools/useDomRect";
 import type { PartialDomRect } from "./tools/useDomRect";
 import { pick } from "./tools/pick";
@@ -9,7 +9,7 @@ import { id } from "tsafe/id";
 export { PartialDomRect };
 
 export function useDomRect<T extends HTMLElement = any>(): { ref: React.RefObject<T>; domRect: PartialDomRect }
-export function useDomRect<T extends HTMLElement = any>(params: { ref: React.RefObject<T>; }): { domRect: PartialDomRect;  };
+export function useDomRect<T extends HTMLElement = any>(params: { ref: React.RefObject<T>; }): { domRect: PartialDomRect; };
 export function useDomRect<T extends HTMLElement = any>(params?: { ref: React.RefObject<T>; }): { ref: React.RefObject<T>; domRect: PartialDomRect; } {
 
     const internallyCreatedRef = useRef<T>(null);
@@ -29,8 +29,8 @@ export function useDomRect<T extends HTMLElement = any>(params?: { ref: React.Re
     })();
 
     useEffect(
-        ()=>{ checkIfDomRectUpdated(); },
-        [zoomFactor]
+        () => { checkIfDomRectUpdated(); },
+        [zoomFactor ?? Object]
     );
 
     const fixedDomRect = useMemo(
@@ -48,7 +48,7 @@ export function useDomRect<T extends HTMLElement = any>(params?: { ref: React.Re
             return id<PartialDomRect>(writableDomRect);
 
         },
-        [domRect, zoomFactor]
+        [domRect, zoomFactor ?? Object]
     );
 
     return { ref, "domRect": fixedDomRect };
