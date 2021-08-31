@@ -1,3 +1,8 @@
+### **0.7.2** (2021-08-31)  
+  
+- Add todo  
+- Try to make it not crash    
+  
 ### **0.7.1** (2021-07-30)  
   
 - update deps    
