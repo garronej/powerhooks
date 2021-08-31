@@ -328,6 +328,8 @@ const { getPersistentStorage } = (() => {
 
                 let newCookie = `${key}=${value};path=/;max-age=31536000`;
 
+                //TODO: Use https://dev.to/debosthefirst/how-to-use-cookies-for-persisting-users-in-nextjs-4617?signin=true
+                //to make it work with nextJs.
                 //We do not set the domain if we are on localhost or an ip
                 if (window.location.hostname.match(/\.[a-zA-Z]{2,}$/)) {
                     newCookie += `;domain=${window.location.hostname.split(".").length >= 3 ?
