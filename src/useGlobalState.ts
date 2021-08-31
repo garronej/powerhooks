@@ -10,6 +10,7 @@ import { typeGuard } from "tsafe/typeGuard";
 import { capitalize } from "./tools/capitalize";
 import memoize from "memoizee";
 import { urlSearchParams } from "./tools/urlSearchParams";
+import { isBrowser } from "./tools/isBrowser";
 
 export type { StatefulEvt };
 
@@ -134,7 +135,7 @@ export function createUseGlobalState<T, Name extends string>(
     const { persistance = "localStorage" } = params ?? {};
 
     const persistentStorage =
-        persistance === false ?
+        persistance === false || !isBrowser ?
             undefined :
             (() => {
 
