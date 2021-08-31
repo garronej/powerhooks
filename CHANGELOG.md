@@ -1,3 +1,7 @@
+### **0.7.3** (2021-08-31)  
+  
+- Notice that powerhooks is not compatible with server side rendering    
+  
 ### **0.7.2** (2021-08-31)  
   
 - Add todo  
