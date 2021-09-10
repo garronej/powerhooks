@@ -1,6 +1,6 @@
 {
     "name": "powerhooks",
-    "version": "0.7.3",
+    "version": "0.8.0",
     "description": "A collection of powerful react hooks",
     "repository": {
         "type": "git",
