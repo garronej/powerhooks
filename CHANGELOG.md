@@ -1,3 +1,7 @@
+## **0.8.0** (2021-09-10)  
+  
+- Feat: useEffectIf    
+  
 ### **0.7.3** (2021-08-31)  
   
 - Notice that powerhooks is not compatible with server side rendering    
