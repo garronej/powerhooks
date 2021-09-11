@@ -24,5 +24,5 @@ Start the test SPA
 
 ```
 npx tsc -w
-yarn start
+yarn start_spa
 ```

@@ -38,9 +38,50 @@ export function useEffectRunConditionToDependencyArray(
 		hookName = useEffectRunConditionToDependencyArray.name
 	} = props;
 
-	const refIsFistRender = useRef(true);
+	/*
+	const isFistRenderRef = useRef(true);
 
-	useEffect(() => { refIsFistRender.current = false; }, []);
+	useEffect(() => { isFistRenderRef.current = false; }, []);
+	*/
+
+	const { isFirstUpdateWithDepsRef } = (function useClosure() {
+
+		const isFirstUpdateWithDepsRef = useRef(true);
+		const previousDoRunOnlyOnChangeRef = useRef<undefined | boolean>(undefined);
+
+		if (
+			!previousDoRunOnlyOnChangeRef.current &&
+			typeof effectRunCondition === "object" &&
+			"doRunOnlyOnChange" in effectRunCondition &&
+			effectRunCondition.doRunOnlyOnChange
+		) {
+
+			isFirstUpdateWithDepsRef.current = true;
+
+		}
+
+		useEffect(
+			() => {
+
+				isFirstUpdateWithDepsRef.current = false;
+
+				previousDoRunOnlyOnChangeRef.current =
+					(
+						typeof effectRunCondition === "object" &&
+						"doRunOnlyOnChange" in effectRunCondition
+					) ?
+						effectRunCondition.doRunOnlyOnChange : undefined;
+
+
+
+			}
+		);
+
+		return { isFirstUpdateWithDepsRef };
+
+	})();
+
+
 
 	const depsRef = useRef<readonly any[]>(new Array(depsMaxLength).fill(privateObject));
 
@@ -61,7 +102,7 @@ export function useEffectRunConditionToDependencyArray(
 			[effectRunCondition, false] :
 			[
 				effectRunCondition.deps,
-				effectRunCondition.doRunOnlyOnChange && refIsFistRender.current
+				effectRunCondition.doRunOnlyOnChange && isFirstUpdateWithDepsRef.current
 			];
 
 		assert(
@@ -80,8 +121,8 @@ export function useEffectRunConditionToDependencyArray(
 
 	depsRef.current = deps;
 
-	return { 
-		deps, 
+	return {
+		deps,
 		doSkipEffectRun /* NOTE: Only necessary for fist render */
 	};
 

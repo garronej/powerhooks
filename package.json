@@ -10,8 +10,8 @@
     "types": "dist/index.d.ts",
     "scripts": {
         "build": "tsc",
-        "link_test_projects_dependencies": "node dist/bin/link_test_projects_dependencies",
-        "start": "yarn link_test_projects_dependencies && cd src/test && yarn start"
+        "yarn_link": "ts-node src/bin/yarn_link.ts",
+        "start_spa": "yarn yarn_link && cd src/test/spa && yarn start"
     },
     "author": "u/garronej & u/thieryw",
     "license": "MIT",
