@@ -15,7 +15,7 @@ export function TestUseEffectIf() {
 
 	const shapeRef = useRef<Shape>({
 		"type": "square",
-		"sideLength": 10
+		"sideLength": 5
 
 	});
 
@@ -59,6 +59,28 @@ export function TestUseEffectIf() {
 
 			}
 
+			if (tick === 12) {
+
+				shapeRef.current ={
+					"type": "square",
+					"sideLength": 40
+				};
+
+				return;
+
+			}
+
+			if (tick === 15) {
+
+				shapeRef.current ={
+					"type": "circle",
+					"radius": 50
+				};
+
+				return;
+
+			}
+
 		},
 		[tick]
 	);
@@ -66,13 +88,11 @@ export function TestUseEffectIf() {
 	useEffectIf(
 		({ deps: [radius] }) => {
 			console.log("===================>", { radius });
+			return ()=> console.log(`cleanup ${radius}`);
 		},
 		shapeRef.current.type !== "circle" ?
 			false :
-			{
-				"doRunOnlyOnChange": true,
-				"deps": [shapeRef.current.radius, "foo"] as const
-			}
+			[shapeRef.current.radius, "foo"] as const
 	);
 
 	return <h1>{tick} {JSON.stringify(shapeRef.current)}</h1>

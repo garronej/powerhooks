@@ -1,7 +1,5 @@
-import { useRef, useEffect } from "react";
+import { useRef } from "react";
 import { assert } from "tsafe/assert";
-
-export type EffectRunCondition<Deps extends readonly any[] = readonly any[]> = boolean | Deps | { doRunOnlyOnChange: boolean; deps: Deps };
 
 const depsMaxLength = 9;
 
@@ -27,7 +25,7 @@ const privateObject = {}
  */
 export function useEffectRunConditionToDependencyArray(
 	props: {
-		effectRunCondition: EffectRunCondition,
+		effectRunCondition: boolean | readonly any[],
 		/** For more insightful debug messages */
 		hookName?: string;
 	}
@@ -37,51 +35,6 @@ export function useEffectRunConditionToDependencyArray(
 		effectRunCondition,
 		hookName = useEffectRunConditionToDependencyArray.name
 	} = props;
-
-	/*
-	const isFistRenderRef = useRef(true);
-
-	useEffect(() => { isFistRenderRef.current = false; }, []);
-	*/
-
-	const { isFirstUpdateWithDepsRef } = (function useClosure() {
-
-		const isFirstUpdateWithDepsRef = useRef(true);
-		const previousDoRunOnlyOnChangeRef = useRef<undefined | boolean>(undefined);
-
-		if (
-			!previousDoRunOnlyOnChangeRef.current &&
-			typeof effectRunCondition === "object" &&
-			"doRunOnlyOnChange" in effectRunCondition &&
-			effectRunCondition.doRunOnlyOnChange
-		) {
-
-			isFirstUpdateWithDepsRef.current = true;
-
-		}
-
-		useEffect(
-			() => {
-
-				isFirstUpdateWithDepsRef.current = false;
-
-				previousDoRunOnlyOnChangeRef.current =
-					(
-						typeof effectRunCondition === "object" &&
-						"doRunOnlyOnChange" in effectRunCondition
-					) ?
-						effectRunCondition.doRunOnlyOnChange : undefined;
-
-
-
-			}
-		);
-
-		return { isFirstUpdateWithDepsRef };
-
-	})();
-
-
 
 	const depsRef = useRef<readonly any[]>(new Array(depsMaxLength).fill(privateObject));
 
@@ -98,24 +51,17 @@ export function useEffectRunConditionToDependencyArray(
 
 		}
 
-		const [shortDeps, doSkipEffectRun] = "length" in effectRunCondition ?
-			[effectRunCondition, false] :
-			[
-				effectRunCondition.deps,
-				effectRunCondition.doRunOnlyOnChange && isFirstUpdateWithDepsRef.current
-			];
-
 		assert(
-			shortDeps.length <= depsMaxLength,
+			effectRunCondition.length <= depsMaxLength,
 			`dependency array passed to ${hookName} can only contain at most ${depsMaxLength} elements`
 		);
 
 		const deps = [
-			...shortDeps,
-			...new Array(depsMaxLength - shortDeps.length).fill(privateObject)
+			...effectRunCondition,
+			...new Array(depsMaxLength - effectRunCondition.length).fill(privateObject)
 		];
 
-		return { deps, doSkipEffectRun };
+		return { deps, "doSkipEffectRun": false };
 
 	})();
 
@@ -127,3 +73,4 @@ export function useEffectRunConditionToDependencyArray(
 	};
 
 }
+
