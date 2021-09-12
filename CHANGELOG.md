@@ -1,3 +1,10 @@
+## **0.9.0** (2021-09-12)  
+  
+- useGuarenteedMemo: improve typing  
+- Roll back to a more straight forward and more predictible API  
+- Setup test app  
+- Feat: useEffectIf    
+  
 ## **0.8.0** (2021-09-10)  
   
 - Feat: useEffectIf    
