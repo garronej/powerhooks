@@ -1,7 +1,7 @@
 
 import { useRef } from "react";
 
-export function useGuaranteedMemo<T>(fn: () => T, deps: any[]): T {
+export function useGuaranteedMemo<T>(fn: () => T, deps: readonly any[]): T {
 
     const ref = useRef<{ v: T; prevDeps: any[]; }>()
 
