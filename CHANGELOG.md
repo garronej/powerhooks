@@ -1,3 +1,7 @@
+### **0.9.3** (2021-10-05)  
+  
+- Fix warnings  Evt memory leak detected    
+  
 ### **0.9.2** (2021-09-14)  
   
   
