@@ -28,7 +28,7 @@ export function useDomRect<T extends HTMLElement = any>(params?: { ref: React.Re
                 height: number,
                 width: number
             ): PartialDomRect => ({
-                bottom, right, top, 
+                bottom, right, top,
                 left, height, width
             }),
             { "max": 1 }
@@ -49,7 +49,10 @@ export function useDomRect<T extends HTMLElement = any>(params?: { ref: React.Re
     const ref = params?.ref ?? internallyCreatedRef;
 
     useElementEvt<T>(
-        ({ ctx, element }) =>
+        ({ ctx, element }) => {
+
+            ctx.evtDetach.setMaxHandlers(Infinity);
+
             Evt.merge([
                 Evt.from(ctx, ResizeObserver, element),
                 evtForceUpdate
@@ -90,7 +93,9 @@ export function useDomRect<T extends HTMLElement = any>(params?: { ref: React.Re
                         return;
                     }
 
-                })(0)),
+                })(0));
+
+        },
         ref,
         []
     );
