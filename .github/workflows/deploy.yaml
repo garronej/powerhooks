@@ -1,7 +1,7 @@
 on:
   push:
     branches:
-      - landingpage
+      - landing-page
 
 jobs:
 
