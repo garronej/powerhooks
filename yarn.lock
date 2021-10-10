@@ -5845,10 +5845,10 @@ github-buttons@^2.8.0:
   resolved "https://registry.yarnpkg.com/github-buttons/-/github-buttons-2.19.1.tgz#9703755a4da1c5b229d3f1d875c2f787efa59bd5"
   integrity sha512-us6ZC0bFYLfBq2CkZJJRpdPP5JlB6+kWFTdw8iK3E7yoMKdoLhDkqQHelJ+39UVR2zQbfXN5gNt3cVYp4fAuXA==
 
-gitlanding@^0.3.16:
-  version "0.3.16"
-  resolved "https://registry.yarnpkg.com/gitlanding/-/gitlanding-0.3.16.tgz#c6850ea10693f96b1e85e9e68f15740c981e5cd0"
-  integrity sha512-3N4W1FnEYfPznee14/8QH7KNSqCC3lau6ujvDglClIkIxBQcN88EaY5R03fxdJnKS61Mc00p6Q+JNMgWCWpcbA==
+gitlanding@^0.4.4:
+  version "0.4.4"
+  resolved "https://registry.yarnpkg.com/gitlanding/-/gitlanding-0.4.4.tgz#4e2674821c21aa123f05f64fac46e7e7b3596fac"
+  integrity sha512-Q9R7FwTCYQuosRsAncWSvCp1506iBpqEdpdn3Gb0xiM3qqiQphiAa4LgtThDNu4SIPfAbPRu1N437toAbMxjcg==
   dependencies:
     "@emotion/react" "^11.4.1"
     "@emotion/styled" "^11.3.0"

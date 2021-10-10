@@ -6,7 +6,7 @@ import {GlHero} from "gitlanding/GlHero";
 import {makeStyles, ThemeProviderDefault} from "gitlanding/theme";
 import backgroundUrlDark from "./assets/img/background-dark.jpg";
 import backgroundUrlLight from "./assets/img/background-light.jpg";
-import heroMp4 from "./assets/videos/heroIllustration.mp4";
+import heroMp4 from "./assets/videos/hero-video.mp4";
 import {GlArticle} from "gitlanding/GlArticle";
 import todoListMp4 from "./assets/videos/todo-list.mp4";
 import {GlIllustration} from "gitlanding/GlIllustration";
@@ -25,13 +25,14 @@ const useStyles = makeStyles()(
     theme => ({
         "hero": {
             "backgroundImage": `url("${theme.isDarkModeEnabled ? backgroundUrlDark : backgroundUrlLight}")`,
-            "backgroundAttachment": "fixed",
-            "backgroundPosition": "bottom",
             "backgroundRepeat": "no-repeat",
             "paddingTop": theme.spacing(6),
             "& h3": {
                 "color": theme.colors.useCases.typography.textPrimary
             },
+            "backgroundSize": "cover",
+            "backgroundPositionY": "bottom",
+
         },
 
         "title": {
@@ -108,6 +109,7 @@ const App = memo(()=>{
             />
 
             <GlArticle 
+                id="firstSection"
                 title="Enhance your React Game"
                 body={`**React** **Powerhooks** solves an array of problems that would otherwise be very tricky to solve. For instance being able to inject parameters into a callback function with out it having to be re instantiated on every render, or easily getting measurement on a dom element.
 
@@ -123,7 +125,6 @@ Checkout a repository of examples.
                     hasShadow={true}
                 />}
                 illustrationPosition="left"
-                hasAnimation={true}
             />
 
             <h1 className={classes.title}>Important examples</h1>
@@ -139,6 +140,7 @@ and this without involving a provider.`}
                     url={useGlobalStateSnippet}
                     hasShadow={true}
                 />}
+                animationVariant="primary"
             />
 
             <GlSectionDivider />
@@ -162,6 +164,7 @@ yet the values of x ant y are always up to date.`}
                     hasShadow={true}
                 />}
                 illustrationPosition="left"
+                animationVariant="secondary"
             />
 
             <GlSectionDivider />
@@ -182,11 +185,12 @@ completed without re-rendering every items.`}
                     url={useCallbackFactoryCodeSnippet}
                     hasShadow={true}
                 />}
+                animationVariant="primary"
             />
 
     <GlSlider 
         title="Projects that use Powerhooks"
-        autoPlayTimeInterval={4000}
+        autoPlayTimeInterval={4}
         slides={[
             <GlLogoCard 
                 className={classes.card}
