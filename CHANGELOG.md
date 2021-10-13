@@ -1,3 +1,7 @@
+### **0.9.4** (2021-10-13)  
+  
+- Better urlSearchParams    
+  
 ### **0.9.3** (2021-10-05)  
   
 - Fix warnings  Evt memory leak detected    
