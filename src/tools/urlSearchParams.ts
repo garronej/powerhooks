@@ -1,5 +1,4 @@
 
-
 function add(
     params: {
         url: string,
@@ -10,7 +9,12 @@ function add(
 
     const { url, name, value } = params;
 
-    const newUrl = `${url}${/\?/.test(url) ? "&" : "?"}${name}=${encodeURI(value)}`;
+    const { newLocationSearch } = retrieve({
+        "locationSearch": url.split("?")[1] ?? "",
+        "prefix": name
+    });
+
+    const newUrl = url.split("?")[0] + "?" + [newLocationSearch + `${name}=${encodeURI(value)}`].join("&");
 
     return { newUrl };
 
