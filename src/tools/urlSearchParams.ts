@@ -14,7 +14,7 @@ function add(
         "prefix": name
     });
 
-    const newUrl = url.split("?")[0] + [newLocationSearch + `${name}=${encodeURI(value)}`].join("&");
+    const newUrl = url.split("?")[0] + [newLocationSearch, `${name}=${encodeURI(value)}`].join("&");
 
     return { newUrl };
 
