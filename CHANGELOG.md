@@ -1,3 +1,7 @@
+### **0.9.5** (2021-10-16)  
+  
+- tools/urlSearchParams: fix    
+  
 ### **0.9.4** (2021-10-13)  
   
 - Better urlSearchParams    
