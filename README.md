@@ -47,7 +47,7 @@ How cool is that ?!
 Measure renders components in realtime.
 
 ```tsx
-import { } from "powerhooks/useDomRect";
+import { useDomRect } from "powerhooks/useDomRect";
 
 function MyComponent(){
 
