@@ -44,7 +44,7 @@ How cool is that ?!
 
 ## `useDomRect`
 
-Measure renders components in realtime.
+Measure rendered components in realtime.
 
 ```tsx
 import { useDomRect } from "powerhooks/useDomRect";
