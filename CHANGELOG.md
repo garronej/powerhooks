@@ -1,3 +1,8 @@
+### **0.9.7** (2021-10-16)  
+  
+- Remove the state from url as soon as consumed now that powerhook is a peer dependency  
+- bugfix    
+  
 ### **0.9.6** (2021-10-16)  
   
   

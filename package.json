@@ -32,11 +32,11 @@
   ],
   "homepage": "https://github.com/garronej/powerhooks",
   "devDependencies": {
-    "@types/memoizee": "^0.4.5",
-    "@types/node": "^10.0.0",
-    "@types/react": "^17.0.2",
-    "react": "^17.0.1",
-    "typescript": "^4.4.4"
+    "@types/memoizee": "0.4.6",
+    "@types/node": "10.17.60",
+    "@types/react": "17.0.30",
+    "react": "17.0.2",
+    "typescript": "4.4.4"
   },
   "dependencies": {
     "evt": "2.0.0-beta.38",
