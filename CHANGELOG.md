@@ -1,3 +1,26 @@
+## **0.10.0** (2021-10-17)  
+  
+- Update lockfile  
+- Improve url search param lib  
+- Merge pull request #10 from garronej/renovate/garronej-github_actions_toolkit-2.x
+
+Update garronej/github_actions_toolkit action to v2.4  
+- Merge pull request #9 from garronej/renovate/actions-setup-node-2.x
+
+Update actions/setup-node action to v2.4.1  
+- Update actions/setup-node action to v2.4.1  
+- Merge pull request #7 from garronej/renovate/actions-checkout-2.x
+
+Update actions/checkout action to v2.3.5  
+- Merge pull request #6 from garronej/renovate/pin-dependencies
+
+Pin dependencies  
+- Update garronej/github_actions_toolkit action to v2.4  
+- Update actions/checkout action to v2.3.5  
+- Pin dependencies  
+- Merge pull request #5 from garronej/renovate/configure  
+- Add renovate.json    
+  
 ### **0.9.7** (2021-10-16)  
   
 - Remove the state from url as soon as consumed now that powerhook is a peer dependency  
