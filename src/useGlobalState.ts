@@ -9,7 +9,7 @@ import type { UseNamedStateReturnType } from "./useNamedState";
 import { typeGuard } from "tsafe/typeGuard";
 import { capitalize } from "./tools/capitalize";
 import memoize from "memoizee";
-import { urlSearchParams } from "./tools/urlSearchParams";
+import { addParamToUrl, retrieveAllParamStartingWithPrefixFromUrl, updateSearchBarUrl } from "./tools/urlSearchParams";
 
 export type { StatefulEvt };
 
@@ -37,8 +37,8 @@ const { injectGlobalStatesInSearchParams, getStatesFromUrlSearchParams } = (() =
         Object.keys(globalStates)
             .filter(name => persistedGlobalStateNames.has(name))
             .forEach(name =>
-                newUrl = urlSearchParams
-                    .add({
+                newUrl = 
+                    addParamToUrl({
                         "url": newUrl,
                         "name": `${prefix}${name}`,
                         "value": stringify(globalStates[name])
@@ -53,15 +53,15 @@ const { injectGlobalStatesInSearchParams, getStatesFromUrlSearchParams } = (() =
     const getUnparsedStatesFromUrlSearchParams = memoize(() => {
 
         const {
-            newLocationSearch, 
+            newUrl, 
             values: unparsedStates
-        } = urlSearchParams.retrieve({ "locationSearch": location.search, prefix })
+        } = retrieveAllParamStartingWithPrefixFromUrl({ 
+            "url": window.location.href, 
+            prefix, 
+            "doLeavePrefixInResults": false 
+        });
 
-        window.history.replaceState(
-            "",
-            "",
-            `${location.href.split("?")[0]}${newLocationSearch}`
-        );
+        updateSearchBarUrl(newUrl);
 
         return { unparsedStates };
 

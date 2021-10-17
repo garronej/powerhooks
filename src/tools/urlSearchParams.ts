@@ -1,5 +1,5 @@
 
-function add(
+export function addParamToUrl(
     params: {
         url: string,
         name: string,
@@ -9,25 +9,36 @@ function add(
 
     const { url, name, value } = params;
 
-    const { newLocationSearch } = retrieve({
-        "locationSearch": url.split("?")[1] ?? "",
-        "prefix": name
+    let newUrl = url;
+
+    const result = retrieveParamFromUrl({
+        url,
+        name
     });
 
-    const newUrl = url.split("?")[0] + [newLocationSearch, `${name}=${encodeURI(value)}`].join("&");
+    if (result.wasPresent) {
+
+        newUrl = result.newUrl;
+
+    }
+
+    newUrl += `${newUrl.includes("?") ? "&" : newUrl.endsWith("?") ? "" : "?"}${name}=${encodeURI(value)}`;
 
     return { newUrl };
 
 }
 
-export function retrieve(
+export function retrieveAllParamStartingWithPrefixFromUrl<Prefix extends string, DoLeave extends boolean>(
     params: {
-        locationSearch: string;
-        prefix: string;
+        url: string;
+        prefix: Prefix;
+        doLeavePrefixInResults: DoLeave;
     }
-): { newLocationSearch: string; values: Record<string, string>; } {
+): { newUrl: string; values: Record<DoLeave extends true ? `${Prefix}${string}` : string, string>; } {
 
-    const { locationSearch, prefix } = params;
+    const { url, prefix, doLeavePrefixInResults } = params;
+
+    const [baseUrl, locationSearch = ""] = url.split("?");
 
     const values: Record<string, string> = {};
 
@@ -40,7 +51,7 @@ export function retrieve(
             .filter(([key, value_i]) =>
                 !key.startsWith(prefix) ?
                     true :
-                    (values[key.substring(prefix.length)] = decodeURI(value_i), false))
+                    (values[doLeavePrefixInResults ? key : key.substring(prefix.length)] = decodeURI(value_i), false))
             .map(entry => entry.join("="))
             .join("&")
             ;
@@ -53,12 +64,49 @@ export function retrieve(
     })();
 
     return {
-        newLocationSearch,
+        "newUrl": `${baseUrl}${newLocationSearch}`,
         values
     };
 
 }
 
-export const urlSearchParams = { add, retrieve };
+export function retrieveParamFromUrl(
+    params: {
+        url: string;
+        name: string;
+    }
+): { wasPresent: false; } | { wasPresent: true; newUrl: string; value: string; } {
+
+    const { url, name } = params;
+
+    const { newUrl, values } = retrieveAllParamStartingWithPrefixFromUrl({
+        url,
+        "prefix": name,
+        "doLeavePrefixInResults": true
+    });
+
+    return name in values ?
+        {
+            "wasPresent": true, newUrl,
+            "value": values[name]
+        } :
+        {
+            "wasPresent": false
+        };
+
+}
+
+
+export function updateSearchBarUrl(url: string) {
+
+    window.history.replaceState(
+        "",
+        "",
+        url
+    );
+
+}
+
+
 
 
