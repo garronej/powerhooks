@@ -1,3 +1,19 @@
+## **0.11.0** (2021-10-22)  
+  
+- Add useConst()  
+- Merge pull request #13 from garronej/renovate/node-14.x
+
+Update dependency @types/node to v14.17.28  
+- Update dependency @types/node to v14.17.28  
+- Merge pull request #11 from garronej/renovate/node-14.x
+
+Update dependency @types/node to v14  
+- Update dependency @types/node to v14  
+- Merge pull request #12 from garronej/renovate/react-17.x
+
+Update dependency @types/react to v17.0.31  
+- Update dependency @types/react to v17.0.31    
+  
 ## **0.10.0** (2021-10-17)  
   
 - Update lockfile  
