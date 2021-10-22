@@ -106,6 +106,18 @@ assert(same(
 	}
 ));
 
+assert(same(
+	retrieveParamFromUrl({
+		"url": "https://datalab.sspcloud.fr/?palette=ultraviolet&title=Eurostat",
+		"name": "title"
+	}),
+	{
+		"newUrl": "https://datalab.sspcloud.fr/?palette=ultraviolet",
+		"wasPresent": true,
+		"value": "Eurostat"
+	}
+));
+
 console.log("PASS");
 
 
