@@ -30,6 +30,8 @@ array to `useCallback`](https://stackoverflow.com/questions/65890278/why-cant-us
   <img src="https://www.powerhooks.dev/static/media/useConstCallback.07317f8f.png">
 </p>
 
+[Demo playground](https://stackblitz.com/edit/react-ts-fyrwng?file=index.tsx) to show you why it matters.
+
 ## `useGlobalState`
 
 Create global state persistent across reloads that is accessible through out the entire app, and this without involving a provider.
