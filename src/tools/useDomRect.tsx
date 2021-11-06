@@ -51,7 +51,7 @@ export function useDomRect<T extends HTMLElement = any>(params?: { ref: React.Re
     useElementEvt<T>(
         ({ ctx, element }) => {
 
-            ctx.evtDetach.setMaxHandlers(Infinity);
+            ctx.evtDoneOrAborted.setMaxHandlers(Infinity);
 
             Evt.merge([
                 Evt.from(ctx, ResizeObserver, element),
@@ -68,7 +68,7 @@ export function useDomRect<T extends HTMLElement = any>(params?: { ref: React.Re
 
                         const internalCtx = Evt.newCtx();
 
-                        ctx.evtDetach.attachOnce(internalCtx, () => clearTimeout(timer));
+                        ctx.evtDoneOrAborted.attachOnce(internalCtx, () => clearTimeout(timer));
 
                         await pr;
 
