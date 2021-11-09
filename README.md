@@ -16,7 +16,7 @@
 -->
 
 <i>This module is still under development. A real documentation website is coming.</i>  
-**WARNING**: As for now most of the `powerhooks` aren't compatible with server side rendering.
+**WARNING**: As for now `useDomRect` and `useGlobalStates` aren't compatible with server side rendering.
 Do not hesitate to open an issue about it if it's a problem for you.
 
 # Main hooks
