@@ -16,8 +16,7 @@
 -->
 
 <i>This module is still under development. A real documentation website is coming.</i>  
-**WARNING**: As for now `useDomRect` and `useGlobalStates` aren't compatible with server side rendering.
-Do not hesitate to open an issue about it if it's a problem for you.
+
 
 # Main hooks
 
@@ -43,6 +42,8 @@ How cool is that ?!
 <p align="center">
   <img src="https://user-images.githubusercontent.com/6702424/137588840-b40ec4a4-288e-4d23-981a-9dd834bcd794.png">
 </p>
+
+WARNING: Not yet compatible with SSR.  
 
 ## `useDomRect`
 
@@ -74,6 +75,8 @@ function MyComponent(){
 
 }
 ```
+
+WARNING: Not yet compatible with SSR  
 
 ## `useCallbackFactory`
 
