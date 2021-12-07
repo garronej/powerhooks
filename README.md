@@ -37,10 +37,10 @@ To avoid re-rendering every list item component when the parent re-renders.
 
 ```tsx
 todos.map(todo=> 
-	<Todo 
-		todo={todo}
-		onClick={(a, b)=> onClick(todo, a, b)}
-	/>
+    <Todo 
+        todo={todo}
+        onClick={(a, b)=> onClick(todo, a, b)}
+    />
 );
 
 //With: 
@@ -50,17 +50,17 @@ import { useCallbackFactory } from "powerhooks/useCallbackFactory";
 //...
 
 const onClickFactory = useCallbackFactory(
-	(
-		[todo]: [string],
-		[a, b]: [string, number]
-	) => onClick(todo, a, b)
+    (
+        [todo]: [string],
+        [a, b]: [string, number]
+    ) => onClick(todo, a, b)
 );
 
 todos.map(todo=> 
-	<Todo 
-		todo={todo}
-		onClick={onClickFactory(todo)}
-	/>
+    <Todo 
+        todo={todo}
+        onClick={onClickFactory(todo)}
+    />
 );
 ```
 
