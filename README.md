@@ -36,6 +36,8 @@ array to `useCallback`](https://stackoverflow.com/questions/65890278/why-cant-us
 To avoid re-rendering every list item component when the parent re-renders.
 
 ```tsx
+//Without powerhook: 
+
 todos.map(todo=> 
     <Todo 
         todo={todo}
