@@ -2,10 +2,18 @@
     <i>The missing builtins hooks</i>
     <br>
     <br>
-    <img src="https://github.com/garronej/powerhooks/workflows/ci/badge.svg?branch=master">
-    <img src="https://img.shields.io/bundlephobia/minzip/powerhooks">
-    <img src="https://img.shields.io/npm/dw/powerhooks">
-    <img src="https://img.shields.io/npm/l/powerhooks">
+    <a href="https://github.com/garronej/powerhooks/actions">
+      <img src="https://github.com/garronej/powerhooks/workflows/ci/badge.svg?branch=master">
+    </a>
+    <a href="https://bundlephobia.com/package/powerhooks">
+      <img src="https://img.shields.io/bundlephobia/minzip/powerhooks">
+    </a>
+    <a href="https://www.npmjs.com/package/powerhooks">
+      <img src="https://img.shields.io/npm/dw/powerhooks">
+    </a>
+    <a href="https://github.com/garronej/powerhooks/blob/main/LICENSE">
+      <img src="https://img.shields.io/npm/l/powerhooks">
+    </a>
 </p>
 <!--
 <p align="center">
