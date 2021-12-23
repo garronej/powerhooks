@@ -1,3 +1,51 @@
+### **0.11.1** (2021-11-06)  
+  
+- useDomRect: Fix component unmonted bug  
+- Merge pull request #21 from garronej/renovate/react-17.x
+
+Update dependency @types/react to v17.0.34  
+- Update dependency @types/react to v17.0.34  
+- Merge pull request #20 from garronej/renovate/actions-checkout-2.x
+
+Update actions/checkout action to v2.4.0  
+- Update actions/checkout action to v2.4.0  
+- Merge pull request #19 from garronej/renovate/node-16.x
+
+Update dependency @types/node to v16  
+- Update dependency @types/node to v16  
+- Merge pull request #18 from garronej/renovate/react-17.x  
+- Update dependency @types/react to v17.0.33  
+- Merge pull request #17 from garronej/renovate/node-14.x
+
+Update dependency @types/node to v14.17.32  
+- Update dependency @types/node to v14.17.32  
+- Merge pull request #16 from garronej/renovate/node-14.x
+
+Update dependency @types/node to v14.17.31  
+- Update dependency @types/node to v14.17.31  
+- Merge pull request #15 from garronej/renovate/react-17.x
+
+Update dependency @types/react to v17.0.32  
+- Update dependency @types/react to v17.0.32  
+- Merge pull request #14 from garronej/renovate/node-14.x  
+- Update dependency @types/node to v14.17.29    
+  
+## **0.11.0** (2021-10-22)  
+  
+- Add useConst()  
+- Merge pull request #13 from garronej/renovate/node-14.x
+
+Update dependency @types/node to v14.17.28  
+- Update dependency @types/node to v14.17.28  
+- Merge pull request #11 from garronej/renovate/node-14.x
+
+Update dependency @types/node to v14  
+- Update dependency @types/node to v14  
+- Merge pull request #12 from garronej/renovate/react-17.x
+
+Update dependency @types/react to v17.0.31  
+- Update dependency @types/react to v17.0.31    
+  
 ## **0.10.0** (2021-10-17)  
   
 - Update lockfile  

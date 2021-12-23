@@ -24,8 +24,7 @@
 -->
 
 <i>This module is still under development. A real documentation website is coming.</i>  
-**WARNING**: As for now most of the `powerhooks` aren't compatible with server side rendering.
-Do not hesitate to open an issue about it if it's a problem for you.
+
 
 # Main hooks
 
@@ -38,6 +37,47 @@ array to `useCallback`](https://stackoverflow.com/questions/65890278/why-cant-us
   <img src="https://www.powerhooks.dev/static/media/useConstCallback.07317f8f.png">
 </p>
 
+[Demo playground](https://stackblitz.com/edit/react-ts-fyrwng?file=index.tsx) to show you why it matters.
+
+## `useCallbackFactory`
+
+To avoid re-rendering every list item component when the parent re-renders.
+
+```tsx
+//Without powerhook: 
+
+todos.map(todo=> 
+    <Todo 
+        todo={todo}
+        onClick={(a, b)=> onClick(todo, a, b)}
+    />
+);
+
+//With: 
+
+import { useCallbackFactory } from "powerhooks/useCallbackFactory";
+
+//...
+
+const onClickFactory = useCallbackFactory(
+    (
+        [todo]: [string],
+        [a, b]: [string, number]
+    ) => onClick(todo, a, b)
+);
+
+todos.map(todo=> 
+    <Todo 
+        todo={todo}
+        onClick={onClickFactory(todo)}
+    />
+);
+```
+
+Let's assume `<TodoItem />` uses `React.memo`, in the example without powerhooks, 
+every render of the parent the reference of `onComplete` changes.  
+`useCallbackFactory` on the other hand always returns the same function for a given `todo: string`.  
+
 ## `useGlobalState`
 
 Create global state persistent across reloads that is accessible through out the entire app, and this without involving a provider.
@@ -49,6 +89,8 @@ How cool is that ?!
 <p align="center">
   <img src="https://user-images.githubusercontent.com/6702424/137588840-b40ec4a4-288e-4d23-981a-9dd834bcd794.png">
 </p>
+
+WARNING: Not yet compatible with SSR.  
 
 ## `useDomRect`
 
@@ -81,17 +123,7 @@ function MyComponent(){
 }
 ```
 
-## `useCallbackFactory`
-
-To avoid re-rendering every list item component when the parent re-renders.
-
-<p align="center">
-  <img src="https://www.powerhooks.dev/static/media/useCallbackFactory.6c0887be.png">
-</p>
-
-Let's assume `<TodoItem />` uses `React.memo`, in the example without powerhooks, 
-every render of the parent the reference of `onComplete` changes.  
-`useCallbackFactory` on the other hand always returns the same reference for a given `todo: string`.
+WARNING: Not yet compatible with SSR  
 
 # Used by
 
