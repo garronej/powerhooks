@@ -1,3 +1,63 @@
+### **0.11.2** (2021-12-27)  
+  
+- Update evt  
+- Merge pull request #40 from garronej/renovate/evt-2.x
+
+Update dependency evt to v2.0.0-beta.39  
+- Update dependency evt to v2.0.0-beta.39  
+- Merge pull request #37 from garronej/renovate/node-16.x  
+- Update dependency @types/node to v16.11.16  
+- Merge pull request #36 from garronej/renovate/node-16.x
+
+Update dependency @types/node to v16.11.15  
+- Update dependency @types/node to v16.11.15  
+- Merge pull request #35 from garronej/renovate/node-16.x  
+- Update dependency @types/node to v16.11.14  
+- Merge pull request #32 from garronej/renovate/node-16.x  
+- Update dependency @types/node to v16.11.13  
+- Merge pull request #33 from garronej/renovate/typescript-4.x  
+- Update dependency typescript to v4.5.4  
+- Merge pull request #24 from garronej/renovate/typescript-4.x
+
+Update dependency typescript to v4.5.3  
+- Update dependency typescript to v4.5.3  
+- Update README.md  
+- fmt  
+- Merge pull request #31 from garronej/renovate/node-16.x
+
+Update dependency @types/node to v16.11.11  
+- Update dependency @types/node to v16.11.11  
+- Merge pull request #30 from garronej/renovate/actions-setup-node-2.x
+
+Update actions/setup-node action to v2.5.0  
+- Update actions/setup-node action to v2.5.0  
+- Merge pull request #29 from garronej/renovate/react-17.x
+
+Update dependency @types/react to v17.0.37  
+- Update dependency @types/react to v17.0.37  
+- Merge pull request #28 from garronej/renovate/node-16.x
+
+Update dependency @types/node to v16.11.10  
+- Update dependency @types/node to v16.11.10  
+- Merge pull request #26 from garronej/renovate/node-16.x  
+- Update dependency @types/node to v16.11.9  
+- Merge pull request #27 from garronej/renovate/react-17.x
+
+Update dependency @types/react to v17.0.36  
+- Update dependency @types/react to v17.0.36  
+- Merge pull request #25 from garronej/renovate/node-16.x
+
+Update dependency @types/node to v16.11.8  
+- Update dependency @types/node to v16.11.8  
+- Merge pull request #22 from garronej/renovate/node-16.x  
+- Update dependency @types/node to v16.11.7  
+- Merge pull request #23 from garronej/renovate/react-17.x
+
+Update dependency @types/react to v17.0.35  
+- Update dependency @types/react to v17.0.35  
+- Update README.md  
+- Update README.md    
+  
 ### **0.11.1** (2021-11-06)  
   
 - useDomRect: Fix component unmonted bug  
