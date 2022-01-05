@@ -8,7 +8,6 @@ import backgroundUrlDark from "./assets/img/background-dark.jpg";
 import backgroundUrlLight from "./assets/img/background-light.jpg";
 import heroMp4 from "./assets/videos/hero-video.mp4";
 import {GlArticle} from "gitlanding/GlArticle";
-import todoListMp4 from "./assets/videos/todo-list.mp4";
 import {GlIllustration} from "gitlanding/GlIllustration";
 import useCallbackFactoryCodeSnippet from "./assets/img/useCallbackFactory.png"
 import useConstCallbackSnippet from "./assets/img/useConstCallback.png"
@@ -18,8 +17,8 @@ import {GlLogoCard} from "gitlanding/GlCards/GlLogoCard"
 import {GlSlider} from "gitlanding/GlSlider";
 import gitlandingLogoPng from "./assets/img/gitlanding-logo.png";
 import onyxiaLogoSvg from "./assets/svg/OnyxiaLogo.svg";
-import tssPng from "./assets/img/tss.png";
 import {GlFooter} from "gitlanding/GlFooter";
+import useDomRectSnippet from "./assets/img/useDomRect.png";
 
 const useStyles = makeStyles()(
     theme => ({
@@ -39,12 +38,12 @@ const useStyles = makeStyles()(
             ...theme.spacing.rightLeft("padding", `${theme.paddingRightLeft}px`),
             "textAlign": "center",
             ...theme.typography.variants["page heading"].style,
-            ...theme.spacing.topBottom("margin", 9)
-
+            "marginTop": theme.spacing(8),
+            "marginBottom": theme.spacing(6)
         },
         "section": {
             "& img": {
-                "maxWidth": 600
+                "maxWidth": 700
             }
         },
         "card": {
@@ -108,122 +107,107 @@ const App = memo(()=>{
                 hasImageShadow={true}
             />
 
+
+            <h1 className={classes.title}>Main hooks</h1>
+
             <GlArticle 
                 id="firstSection"
-                title="Enhance your React Game"
-                body={`**React** **Powerhooks** solves an array of problems that would otherwise be very tricky to solve. For instance being able to inject parameters into a callback function with out it having to be re instantiated on every render, or easily getting measurement on a dom element.
-
-Checkout a repository of examples.
-                `}
-                buttonLabel="Github"
-                buttonLink={{
-                    "href": "https://www.github.com/thieryw/powerhooks-example"
-                }}
-                illustration={<GlIllustration 
-                    type="image"
-                    url={todoListMp4}
-                    hasShadow={true}
-                />}
-                illustrationPosition="left"
-            />
-
-            <h1 className={classes.title}>Important examples</h1>
-
-            <GlArticle 
-                className={classes.section}
-                title="useGlobalState"
-                body={`This hook enables us to have a state persisting across
-reloads that is accessible through out the entire app,
-and this without involving a provider.`}
-                illustration={<GlIllustration
-                    type="image"
-                    url={useGlobalStateSnippet}
-                    hasShadow={true}
-                />}
-                animationVariant="primary"
-            />
-
-            <GlSectionDivider />
-
-
-            <GlArticle 
                 className={classes.section}
                 title="useConstCallback"
-
-                body= {`Each time x 
-and/or y have changed since the previous render **onClick** gets a new reference. 
-Witch is a pain when using **React.memo**. 
-
-On top of that if an involved state is forgotten in the dependency array
-the callback will encapsulate states that are out of date.
-With **useConstCallback**, the value of onClick never changes across renders
-yet the values of x ant y are always up to date.`}
+                body={`Believe it or not there is no valid reason to require user to pass in a dependency array to \`useCallback\`.`}
                 illustration={<GlIllustration
                     type="image"
                     url={useConstCallbackSnippet}
                     hasShadow={true}
                 />}
-                illustrationPosition="left"
-                animationVariant="secondary"
+                hasAnimation={true}
             />
+
 
             <GlSectionDivider />
 
             <GlArticle 
                 className={classes.section}
                 title="useCallbackFactory"
+                illustrationPosition="left"
 
-                body={`Even if **<TodoItem>** uses **React.memo**, each time a 
-item of the list is set to completed every **<TodoItem>** is 
-re-rendered because of onComplete that changes at every render for every item. 
+                body={`To avoid re-rendering every list item component when the parent re-renders.
 
-Whereas the value returned by **onCompleteFactory** is always the same for 
-a specific todo. With **useCallbackFactory** we can set an element of the list to 
-completed without re-rendering every items.`}
+Let's assume \`<TodoItem />\` uses \`React.memo\`, in the example without powerhooks, every render of the parent the reference of \`onComplete\` changes.
+\`useCallbackFactory\` on the other hand always returns the same function for a given \`todo: string\`.
+
+                `}
                 illustration={<GlIllustration
                     type="image"
-                    url={useCallbackFactoryCodeSnippet}
-                    hasShadow={true}
-                />}
-                animationVariant="primary"
-            />
+                url={useCallbackFactoryCodeSnippet}
+                hasShadow={true}
+            />}
+            hasAnimation={true}
+        />
 
-    <GlSlider 
-        title="Projects that use Powerhooks"
-        autoPlayTimeInterval={4}
-        slides={[
-            <GlLogoCard 
-                className={classes.card}
-                iconUrls={[gitlandingLogoPng]}
-                buttonLabel="Learn More"
-                title="Gitlanding"
-                paragraph="A Collection of React components for building a stylish landing page for github projects"
-                link={{
-                    "href": "https://github.com/thieryw/gitlanding"
-                }}
-            />,
-            <GlLogoCard 
-                className={classes.card}
-                iconUrls={[onyxiaLogoSvg]}
-                buttonLabel="Learn More"
-                title="Onyxia UI"
-                paragraph="A powerful UI tool kit for React based on Material UI"
-                link={{
-                    "href": "https://github.com/InseeFrLab/onyxia-ui"
-                }}
-            />,
-            <GlLogoCard 
-                className={classes.card}
-                iconUrls={[tssPng]}
-                buttonLabel="Learn More"
-                title="TSS React"
-                paragraph="A replacement for React jss and for Material UI's makeStyle. It's API is focused on providing maximum type safety and minimum verbosity."
-                link={{
-                    "href": "https://github.com/garronej/tss-react"
-                }}
-            />
-        ]}
-    />
+        <GlSectionDivider />
+
+        <GlArticle
+            className={classes.section}
+            title="useGlobalState"
+            body={`Create global state persistent across reloads that is accessible through out the entire app, and this without involving a provider.
+
+NOTE: It makes uses of TypeScript's template literal types to return \`useIsDarkModeEnabled\` based on the \`name\` parameter (\`"isDarkModeEnabled"\`).
+How cool is that ?!
+
+
+            `}
+            illustration={<GlIllustration
+                type="image"
+                url={useGlobalStateSnippet}
+                hasShadow={true}
+            />}
+            hasAnimation={true}
+        />
+        <GlSectionDivider />
+
+        <GlArticle
+            className={classes.section}
+            title="useDomRect"
+            illustrationPosition="left"
+            body={`Measure rendered components in realtime.
+
+WARNING: Not yet compatible with SSR
+            `}
+            illustration={<GlIllustration
+                type="image"
+                url={useDomRectSnippet}
+                hasShadow={true}
+            />}
+            hasAnimation={true}
+        />
+
+        <GlSlider
+            title="Projects that use Powerhooks"
+            autoPlayTimeInterval={4}
+            slides={[
+                <GlLogoCard
+                    className={classes.card}
+                    iconUrls={[gitlandingLogoPng]}
+                    buttonLabel="Learn More"
+                    title="Gitlanding"
+                    paragraph="A Collection of React components for building a stylish landing page for github projects"
+                    link={{
+                        "href": "https://github.com/thieryw/gitlanding"
+                    }}
+                />,
+                <GlLogoCard
+                    className={classes.card}
+                    iconUrls={[onyxiaLogoSvg]}
+                    buttonLabel="Learn More"
+                    title="Onyxia UI"
+                    paragraph="A powerful UI tool kit for React based on Material UI"
+                    link={{
+                        "href": "https://github.com/InseeFrLab/onyxia-ui"
+                    }}
+                />,
+            ]}
+        />
 
     </GlTemplate>
 
@@ -232,7 +216,7 @@ completed without re-rendering every items.`}
 
 reactDom.render(
     <ThemeProviderDefault>
-        <App/>
+        <App />
     </ThemeProviderDefault>,
     document.getElementById("root")
 );
