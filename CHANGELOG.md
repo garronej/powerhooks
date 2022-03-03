@@ -1,3 +1,35 @@
+## **0.12.0** (2022-03-03)  
+  
+- Enable to pass pre existing ref in useClickAway  
+- Merge pull request #49 from garronej/renovate/actions-setup-node-3.x  
+- Update actions/setup-node action to v3  
+- Merge pull request #47 from garronej/renovate/react-17.x
+
+Update dependency @types/react to v17.0.39  
+- Update dependency @types/react to v17.0.39  
+- Merge pull request #45 from garronej/renovate/node-16.x
+
+Update dependency @types/node to v16.11.22  
+- Update dependency @types/node to v16.11.22  
+- Merge pull request #44 from garronej/renovate/node-16.x
+
+Update dependency @types/node to v16.11.20  
+- Update dependency @types/node to v16.11.20  
+- Merge pull request #43 from garronej/renovate/node-16.x  
+- Update dependency @types/node to v16.11.19  
+- Merge pull request #42 from garronej/renovate/memoizee-0.x  
+- Update dependency @types/memoizee to v0.4.7  
+- Merge pull request #39 from garronej/renovate/react-17.x
+
+Update dependency @types/react to v17.0.38  
+- Update dependency @types/react to v17.0.38  
+- Merge pull request #38 from garronej/renovate/node-16.x
+
+Update dependency @types/node to v16.11.18  
+- Update dependency @types/node to v16.11.18  
+- Merge pull request #41 from garronej/renovate/actions-setup-node-2.x  
+- Update actions/setup-node action to v2.5.1    
+  
 ### **0.11.2** (2021-12-27)  
   
 - Update evt  
