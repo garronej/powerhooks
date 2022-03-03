@@ -1,12 +1,18 @@
 import { useRef } from "react";
+import type { RefObject } from "react";
 import { useEvt } from "evt/hooks";
 import { Evt } from "evt";
 import { useConstCallback } from "./useConstCallback";
 
+export function useClickAway<T extends HTMLElement = any>(params: { onClickAway: () => void; }): { ref: RefObject<T>; };
+export function useClickAway<T extends HTMLElement = any>(params: { onClickAway: () => void; ref: RefObject<T>; }): void;
+export function useClickAway<T extends HTMLElement = any>(params: { onClickAway: () => void; ref?: RefObject<T>; }): { ref: RefObject<T>; } {
 
-export function useClickAway<T extends HTMLElement = any>(onClickAway: () => void) {
+    const { onClickAway } = params;
 
-    const rootRef = useRef<T>(null);
+    const internallyCreatedRef = useRef<T>(null);
+
+    const ref = params?.ref ?? internallyCreatedRef;
 
     const onClickAway_const = useConstCallback(onClickAway);
 
@@ -14,13 +20,12 @@ export function useClickAway<T extends HTMLElement = any>(onClickAway: () => voi
         ctx =>
             Evt.from(ctx, document, "mousedown")
                 .attach(
-                    ({ target }) => !rootRef.current?.contains(target as any),
+                    ({ target }) => !ref.current?.contains(target as any),
                     onClickAway_const
                 ),
-        // eslint-disable-next-line react-hooks/exhaustive-deps
         []
     );
 
-    return { rootRef };
+    return { ref };
 
 }
