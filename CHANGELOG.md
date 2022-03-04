@@ -1,3 +1,7 @@
+## **0.13.0** (2022-03-04)  
+  
+- Add useStickyTop useOnLoadMore and getScrollableParent    
+  
 ## **0.12.0** (2022-03-03)  
   
 - Enable to pass pre existing ref in useClickAway  
