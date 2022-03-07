@@ -1,3 +1,7 @@
+## **0.14.0** (2022-03-07)  
+  
+- Enable powerhooks to work without being a peer dependency    
+  
 ## **0.13.0** (2022-03-04)  
   
 - Add useStickyTop useOnLoadMore and getScrollableParent    
