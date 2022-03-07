@@ -4811,10 +4811,10 @@ evp_bytestokey@^1.0.0, evp_bytestokey@^1.0.3:
     md5.js "^1.3.4"
     safe-buffer "^5.1.1"
 
-evt@2.0.0-beta.29:
-  version "2.0.0-beta.29"
-  resolved "https://registry.yarnpkg.com/evt/-/evt-2.0.0-beta.29.tgz#2cc940a4202d63bdcde21b282269d8b41829ec93"
-  integrity sha512-NgkSE9GV/aiXFqKYsMRZpOc2XihuPc4z5/OV6gxwwxJEZE1NURZ/GaAmHSEPuICHIQFwjI5xMOujhGIStHxgJg==
+evt@2.0.0-beta.39:
+  version "2.0.0-beta.39"
+  resolved "https://registry.yarnpkg.com/evt/-/evt-2.0.0-beta.39.tgz#3c859a83b35940f7eecfb5f148f03b7cbf3fee51"
+  integrity sha512-XxJkaHrFWBrzjTbnr5LJYXkGkADsAXReZfq2lFu3Kf1iCEw5/5ibrdXu3bQdWW6xkZ8qwAHT3STU9zYcCl09BA==
   dependencies:
     minimal-polyfills "^2.2.1"
     run-exclusive "^2.2.14"
@@ -8881,12 +8881,12 @@ postcss@^8.1.0:
     source-map-js "^0.6.2"
 
 "powerhooks@file:../../../dist":
-  version "0.7.3"
+  version "0.13.0"
   dependencies:
-    evt "2.0.0-beta.29"
+    evt "2.0.0-beta.39"
     memoizee "^0.4.15"
     resize-observer-polyfill "^1.5.1"
-    tsafe "^0.4.1"
+    tsafe "^0.8.1"
 
 prelude-ls@^1.2.1:
   version "1.2.1"
@@ -10743,6 +10743,11 @@ tsafe@^0.4.1:
   version "0.4.1"
   resolved "https://registry.yarnpkg.com/tsafe/-/tsafe-0.4.1.tgz#00af1be2db82abb4be531209b90232d7954e1a03"
   integrity sha512-+OZ0gdgmwcru+MOSheCx+ymAvQz+1/ui+KFJRuaq0t2m8RNrlf7eSzEieptoPQXPY67Mdkqgkdjknn8azoD5sw==
+
+tsafe@^0.8.1:
+  version "0.8.1"
+  resolved "https://registry.yarnpkg.com/tsafe/-/tsafe-0.8.1.tgz#9af7e1540bc04313a82d60c98056a5017c8b086b"
+  integrity sha512-EfPjxQHzndQAV/uh0SMGP26Wg3dCuaw8dRv2VPEuGHen5qzg2oqsMvZw2wkQFkiMisZq2fm95m5lheimW2Fpvg==
 
 tsconfig-paths@^3.11.0:
   version "3.11.0"
