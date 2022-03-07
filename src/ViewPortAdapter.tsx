@@ -1,6 +1,6 @@
 
 
-import type { ReactNode } from "react";
+import type { ReactNode, Context } from "react";
 import { useRef } from "react";
 import { useGuaranteedMemo } from "./useGuaranteedMemo";
 import { useWindowInnerSize } from "./tools/useWindowInnerSize";
@@ -43,10 +43,40 @@ export type ViewPortState = ReturnType<ViewPortAdapterProps["getConfig"]> & {
 	zoomFactor: number;
 };
 
-const context = createContext<ViewPortState | undefined>(undefined);
+const { reactContext } = (() => {
+
+    type SharedContext = {
+        reactContext: Context<ViewPortState | undefined>;
+    };
+
+    const propertyKey = "__powerhooks_ViewPortAdapter_context";
+
+    const peerDepObj: Record<typeof propertyKey, SharedContext | undefined> = createContext as any;
+
+    let sharedContext = peerDepObj["__powerhooks_ViewPortAdapter_context"];
+
+    if (sharedContext === undefined) {
+
+        sharedContext = {
+			"reactContext": createContext<ViewPortState | undefined>(undefined)
+        };
+
+        Object.defineProperty(peerDepObj, propertyKey, {
+            "configurable": false,
+            "enumerable": false,
+            "writable": false,
+            "value": sharedContext
+        });
+    }
+
+    return sharedContext;
+
+})();
+
+
 
 export function useViewPortState() {
-	const viewPortState = useContext(context);
+	const viewPortState = useContext(reactContext);
 	return { viewPortState };
 }
 
@@ -223,9 +253,9 @@ export function ViewPortAdapter(props: ViewPortAdapterProps) {
 					"overflow": "hidden"
 				}}
 			>
-				<context.Provider value={viewPortState}>
+				<reactContext.Provider value={viewPortState}>
 					{children}
-				</context.Provider>
+				</reactContext.Provider>
 			</div>
 		</div>
 	);

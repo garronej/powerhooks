@@ -1,10 +1,10 @@
 
-import { useState } from "react";
+import { useState, createContext } from "react";
 import { Evt } from "evt";
 import type { StatefulEvt } from "evt";
 import { useEvt } from "evt/hooks";
 import { useConstCallback } from "./useConstCallback";
-import { overwriteReadonlyProp } from "tsafe/lab/overwriteReadonlyProp";
+import { overwriteReadonlyProp } from "tsafe/lab/overwriteReadonlyProp";
 import type { UseNamedStateReturnType } from "./useNamedState";
 import { typeGuard } from "tsafe/typeGuard";
 import { capitalize } from "./tools/capitalize";
@@ -13,9 +13,43 @@ import { addParamToUrl, retrieveAllParamStartingWithPrefixFromUrl, updateSearchB
 
 export type { StatefulEvt };
 
-export const globalStates: Readonly<Record<string, unknown>> = {};
+const {
+    globalStates,
+    persistedGlobalStateNames
+} = (() => {
 
-const persistedGlobalStateNames = new Set<string>();
+    type SharedContext = {
+        globalStates: Readonly<Record<string, unknown>>;
+        persistedGlobalStateNames: Set<string>;
+    };
+
+    const propertyKey = "__powerhooks_useGlobalState_context";
+
+    const peerDepObj: Record<typeof propertyKey, SharedContext | undefined> = createContext as any;
+
+    let sharedContext = peerDepObj.__powerhooks_useGlobalState_context;
+
+    if (sharedContext === undefined) {
+
+        sharedContext = {
+            "globalStates": {},
+            "persistedGlobalStateNames": new Set<string>()
+        };
+
+        Object.defineProperty(peerDepObj, propertyKey, {
+            "configurable": false,
+            "enumerable": false,
+            "writable": false,
+            "value": sharedContext
+        });
+    }
+
+    return sharedContext;
+
+})();
+
+export { globalStates };
+
 
 function stringify(obj: unknown): string {
     return JSON.stringify([obj]);
@@ -37,12 +71,12 @@ const { injectGlobalStatesInSearchParams, getStatesFromUrlSearchParams } = (() =
         Object.keys(globalStates)
             .filter(name => persistedGlobalStateNames.has(name))
             .forEach(name =>
-                newUrl = 
-                    addParamToUrl({
-                        "url": newUrl,
-                        "name": `${prefix}${name}`,
-                        "value": stringify(globalStates[name])
-                    })
+                newUrl =
+                addParamToUrl({
+                    "url": newUrl,
+                    "name": `${prefix}${name}`,
+                    "value": stringify(globalStates[name])
+                })
                     .newUrl
             );
 
@@ -53,12 +87,12 @@ const { injectGlobalStatesInSearchParams, getStatesFromUrlSearchParams } = (() =
     const getUnparsedStatesFromUrlSearchParams = memoize(() => {
 
         const {
-            newUrl, 
+            newUrl,
             values: unparsedStates
-        } = retrieveAllParamStartingWithPrefixFromUrl({ 
-            "url": window.location.href, 
-            prefix, 
-            "doLeavePrefixInResults": false 
+        } = retrieveAllParamStartingWithPrefixFromUrl({
+            "url": window.location.href,
+            prefix,
+            "doLeavePrefixInResults": false
         });
 
         updateSearchBarUrl(newUrl);
@@ -149,7 +183,7 @@ export function createUseGlobalState<T, Name extends string>(
                     })()
                 });
 
-                if( !result.isSupported ){
+                if (!result.isSupported) {
 
                     console.warn([
                         `powerhooks warning, persistance mechanism ${persistance}`,
