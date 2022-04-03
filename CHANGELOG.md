@@ -1,3 +1,7 @@
+### **0.14.1** (2022-04-03)  
+  
+- Optimization by memoization of useConstCallback    
+  
 ## **0.14.0** (2022-03-07)  
   
 - Enable powerhooks to work without being a peer dependency    
