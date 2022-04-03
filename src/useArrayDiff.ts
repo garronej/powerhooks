@@ -2,6 +2,7 @@ import { useState, useEffect } from "react";
 import { Evt } from "evt";
 import { useEvt } from "evt/hooks";
 import { arrDiff } from "evt/tools/reducers/diff";
+import { useConstCallback } from "./useConstCallback";
 
 export type UseArrayDiffCallbackParams<ArrOf> = {
     added: ArrOf[];
@@ -43,6 +44,8 @@ export function useArrayDiff<ArrOf>(
 
     const { watchFor, array, callback } = params
 
+    const constCallback = useConstCallback(callback);
+
 
     const [evtArray] = useState(() => Evt.create(array));
 
@@ -79,14 +82,14 @@ export function useArrayDiff<ArrOf>(
                         break;
                 }
 
-                callback({
+                constCallback({
                     "added": [...added],
                     "removed": [...removed]
                 });
 
 
             }),
-        [callback, evtArray, watchFor]
+        [evtArray, watchFor]
     );
 
 
