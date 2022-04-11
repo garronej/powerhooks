@@ -47,7 +47,6 @@ export function getScrollableParent(
     }
 
     if (doReturnElementIfScrollable && getIsElementScrollable(element)) {
-        console.log("====>", element);
         return element;
     }
 
