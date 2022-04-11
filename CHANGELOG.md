@@ -1,3 +1,7 @@
+## **0.15.0** (2022-04-11)  
+  
+- Fix getScrollableParent to work with window    
+  
 ### **0.14.1** (2022-04-03)  
   
 - Optimization by memoization of useConstCallback    
