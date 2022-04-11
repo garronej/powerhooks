@@ -1,3 +1,8 @@
+## **0.16.0** (2022-04-11)  
+  
+- Add missing files  
+- Feature useStateRef and useStickyTop update    
+  
 ## **0.15.0** (2022-04-11)  
   
 - Fix getScrollableParent to work with window    
