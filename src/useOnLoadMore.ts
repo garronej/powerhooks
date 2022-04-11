@@ -53,11 +53,16 @@ export function useOnLoadMore(props: {
             //NOTE: If the loadingDivHeight is not 0, loadingDiv has rendered.
             assert(loadingDivElement !== null);
 
-            const scrollElement = getScrollableParent(loadingDivElement);
+            const scrollElement = getScrollableParent({ 
+                "element": loadingDivElement,
+                "doReturnElementIfScrollable": false
+            });
 
             Evt.from(ctx, scrollElement, "scroll")
                 .toStateful()
                 .attach(() => {
+
+
                     const { scrollTop, clientHeight, scrollHeight } = scrollElement;
 
                     const rest = scrollHeight - (scrollTop + clientHeight);

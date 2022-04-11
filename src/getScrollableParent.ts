@@ -1,17 +1,66 @@
 import { assert } from "tsafe/assert";
 
-export function getScrollableParent(element: HTMLElement): HTMLElement {
-    const parentElement = element.parentElement;
+//NOTE: If the element is scrollable, it returns the element itself.
+export function getScrollableParent(
+    params: {
+        element: HTMLElement;
+        doReturnElementIfScrollable: boolean;
+    }
+): {
+    addEventListener: (type: "scroll", listener: () => void) => void;
+    removeEventListener: (type: "scroll", listener: () => void) => void;
+    getBoundingClientRect: () => DOMRect;
+    scrollTop: number;
+    clientHeight: number;
+    scrollHeight: number;
+    isWindow?: true;
+} {
 
-    if (parentElement === null) {
-        assert(getComputedStyle(element).overflow !== "hidden", "No scrollable parent");
+    const { element, doReturnElementIfScrollable } = params;
 
+    if (element === document.documentElement) {
+
+        const element: ReturnType<typeof getScrollableParent> = {
+            "addEventListener": (type, listener) => window.addEventListener(type, listener),
+            "removeEventListener": (type, listener) => window.removeEventListener(type, listener),
+            "getBoundingClientRect": () => document.documentElement.getBoundingClientRect(),
+            "scrollTop": NaN,
+            "clientHeight": NaN,
+            "scrollHeight": NaN,
+            "isWindow": true
+        };
+
+        Object.defineProperties(element, {
+            "scrollTop": {
+                "get": () => window.scrollY
+            },
+            "clientHeight": {
+                "get": () => document.documentElement.clientHeight
+            },
+            "scrollHeight": {
+                "get": () => document.documentElement.scrollHeight
+            }
+        });
+
+        return element;
+
+    }
+
+    if (doReturnElementIfScrollable && getIsElementScrollable(element)) {
+        console.log("====>", element);
         return element;
     }
 
-    if (["auto", "scroll"].includes(getComputedStyle(parentElement).overflow)) {
-        return parentElement;
-    }
+    const parentElement = element.parentElement;
 
-    return getScrollableParent(parentElement);
+    assert(parentElement !== null);
+
+    return getScrollableParent({
+        "element": parentElement,
+        "doReturnElementIfScrollable": true
+    });
+}
+
+function getIsElementScrollable(element: HTMLElement): boolean {
+    return ["auto", "scroll"].includes(getComputedStyle(element).overflow);
 }

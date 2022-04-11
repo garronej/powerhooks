@@ -21,11 +21,14 @@ export function useStickyTop() {
             return;
         }
 
-        assert(refSticky.current !== null);
+        const stickyElement = refSticky.current;
 
-        const { top: topScrollable } = getScrollableParent(
-            refSticky.current,
-        ).getBoundingClientRect();
+        assert(stickyElement !== null);
+
+        const { top: topScrollable } = getScrollableParent({
+            "element": stickyElement,
+            "doReturnElementIfScrollable": false
+        }).getBoundingClientRect();
 
         setTop(topSticky - topScrollable);
     }, [topSticky]);
