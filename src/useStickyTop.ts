@@ -1,37 +1,44 @@
-import { useState, useEffect } from "react";
+import { useState, useEffect, useRef } from "react";
 import { assert } from "tsafe/assert";
 import { useDomRect } from "./useDomRect";
 import { getScrollableParent } from "./getScrollableParent";
 
-export function useStickyTop() {
+export function useStickyTop<T extends HTMLElement = any>(): { ref: React.RefObject<T>; top: number | undefined; }
+export function useStickyTop<T extends HTMLElement = any>(params: { ref: React.RefObject<T>; }): { top: number | undefined; };
+export function useStickyTop<T extends HTMLElement = any>(params?: { ref: React.RefObject<T>; }): { ref: React.RefObject<T>; top: number | undefined; } {
+
+    const internallyCreatedRef = useRef<T>(null);
+
+    const ref = params?.ref ?? internallyCreatedRef;
+
     const {
-        ref: refSticky,
         domRect: { top: topSticky },
-    } = useDomRect<HTMLDivElement>();
+    } = useDomRect<T>({ ref });
 
     const [top, setTop] = useState<number | undefined>(undefined);
 
     useEffect(() => {
         /*
-			if (top !== undefined) {
-				return;
-			}
-			*/
+            if (top !== undefined) {
+                return;
+            }
+            */
         if (topSticky === 0) {
             return;
         }
 
-        const stickyElement = refSticky.current;
+        const element = ref.current;
 
-        assert(stickyElement !== null);
+        assert(element !== null);
 
         const { top: topScrollable } = getScrollableParent({
-            "element": stickyElement,
+            "element": element,
             "doReturnElementIfScrollable": false
         }).getBoundingClientRect();
 
         setTop(topSticky - topScrollable);
     }, [topSticky]);
 
-    return { top, refSticky };
+    return { top, ref };
+
 }
