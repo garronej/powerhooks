@@ -42,6 +42,6 @@
     "evt": "2.0.0-beta.39",
     "memoizee": "^0.4.15",
     "resize-observer-polyfill": "^1.5.1",
-    "tsafe": "^0.8.1"
+    "tsafe": "^0.10.0"
   }
 }
