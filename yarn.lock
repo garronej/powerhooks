@@ -7,10 +7,10 @@
   resolved "https://registry.yarnpkg.com/@types/memoizee/-/memoizee-0.4.7.tgz#fa0025b5ea1c8acb85fd52a76982c5a096c2c91e"
   integrity sha512-EMtvWnRC/W0KYmXxbPJAMg/M1OXkFboSpd/IzkNMDXfoFPE4uom1RHFl8q7m/4R0y9eG1yaoaIPiMHk0vMA0eA==
 
-"@types/node@16.11.22":
-  version "16.11.22"
-  resolved "https://registry.yarnpkg.com/@types/node/-/node-16.11.22.tgz#e704150225bfc4195f8ce68a7ac8da02b753549a"
-  integrity sha512-DYNtJWauMQ9RNpesl4aVothr97/tIJM8HbyOXJ0AYT1Z2bEjLHyfjOBPAQQVMLf8h3kSShYfNk8Wnto8B2zHUA==
+"@types/node@16.11.27":
+  version "16.11.27"
+  resolved "https://registry.yarnpkg.com/@types/node/-/node-16.11.27.tgz#5da19383bdbeda99bc0d09cfbb88cab7297ebc51"
+  integrity sha512-C1pD3kgLoZ56Uuy5lhfOxie4aZlA3UMGLX9rXteq4WitEZH6Rl80mwactt9QG0w0gLFlN/kLBTFnGXtDVWvWQw==
 
 "@types/prop-types@*":
   version "15.7.4"
