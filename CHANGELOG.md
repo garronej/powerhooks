@@ -1,3 +1,7 @@
+### **0.16.2** (2022-04-14)  
+  
+- getScrollableParent add scrollTo    
+  
 ### **0.16.1** (2022-04-11)  
   
 - Remove missing log    
