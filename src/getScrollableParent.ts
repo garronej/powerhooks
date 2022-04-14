@@ -14,6 +14,7 @@ export function getScrollableParent(
     clientHeight: number;
     scrollHeight: number;
     isWindow?: true;
+    scrollTo: typeof window.scrollTo
 } {
 
     const { element, doReturnElementIfScrollable } = params;
@@ -27,7 +28,8 @@ export function getScrollableParent(
             "scrollTop": NaN,
             "clientHeight": NaN,
             "scrollHeight": NaN,
-            "isWindow": true
+            "isWindow": true,
+            "scrollTo": window.scrollTo.bind(window)
         };
 
         Object.defineProperties(element, {
