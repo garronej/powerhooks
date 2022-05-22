@@ -1,0 +1,24 @@
+{
+    "name": "ssr",
+    "version": "0.1.0",
+    "private": true,
+    "scripts": {
+        "dev": "next dev",
+        "build": "next build",
+        "start": "next start",
+        "lint": "next lint"
+    },
+    "dependencies": {
+        "next": "12.1.7-canary.4",
+        "react": "18.1.0",
+        "react-dom": "18.1.0",
+        "powerhooks": "file:../../../dist",
+        "next-dark-mode": "^3.0.0"
+    },
+    "devDependencies": {
+        "@types/react": "18.0.9",
+        "eslint": "7.30.0",
+        "eslint-config-next": "11.0.1",
+        "typescript": "^4.6.4"
+    }
+}
