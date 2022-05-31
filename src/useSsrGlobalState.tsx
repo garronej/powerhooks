@@ -118,7 +118,7 @@ export function createUseSsrGlobalState<T, Name extends string>(
 
 
 		type AppWithXyzProps = {
-			props: AppProps;
+			initialProps: AppProps;
 			xyzServerInfos: {
 				xyz: T;
 				doFallbackToGetInitialValueClientSide: boolean;
@@ -126,14 +126,13 @@ export function createUseSsrGlobalState<T, Name extends string>(
 				pathname: string;
 				query: ParsedUrlQuery;
 			} | undefined;
-
 		};
 
 
 		let isInit = false;
 
 
-		function AppWithXyz({ props, xyzServerInfos, ...rest }: AppWithXyzProps) {
+		function AppWithXyz({ initialProps, xyzServerInfos, ...props }: AppWithXyzProps) {
 
 			scope: {
 
@@ -202,7 +201,7 @@ export function createUseSsrGlobalState<T, Name extends string>(
 			return (
 				<>
 					<AppWithXyzHead {...headProps} />
-					<App {...props as any} {...rest as any} />
+					<App {...initialProps as any} {...props as any} />
 				</>
 			);
 
@@ -213,7 +212,7 @@ export function createUseSsrGlobalState<T, Name extends string>(
 			.forEach(staticMethod => (AppWithXyz as any)[staticMethod] = (App as any)[staticMethod]);
 
 		AppWithXyz.getInitialProps = async (appContext: AppContext): Promise<AppWithXyzProps> => ({
-			"props": App.getInitialProps ? await App.getInitialProps(appContext as any) : {},
+			"initialProps": App.getInitialProps ? await App.getInitialProps(appContext as any) : {},
 			"xyzServerInfos": await (async () => {
 
 				if (!isServer) {
