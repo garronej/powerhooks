@@ -44,7 +44,6 @@
   "dependencies": {
     "evt": "2.0.0-beta.41",
     "memoizee": "^0.4.15",
-    "nookies": "^2.5.2",
     "resize-observer-polyfill": "^1.5.1",
     "tsafe": "^0.10.0"
   }

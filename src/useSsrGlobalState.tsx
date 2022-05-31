@@ -18,8 +18,6 @@ import { useConst } from "./useConst";
 import type { MaybePromise } from "./tools/MaybePromise";
 import type { ParsedUrlQuery } from "querystring";
 
-import { parseCookies, setCookie } from "nookies";
-
 export type { StatefulEvt };
 
 const isServer = typeof window === "undefined";
@@ -156,8 +154,21 @@ export function createUseSsrGlobalState<T, Name extends string>(
 				if (!isServer) {
 
 					evtXyz
-						.attach(state => setCookie(null, `${cookiePrefix}${name}`, stringify(state), { "sameSite": "lax" }));
+						.attach(state => {
 
+							let newCookie = `${cookiePrefix}${name}=${stringify(state)};path=/;max-age=31536000`;
+
+							//We do not set the domain if we are on localhost or an ip
+							if (window.location.hostname.match(/\.[a-zA-Z]{2,}$/)) {
+								newCookie += `;domain=${window.location.hostname.split(".").length >= 3 ?
+									window.location.hostname.replace(/^[^.]+\./, "") :
+									window.location.hostname
+									}`;
+							}
+
+							document.cookie = newCookie;
+
+						});
 
 				}
 
@@ -255,14 +266,41 @@ export function createUseSsrGlobalState<T, Name extends string>(
 
 
 				read_cookie: {
-					const stateStr = parseCookies(appContext.ctx)[`${cookiePrefix}${name}`];
 
-					if (stateStr === undefined) {
+					const cookie = appContext.ctx.req?.headers.cookie;
+
+					if (cookie === undefined) {
 						break read_cookie;
 					}
 
+					const parsedCookies = Object.fromEntries(
+						cookie
+							.split(/; */)
+							.map(line => line.split("="))
+							.map(([key, value]) => [key, decodeURIComponent(value)])
+					);
+
+					const cookieName = `${cookiePrefix}${name}`;
+
+					if (!(cookieName in parsedCookies)) {
+						break read_cookie;
+					}
+
+
+					let xyz: T;
+
+					try {
+
+						xyz = parse<T>(parsedCookies[cookieName]);
+
+					} catch {
+
+						break read_cookie;
+
+					}
+
 					return {
-						"xyz": parse<T>(stateStr),
+						xyz,
 						"doFallbackToGetInitialValueClientSide": false,
 						...common
 					};
