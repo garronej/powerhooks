@@ -3,6 +3,7 @@ import { useEffect } from "react";
 import { createUseSsrGlobalState } from "powerhooks/useSsrGlobalState";
 import Head from "next/head";
 import { updateSearchBarUrl, retrieveParamFromUrl, addParamToUrl } from "powerhooks/tools/urlSearchParams";
+import { assert } from "tsafe/assert";
 
 //https://www.woorank.com/en/edu/seo-guides/best-practices-for-language-declaration
 //https://www.woorank.com/en/edu/seo-guides/hreflang-seo-guide
@@ -14,21 +15,55 @@ type Language = typeof languages[number];
 
 const fallbackLanguage = "en";
 
+const name = "lang";
+
 export const { useLang, withLang, evtLang } = createUseSsrGlobalState({
-	"name": "lang",
+	name,
+	"getValueSeverSide": appContext => {
+
+		const { [name]: value } = appContext.router.query;
+
+		if (typeof value !== "string") {
+			return undefined;
+		}
+
+		const lang = getLanguageBestApprox({
+			languages,
+			"languageLike": value
+		})
+
+		if (lang === undefined) {
+			return undefined;
+		}
+
+		return { "value": lang };
+
+	},
 	"getInitialValueServerSide": appContext => {
 
-		let lang: Language | undefined;
+		let languageLike: string;
 
 		try {
 
-			lang = getLanguageBestApprox<Language>({
-				"languageLike": appContext.ctx.req?.headers["accept-language"]?.split(/[,;]/)[1]!,
-				fallbackLanguage,
-				languages
-			});
+			languageLike = appContext.ctx.req?.headers["accept-language"]?.split(/[,;]/)[1]!;
+
+			assert(typeof languageLike === "string");
 
 		} catch {
+
+			return {
+				"doFallbackToGetInitialValueClientSide": true,
+				"initialValue": fallbackLanguage
+			} as const;
+
+		}
+
+		const lang = getLanguageBestApprox<Language>({
+			languageLike,
+			languages
+		});
+
+		if (lang === undefined) {
 			return {
 				"doFallbackToGetInitialValueClientSide": true,
 				"initialValue": fallbackLanguage
@@ -38,18 +73,25 @@ export const { useLang, withLang, evtLang } = createUseSsrGlobalState({
 		return { "initialValue": lang };
 
 	},
-	"getInitialValueClientSide": () => 
-		getLanguageBestApprox<Language>({
+	"getInitialValueClientSide": () => {
+		const lang = getLanguageBestApprox<Language>({
 			"languageLike": navigator.language,
 			languages,
-			fallbackLanguage
-		}),
+		});
+
+		if (lang === undefined) {
+			return fallbackLanguage;
+		}
+
+		return lang;
+
+	},
 	"Head": ({ lang, headers, pathname, query }) => {
 
 		// eslint-disable-next-line react-hooks/rules-of-hooks
 		useEffect(
 			() => {
-				document.documentElement.setAttribute("lang", lang);
+				document.documentElement.setAttribute(name, lang);
 			},
 			[lang]
 		);
@@ -59,7 +101,7 @@ export const { useLang, withLang, evtLang } = createUseSsrGlobalState({
 
 			const result = retrieveParamFromUrl({
 				"url": window.location.href,
-				"name": "lang",
+				name
 
 			});
 
@@ -116,28 +158,44 @@ export const { useLang, withLang, evtLang } = createUseSsrGlobalState({
 });
 
 
-//TODO: Correct
 function getLanguageBestApprox<Language extends string>(
 	params: {
 		languages: readonly Language[];
-		fallbackLanguage: Language;
 		languageLike: string;
 	}
-): Language {
+): Language | undefined {
 
-	const { languages, languageLike, fallbackLanguage } = params;
+	const { languages, languageLike } = params;
 
-	const iso2LanguageLike = languageLike
-		.split("-")[0]
-		.toLowerCase();
+	scope: {
+		const lang = languages.find(lang => lang.toLowerCase() === languageLike.toLowerCase());
 
-	const lang = languages.find(lang =>
-		lang.toLowerCase().includes(iso2LanguageLike),
-	);
+		if (lang === undefined) {
+			break scope;
+		}
 
-	if (lang !== undefined) {
 		return lang;
+
 	}
 
-	return fallbackLanguage;
+	scope: {
+
+		const iso2LanguageLike = languageLike
+			.split("-")[0]
+			.toLowerCase();
+
+		const lang = languages.find(lang =>
+			lang.toLowerCase().includes(iso2LanguageLike),
+		);
+
+		if (lang === undefined) {
+			break scope;
+		}
+
+		return lang;
+
+	}
+
+	return undefined;
+
 }

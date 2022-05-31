@@ -1,5 +1,3 @@
-
-
 import { useEffect, memo } from "react";
 import type { StatefulEvt } from "evt";
 import { useConstCallback } from "./useConstCallback";
@@ -11,15 +9,16 @@ import type { AppContext } from "next/app";
 import type { NextComponentType } from "next";
 import type { AppProps } from "next/app";
 import { assert } from "tsafe/assert";
-import { parseCookies, setCookie } from "nookies";
 import { useRerenderOnStateChange } from "./evt/hooks/useRerenderOnStateChange";
 import { createLazilyInitializedStatefulEvt } from "./tools/createLazilyInitializedStatefulEvt";
 import DefaultApp from "next/App";
 import type { IncomingHttpHeaders } from "http";
 import type { FC } from "react";
 import { useConst } from "./useConst";
-import type { ParsedUrlQuery } from "querystring";
 import type { MaybePromise } from "./tools/MaybePromise";
+import type { ParsedUrlQuery } from "querystring";
+
+import { parseCookies, setCookie } from "nookies";
 
 export type { StatefulEvt };
 
@@ -36,11 +35,11 @@ function parse<T>(str: string): T {
 
 const cookiePrefix = "powerhooks_useGlobalState_"
 
-
-
 export function createUseSsrGlobalState<T, Name extends string>(
 	params: {
 		name: Name;
+		/** If present and it doesn't return undefined it will override the current state and will take precedence over getInitialValueServerSide if no cookie was present */
+		getValueSeverSide?: (appContext: AppContext) => MaybePromise<{ value: T; } | undefined>
 		getInitialValueServerSide: (appContext: AppContext) => MaybePromise<{ initialValue: T; doFallbackToGetInitialValueClientSide?: boolean; }>;
 		getInitialValueClientSide?: () => MaybePromise<T>;
 		Head?: (props: Record<Name, T> & { headers: IncomingHttpHeaders; query: ParsedUrlQuery; pathname: string; }) => ReturnType<FC>;
@@ -54,16 +53,16 @@ export function createUseSsrGlobalState<T, Name extends string>(
 > & Record<
 	`with${Capitalize<Name>}`,
 	<AppComponent>(App?: AppComponent) => AppComponent
->  {
+> {
 
-	const { name, getInitialValueServerSide, getInitialValueClientSide, Head } = params;
+	const { name, getValueSeverSide, getInitialValueServerSide, getInitialValueClientSide, Head } = params;
 
 
 	let initialStateWrap: [T] | undefined = undefined;
 
 	const evtXyz = createLazilyInitializedStatefulEvt<T>(() => {
 
-		if( initialStateWrap === undefined ){
+		if (initialStateWrap === undefined) {
 			throw new Error("Too soon, we need to get the initial state from backend first");
 		}
 
@@ -123,7 +122,6 @@ export function createUseSsrGlobalState<T, Name extends string>(
 			xyzServerInfos: {
 				xyz: T;
 				doFallbackToGetInitialValueClientSide: boolean;
-				isStateFromUrl: boolean;
 				headers: IncomingHttpHeaders | undefined;
 				pathname: string;
 				query: ParsedUrlQuery;
@@ -158,15 +156,9 @@ export function createUseSsrGlobalState<T, Name extends string>(
 
 				if (!isServer) {
 
-					const setStateCookie = (state: T) => setCookie(null, `${cookiePrefix}${name}`, stringify(state), { "sameSite": "lax" });
-
 					evtXyz
-						.toStateless()
-						.attach(setStateCookie);
+						.attach(state => setCookie(null, `${cookiePrefix}${name}`, stringify(state), { "sameSite": "lax" }));
 
-					if (xyzServerInfos.isStateFromUrl) {
-						setStateCookie(evtXyz.state);
-					}
 
 				}
 
@@ -203,7 +195,7 @@ export function createUseSsrGlobalState<T, Name extends string>(
 				assert(pathname !== undefined);
 				assert(query !== undefined);
 
-				return { headers, pathname, query};
+				return { headers, pathname, query };
 
 			});
 
@@ -228,11 +220,6 @@ export function createUseSsrGlobalState<T, Name extends string>(
 					return undefined;
 				}
 
-				console.log("pathname: ",appContext.ctx.pathname);
-				console.log("query: ",appContext.ctx.query);
-
-				//TODO: Read state from URL and update route
-
 				const common = (() => {
 
 					const { pathname, query, req } = appContext.ctx;
@@ -242,6 +229,31 @@ export function createUseSsrGlobalState<T, Name extends string>(
 					return { pathname, query, headers };
 
 				})();
+
+				//TODO: Read state from URL and update route
+
+				get_value: {
+
+					if (getValueSeverSide === undefined) {
+						break get_value;
+					}
+
+					const resp = await getValueSeverSide(appContext);
+
+					if (resp === undefined) {
+						break get_value;
+					}
+
+					const { value } = resp;
+
+					return {
+						"xyz": value,
+						"doFallbackToGetInitialValueClientSide": false,
+						...common
+					};
+
+				}
+
 
 				read_cookie: {
 					const stateStr = parseCookies(appContext.ctx)[`${cookiePrefix}${name}`];
@@ -253,7 +265,6 @@ export function createUseSsrGlobalState<T, Name extends string>(
 					return {
 						"xyz": parse<T>(stateStr),
 						"doFallbackToGetInitialValueClientSide": false,
-						"isStateFromUrl": false,
 						...common
 					};
 
@@ -264,7 +275,6 @@ export function createUseSsrGlobalState<T, Name extends string>(
 				return {
 					"xyz": initialValue,
 					doFallbackToGetInitialValueClientSide,
-					"isStateFromUrl": false,
 					...common
 				};
 
