@@ -24,43 +24,6 @@ export type { StatefulEvt };
 
 const isServer = typeof window === "undefined";
 
-const {
-	globalStates,
-	persistedGlobalStateNames
-} = (() => {
-
-	type SharedContext = {
-		globalStates: Readonly<Record<string, unknown>>;
-		persistedGlobalStateNames: Set<string>;
-	};
-
-	const propertyKey = "__powerhooks_useGlobalState_context";
-
-	const peerDepObj: Record<typeof propertyKey, SharedContext | undefined> = createContext as any;
-
-	let sharedContext = peerDepObj.__powerhooks_useGlobalState_context;
-
-	if (sharedContext === undefined) {
-
-		sharedContext = {
-			"globalStates": {},
-			"persistedGlobalStateNames": new Set<string>()
-		};
-
-		Object.defineProperty(peerDepObj, propertyKey, {
-			"configurable": false,
-			"enumerable": false,
-			"writable": false,
-			"value": sharedContext
-		});
-	}
-
-	return sharedContext;
-
-})();
-
-export { globalStates };
-
 
 function stringify(obj: unknown): string {
 	return JSON.stringify([obj]);
@@ -196,17 +159,6 @@ export function createUseSsrGlobalState<T, Name extends string>(
 				if (!isServer) {
 
 					const setStateCookie = (state: T) => setCookie(null, `${cookiePrefix}${name}`, stringify(state), { "sameSite": "lax" });
-
-					persistedGlobalStateNames.add(name);
-
-					Object.defineProperty(
-						globalStates,
-						name,
-						{
-							"enumerable": true,
-							"get": () => evtXyz.state
-						}
-					);
 
 					evtXyz
 						.toStateless()
