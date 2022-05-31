@@ -1,19 +1,20 @@
-//import { useDarkMode } from "next-dark-mode";
-import { useDarkMode } from "./next-dark-mode";
-import { useFoo } from "./persistanceByCookie";
+import { useLang } from "../useLang";
+import { useIsDarkModeEnabled } from "../useIsDarkModeEnabled";
 
 export default function Index() {
 
-    const { darkModeActive, switchToDarkMode, switchToLightMode } = useDarkMode();
+    const { isDarkModeEnabled, setIsDarkModeEnabled } = useIsDarkModeEnabled();
 
-    const { foo, setFoo } = useFoo();
+    const { lang, setLang } = useLang();
 
     return (
         <>
-            <h1>Hello World, darkModeActive: {darkModeActive ? "yes" : "false"}</h1>
-            <h1>foo: {foo}</h1>
-            <button onClick={() => (darkModeActive ? switchToLightMode : switchToDarkMode)()}>Switch dark mode</button>
-            <button onClick={() => setFoo(`${foo} +1`)}>change foo</button>
+            <h1>isDarkModeEnabled: {isDarkModeEnabled ? "yes" : "false"}</h1>
+            <button onClick={() => setIsDarkModeEnabled(!isDarkModeEnabled)}>Switch dark mode</button>
+            <br/>
+            <h1>lang: {JSON.stringify(lang)}</h1>
+            <button onClick={()=> setLang("fr")}>Set language to fr</button>
+            <button onClick={()=> setLang("en")}>Set language to en</button>
         </>
     );
 

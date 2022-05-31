@@ -881,10 +881,10 @@ event-emitter@^0.3.5:
     d "1"
     es5-ext "~0.10.14"
 
-evt@2.0.0-beta.39:
-  version "2.0.0-beta.39"
-  resolved "https://registry.yarnpkg.com/evt/-/evt-2.0.0-beta.39.tgz#3c859a83b35940f7eecfb5f148f03b7cbf3fee51"
-  integrity sha512-XxJkaHrFWBrzjTbnr5LJYXkGkADsAXReZfq2lFu3Kf1iCEw5/5ibrdXu3bQdWW6xkZ8qwAHT3STU9zYcCl09BA==
+evt@2.0.0-beta.41:
+  version "2.0.0-beta.41"
+  resolved "https://registry.yarnpkg.com/evt/-/evt-2.0.0-beta.41.tgz#df0be147f167824c94b25f2e0a50f529d178edc8"
+  integrity sha512-aJ9hIN8wFxpPyBzKI19a1mHbwiWGfJgTw+/SYo1T6WC33a+7bClwowNzNrxsOwHhRQxVCcFClvB+pQphRxfsRQ==
   dependencies:
     minimal-polyfills "^2.2.1"
     run-exclusive "^2.2.14"
@@ -1617,8 +1617,9 @@ postcss@8.4.5:
 "powerhooks@file:../../../dist":
   version "0.16.3"
   dependencies:
-    evt "2.0.0-beta.39"
+    evt "2.0.0-beta.41"
     memoizee "^0.4.15"
+    nookies "^2.5.2"
     resize-observer-polyfill "^1.5.1"
     tsafe "^0.10.0"
 

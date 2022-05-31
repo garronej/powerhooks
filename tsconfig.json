@@ -16,6 +16,7 @@
         "jsx": "react-jsx",
         "noFallthroughCasesInSwitch": true,
         "resolveJsonModule": true,
+        "skipLibCheck": true
     },
     "include": [
         "src",
