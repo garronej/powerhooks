@@ -10,7 +10,7 @@ export const { evtIsDarkModeEnabled, useIsDarkModeEnabled, withIsDarkModeEnabled
 		window.matchMedia &&
 		window.matchMedia("(prefers-color-scheme: dark)").matches,
 	"getInitialValueServerSide": () => ({
-		"doFallbackToGetInitialStateClientSide": true,
+		"doFallbackToGetInitialValueClientSide": true,
 		"initialValue": false
 	}),
 });

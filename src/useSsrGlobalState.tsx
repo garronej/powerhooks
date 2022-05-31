@@ -41,7 +41,7 @@ const cookiePrefix = "powerhooks_useGlobalState_"
 export function createUseSsrGlobalState<T, Name extends string>(
 	params: {
 		name: Name;
-		getInitialValueServerSide: (appContext: AppContext) => MaybePromise<{ initialValue: T; doFallbackToGetInitialStateClientSide?: boolean; }>;
+		getInitialValueServerSide: (appContext: AppContext) => MaybePromise<{ initialValue: T; doFallbackToGetInitialValueClientSide?: boolean; }>;
 		getInitialValueClientSide?: () => MaybePromise<T>;
 		Head?: (props: Record<Name, T> & { headers: IncomingHttpHeaders; query: ParsedUrlQuery; pathname: string; }) => ReturnType<FC>;
 	}
@@ -122,7 +122,7 @@ export function createUseSsrGlobalState<T, Name extends string>(
 			props: AppProps;
 			xyzServerInfos: {
 				xyz: T;
-				doFallbackToGetInitialStateClientSide: boolean;
+				doFallbackToGetInitialValueClientSide: boolean;
 				isStateFromUrl: boolean;
 				headers: IncomingHttpHeaders | undefined;
 				pathname: string;
@@ -177,7 +177,7 @@ export function createUseSsrGlobalState<T, Name extends string>(
 			useEffect(
 				() => {
 
-					if (isServer || !xyzServerInfos?.doFallbackToGetInitialStateClientSide) {
+					if (isServer || !xyzServerInfos?.doFallbackToGetInitialValueClientSide) {
 						return;
 					}
 
@@ -252,18 +252,18 @@ export function createUseSsrGlobalState<T, Name extends string>(
 
 					return {
 						"xyz": parse<T>(stateStr),
-						"doFallbackToGetInitialStateClientSide": false,
+						"doFallbackToGetInitialValueClientSide": false,
 						"isStateFromUrl": false,
 						...common
 					};
 
 				}
 
-				const { initialValue, doFallbackToGetInitialStateClientSide = false } = await getInitialValueServerSide(appContext);
+				const { initialValue, doFallbackToGetInitialValueClientSide = false } = await getInitialValueServerSide(appContext);
 
 				return {
 					"xyz": initialValue,
-					doFallbackToGetInitialStateClientSide,
+					doFallbackToGetInitialValueClientSide,
 					"isStateFromUrl": false,
 					...common
 				};

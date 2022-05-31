@@ -30,7 +30,7 @@ export const { useLang, withLang, evtLang } = createUseSsrGlobalState({
 
 		} catch {
 			return {
-				"doFallbackToGetInitialStateClientSide": true,
+				"doFallbackToGetInitialValueClientSide": true,
 				"initialValue": fallbackLanguage
 			} as const;
 		}
