@@ -6,13 +6,13 @@ import { createUseSsrGlobalState } from "powerhooks/useSsrGlobalState";
 
 export const { evtIsDarkModeEnabled, useIsDarkModeEnabled, withIsDarkModeEnabled } = createUseSsrGlobalState({
 	"name": "isDarkModeEnabled",
-	"getInitialStateClientSide": async () =>
+	"getInitialValueClientSide": () =>
 		window.matchMedia &&
 		window.matchMedia("(prefers-color-scheme: dark)").matches,
-	"getInitialStateServerSide": async () => ({
+	"getInitialValueServerSide": () => ({
 		"doFallbackToGetInitialStateClientSide": true,
-		"initialState": false
-	})
+		"initialValue": false
+	}),
 });
 
 export const DarkModeRootStyle = memo(() => {

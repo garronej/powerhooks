@@ -16,7 +16,7 @@ const fallbackLanguage = "en";
 
 export const { useLang, withLang, evtLang } = createUseSsrGlobalState({
 	"name": "lang",
-	"getInitialStateServerSide": async appContext => {
+	"getInitialValueServerSide": appContext => {
 
 		let lang: Language | undefined;
 
@@ -31,25 +31,19 @@ export const { useLang, withLang, evtLang } = createUseSsrGlobalState({
 		} catch {
 			return {
 				"doFallbackToGetInitialStateClientSide": true,
-				"initialState": "en"
+				"initialValue": fallbackLanguage
 			} as const;
 		}
 
-		return {
-			"doFallbackToGetInitialStateClientSide": false,
-			"initialState": lang
-		} as const;
+		return { "initialValue": lang };
 
 	},
-	"getInitialStateClientSide": () => Promise.resolve(
+	"getInitialValueClientSide": () => 
 		getLanguageBestApprox<Language>({
 			"languageLike": navigator.language,
 			languages,
 			fallbackLanguage
-		})
-	),
-
-
+		}),
 	"Head": ({ lang, headers, pathname, query }) => {
 
 		// eslint-disable-next-line react-hooks/rules-of-hooks
@@ -122,6 +116,7 @@ export const { useLang, withLang, evtLang } = createUseSsrGlobalState({
 });
 
 
+//TODO: Correct
 function getLanguageBestApprox<Language extends string>(
 	params: {
 		languages: readonly Language[];
