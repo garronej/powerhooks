@@ -9,7 +9,7 @@ import type { AppContext } from "next/app";
 import type { NextComponentType } from "next";
 import type { AppProps } from "next/app";
 import { assert } from "tsafe/assert";
-import { useRerenderOnStateChange } from "./evt/hooks/useRerenderOnStateChange";
+import { useRerenderOnStateChange } from "evt/hooks/useRerenderOnStateChange";
 import { createLazilyInitializedStatefulEvt } from "./tools/createLazilyInitializedStatefulEvt";
 import DefaultApp from "next/App";
 import type { IncomingHttpHeaders } from "http";

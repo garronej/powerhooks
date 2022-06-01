@@ -1,7 +1,7 @@
 import type { MutableRefObject, RefObject } from "react";
 import { useConst } from "./useConst";
 import { Evt } from "evt";
-import { useRerenderOnStateChange } from "./evt/hooks/useRerenderOnStateChange";
+import { useRerenderOnStateChange } from "evt/hooks/useRerenderOnStateChange";
 
 //NOTE: It's like useRef but when the value changes, it will trigger a re-render (hence ref.current is a state of the component).
 

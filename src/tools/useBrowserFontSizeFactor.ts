@@ -1,4 +1,4 @@
-import { useEvt } from "../evt/hooks";
+import { useEvt } from "evt/hooks";
 import { useState } from "react";
 import { Evt } from "evt";
 import memoize from "memoizee";

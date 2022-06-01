@@ -2,7 +2,7 @@
 import type React from "react";
 import { useState } from "react";
 import { Evt } from "evt";
-import { useEvt } from "./evt/hooks";
+import { useEvt } from "evt/hooks";
 import { id } from "tsafe/id";
 import { useConstCallback } from "./useConstCallback";
 import memoizeWithNonExportableTypings from "memoizee";

@@ -2,7 +2,7 @@ import type { RefObject } from "react";
 import { useConstCallback } from "./useConstCallback";
 import { Evt } from "evt";
 import { useDomRect } from "./useDomRect";
-import { useEvt } from "./evt/hooks/useEvt";
+import { useEvt } from "evt/hooks/useEvt";
 import { useConst } from "./useConst";
 import { getScrollableParent } from "./getScrollableParent";
 import { assert } from "tsafe/assert";

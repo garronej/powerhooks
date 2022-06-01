@@ -3,7 +3,7 @@ import { Evt } from "evt";
 import ResizeObserver from "./ResizeObserver";
 import memoize from "memoizee";
 import { useConstCallback } from "../useConstCallback";
-import { useEvt } from "../evt/hooks";
+import { useEvt } from "evt/hooks";
 import { useStateRef } from "../useStateRef";
 
 //TODO: only re-renders when width or height change.

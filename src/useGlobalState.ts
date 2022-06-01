@@ -2,7 +2,7 @@
 import { createContext } from "react";
 import { Evt } from "evt";
 import type { StatefulEvt } from "evt";
-import { useRerenderOnStateChange } from "./evt/hooks/useRerenderOnStateChange";
+import { useRerenderOnStateChange } from "evt/hooks/useRerenderOnStateChange";
 import { useConstCallback } from "./useConstCallback";
 import { overwriteReadonlyProp } from "tsafe/lab/overwriteReadonlyProp";
 import type { UseNamedStateReturnType } from "./useNamedState";

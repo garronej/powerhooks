@@ -1,6 +1,6 @@
 import { useState, useEffect } from "react";
 import { Evt } from "evt";
-import { useEvt } from "./evt/hooks";
+import { useEvt } from "evt/hooks";
 import { arrDiff } from "evt/tools/reducers/diff";
 import { useConstCallback } from "./useConstCallback";
 

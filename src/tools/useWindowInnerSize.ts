@@ -2,7 +2,7 @@
 
 import { useState } from "react";
 import { Evt } from "evt";
-import { useEvt } from "../evt/hooks/useEvt";
+import { useEvt } from "evt/hooks/useEvt";
 
 export function useWindowInnerSize() {
 
