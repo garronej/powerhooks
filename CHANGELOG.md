@@ -1,3 +1,24 @@
+## **0.17.0** (2022-06-01)  
+  
+- Only test on react 14  
+- Fix import  
+- update Evt with a version compatible with react 18  
+- Delete renovate  
+- Compat react 18  
+- Switch to the new implementation of evt/hooks  
+- Fix useGlobalState react18  
+- Remove dependency to nookie  
+- Perfect useDarkModeEnabled SSR  
+- Renaming for consistency  
+- useSrrGlobalState fully working  
+- More consistent naming  
+- Better API for useSsrGlobalState  
+- Removing global state  
+- Working before removing global state  
+- Add missing files  
+- Working proof of concept persistance global state  
+- Setup next app for testing    
+  
 ### **0.16.3** (2022-04-18)  
   
 - Return style in getScrollableParrent    
