@@ -2,7 +2,7 @@ import type { RefObject } from "react";
 import { useConstCallback } from "./useConstCallback";
 import { Evt } from "evt";
 import { useDomRect } from "./useDomRect";
-import { useEvt } from "evt/hooks/useEvt";
+import { useEvt } from "./evt/hooks/useEvt";
 import { useConst } from "./useConst";
 import { getScrollableParent } from "./getScrollableParent";
 import { assert } from "tsafe/assert";
@@ -43,7 +43,7 @@ export function useOnLoadMore(props: {
     })();
 
     useEvt(
-        (ctx, registerSideEffect) => {
+        ctx => {
             if (loadingDivHeight === 0) {
                 return;
             }
@@ -68,7 +68,7 @@ export function useOnLoadMore(props: {
                     const rest = scrollHeight - (scrollTop + clientHeight);
 
                     if (rest < loadingDivHeight) {
-                        registerSideEffect(() => onLoadMoreOnce(scrollHeight));
+                        onLoadMoreOnce(scrollHeight);
                     }
                 });
         },

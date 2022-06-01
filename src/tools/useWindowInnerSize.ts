@@ -1,8 +1,8 @@
 
 
 import { Evt } from "evt";
-import { useEvt } from "evt/hooks/useEvt";
-import { useRerenderOnStateChange } from "evt/hooks/useRerenderOnStateChange";
+import { useEvt } from "./evt/hooks/useEvt";
+import { useRerenderOnStateChange } from "./evt/hooks/useRerenderOnStateChange";
 
 export function useWindowInnerSize() {
 

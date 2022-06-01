@@ -1,4 +1,4 @@
-import { useEvt, useRerenderOnStateChange } from "evt/hooks";
+import { useEvt, useRerenderOnStateChange } from "./evt/hooks";
 import { Evt } from "evt";
 import memoize from "memoizee";
 

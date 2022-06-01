@@ -1,6 +1,6 @@
 import { useRef } from "react";
 import type { RefObject } from "react";
-import { useEvt } from "evt/hooks";
+import { useEvt } from "./evt/hooks";
 import { Evt } from "evt";
 import { useConstCallback } from "./useConstCallback";
 
