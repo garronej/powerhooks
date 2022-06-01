@@ -1,8 +1,8 @@
-import { useRef } from "react";
 import type { RefObject } from "react";
 import { useEvt } from "./evt/hooks";
 import { Evt } from "evt";
 import { useConstCallback } from "./useConstCallback";
+import { useStateRef } from "./useStateRef";
 
 export function useClickAway<T extends HTMLElement = any>(params: { onClickAway: () => void; }): { ref: RefObject<T>; };
 export function useClickAway<T extends HTMLElement = any>(params: { onClickAway: () => void; ref: RefObject<T>; }): void;
@@ -10,7 +10,7 @@ export function useClickAway<T extends HTMLElement = any>(params: { onClickAway:
 
     const { onClickAway } = params;
 
-    const internallyCreatedRef = useRef<T>(null);
+    const internallyCreatedRef = useStateRef<T>(null);
 
     const ref = params?.ref ?? internallyCreatedRef;
 

@@ -1,9 +1,10 @@
-import { useState, useRef } from "react";
+import { useState } from "react";
 import { Evt } from "evt";
 import ResizeObserver from "./ResizeObserver";
 import memoize from "memoizee";
 import { useConstCallback } from "../useConstCallback";
-import { useElementEvt } from "./evt/hooks";
+import { useEvt } from "../evt/hooks";
+import { useStateRef } from "../useStateRef";
 
 //TODO: only re-renders when width or height change.
 
@@ -44,12 +45,18 @@ export function useDomRect<T extends HTMLElement = any>(params?: { ref: React.Re
         () => evtForceUpdate.post()
     );
 
-    const internallyCreatedRef = useRef<T>(null);
+    const internallyCreatedRef = useStateRef<T>(null);
 
     const ref = params?.ref ?? internallyCreatedRef;
 
-    useElementEvt<T>(
-        ({ ctx, element }) => {
+    useEvt(
+        ctx => {
+
+            const element = ref.current;
+
+            if( element === null ){
+                return;
+            }
 
             ctx.evtDoneOrAborted.setMaxHandlers(Infinity);
 
@@ -96,8 +103,7 @@ export function useDomRect<T extends HTMLElement = any>(params?: { ref: React.Re
                 })(0));
 
         },
-        ref,
-        []
+        [ref.current]
     );
 
     return { ref, domRect, checkIfDomRectUpdated };

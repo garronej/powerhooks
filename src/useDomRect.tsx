@@ -1,9 +1,10 @@
 
-import { useMemo, useRef, useEffect } from "react";
+import { useMemo, useEffect } from "react";
 import { useDomRect as useRealDomRect, domRectKeys } from "./tools/useDomRect";
 import type { PartialDomRect } from "./tools/useDomRect";
 import { pick } from "./tools/pick";
 import { useViewPortState } from "./ViewPortAdapter";
+import { useStateRef } from "./useStateRef";
 import { id } from "tsafe/id";
 
 export { PartialDomRect };
@@ -12,7 +13,7 @@ export function useDomRect<T extends HTMLElement = any>(): { ref: React.RefObjec
 export function useDomRect<T extends HTMLElement = any>(params: { ref: React.RefObject<T>; }): { domRect: PartialDomRect; };
 export function useDomRect<T extends HTMLElement = any>(params?: { ref: React.RefObject<T>; }): { ref: React.RefObject<T>; domRect: PartialDomRect; } {
 
-    const internallyCreatedRef = useRef<T>(null);
+    const internallyCreatedRef = useStateRef<T>(null);
 
     const ref = params?.ref ?? internallyCreatedRef;
 

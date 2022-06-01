@@ -1,25 +1,27 @@
 
 
+import { useState } from "react";
 import { Evt } from "evt";
-import { useEvt } from "./evt/hooks/useEvt";
-import { useRerenderOnStateChange } from "./evt/hooks/useRerenderOnStateChange";
+import { useEvt } from "../evt/hooks/useEvt";
 
 export function useWindowInnerSize() {
 
-	const evtInnerWidth = useEvt(ctx =>
+	const [dimensions, setDimensions] = useState(() => ({
+		"windowInnerWidth": window.innerWidth,
+		"windowInnerHeight": window.innerHeight
+	}));
+
+	useEvt(ctx =>
 		Evt.from(ctx, window, "resize")
-			.toStateful()
-			.pipe(() => [{
+			.attach(() => setDimensions({
 				"windowInnerWidth": window.innerWidth,
 				"windowInnerHeight": window.innerHeight
-			}]),
+			})),
 		[]
 	);
 
-	useRerenderOnStateChange(evtInnerWidth);
+	return dimensions;
 
-	const { windowInnerWidth, windowInnerHeight } = evtInnerWidth.state;
 
-	return { windowInnerWidth, windowInnerHeight };
 
 }

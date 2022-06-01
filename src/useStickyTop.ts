@@ -1,13 +1,14 @@
-import { useState, useEffect, useRef } from "react";
+import { useState, useEffect } from "react";
 import { assert } from "tsafe/assert";
 import { useDomRect } from "./useDomRect";
 import { getScrollableParent } from "./getScrollableParent";
+import { useStateRef } from "./useStateRef";
 
 export function useStickyTop<T extends HTMLElement = any>(): { ref: React.RefObject<T>; top: number | undefined; }
 export function useStickyTop<T extends HTMLElement = any>(params: { ref: React.RefObject<T>; }): { top: number | undefined; };
 export function useStickyTop<T extends HTMLElement = any>(params?: { ref: React.RefObject<T>; }): { ref: React.RefObject<T>; top: number | undefined; } {
 
-    const internallyCreatedRef = useRef<T>(null);
+    const internallyCreatedRef = useStateRef<T>(null);
 
     const ref = params?.ref ?? internallyCreatedRef;
 

@@ -1,4 +1,5 @@
-import { useEvt, useRerenderOnStateChange } from "./evt/hooks";
+import { useEvt } from "../evt/hooks";
+import { useState } from "react";
 import { Evt } from "evt";
 import memoize from "memoizee";
 
@@ -25,18 +26,21 @@ export const getBrowserFontSizeFactor = memoize(() => {
 });
 
 export function useBrowserFontSizeFactor() {
-    const evtBrowserFontSizeFactor = useEvt(
+
+    const [browserFontSizeFactor, setBrowserFontSizeFactor] = useState(() => (
+        getBrowserFontSizeFactor.clear(),
+        getBrowserFontSizeFactor()
+    ));
+
+    useEvt(
         ctx =>
             Evt.from(ctx, window, "focus")
-                .toStateful()
-                .pipe(() => {
+                .attach(() => {
                     getBrowserFontSizeFactor.clear();
-                    return [getBrowserFontSizeFactor()];
+                    setBrowserFontSizeFactor(getBrowserFontSizeFactor());
                 }),
-        [],
+        []
     );
 
-    useRerenderOnStateChange(evtBrowserFontSizeFactor);
-
-    return { "browserFontSizeFactor": evtBrowserFontSizeFactor.state };
+    return { browserFontSizeFactor };
 }
