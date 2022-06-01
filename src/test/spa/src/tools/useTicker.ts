@@ -18,7 +18,7 @@ export function useTicker(interval: number) {
 			return () => clearTimeout(timer);
 
 		},
-		[tick]
+		[tick, interval]
 	);
 
 	return { tick };

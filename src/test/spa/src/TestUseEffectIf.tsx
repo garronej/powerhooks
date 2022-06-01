@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-redeclare */
 
 import { useEffectIf } from "powerhooks/useEffectIf";
 import { useTicker } from "./tools/useTicker";

@@ -38,7 +38,6 @@ export const { useIsDarkModeEnabled, withIsDarkModeEnabled } = createUseSsrGloba
 			const result = retrieveParamFromUrl({
 				"url": window.location.href,
 				"name": "theme"
-
 			});
 
 			if (!result.wasPresent) {

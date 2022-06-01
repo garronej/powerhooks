@@ -22,7 +22,7 @@
         "src",
     ],
     "exclude": [
-        "src/test/spa",
+        "src/test/spa_",
         "src/test/ssr"
     ]
 }

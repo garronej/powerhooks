@@ -1,8 +1,8 @@
 
-import { useState, createContext } from "react";
+import { createContext } from "react";
 import { Evt } from "evt";
 import type { StatefulEvt } from "evt";
-import { useEvt } from "evt/hooks";
+import { useRerenderOnStateChange } from "./evt/hooks/useRerenderOnStateChange";
 import { useConstCallback } from "./useConstCallback";
 import { overwriteReadonlyProp } from "tsafe/lab/overwriteReadonlyProp";
 import type { UseNamedStateReturnType } from "./useNamedState";
@@ -149,11 +149,11 @@ export { injectGlobalStatesInSearchParams };
  * 
  */
 export function createUseGlobalState<T, Name extends string>(
-    name: Name,
-    /** If function called only if not in local storage */
-    initialState: T | (() => T),
-    params?: {
-        persistance?: false | "localStorage" | "cookie"
+    params: {
+        name: Name,
+        /** If function called only if not in local storage */
+        initialState: T | (() => T),
+        doPersistAcrossReloads: boolean;
     }
 ): Record<
     `use${Capitalize<Name>}`,
@@ -163,63 +163,23 @@ export function createUseGlobalState<T, Name extends string>(
     StatefulEvt<T>
 > {
 
-    const { persistance = "localStorage" } = params ?? {};
+    const { name, initialState, doPersistAcrossReloads } = params;
 
-    const persistentStorage =
-        persistance === false ?
-            undefined :
-            (() => {
-
-                const result = getPersistentStorage({
-                    "mechanism": persistance,
-                    "key": (() => {
-
-                        if (Object.keys(globalStates).includes(name)) {
-                            console.warn(`${name} already in use`);
-                        }
-
-                        return `${prefix}${name}`;
-
-                    })()
-                });
-
-                if (!result.isSupported) {
-
-                    console.warn([
-                        `powerhooks warning, persistance mechanism ${persistance}`,
-                        `is not supported by the current runtime, state of ${name}`,
-                        `will not be saved`
-                    ].join(" "));
-
-                    return undefined;
-
-                }
-
-                return result.persistanceStorage;
-
-            })();
-
-
-    if (persistentStorage !== undefined) {
+    if( doPersistAcrossReloads) {
 
         persistedGlobalStateNames.add(name);
 
     }
 
     //NOTE: We want to clean the url asap so we don't put it in the 
-    // evt getter... but we don't clean it up because powerhooks version clash...TODO
-    const urlSearchParam =
-        typeof location === "undefined" ?
-            { "wasPresent": false as const } :
-            getStatesFromUrlSearchParams<T>({ name });
+    // evt getter... 
+    const urlSearchParam = getStatesFromUrlSearchParams<T>({ name });
 
     const getEvtXyz = memoize(() => {
 
-        const storeStateInPersistentStorage =
-            persistentStorage == undefined ?
-                undefined :
-                (state: T) => persistentStorage.setItem(stringify(state))
-            ;
+        const localStorageKey= `${prefix}${name}`;
+
+        const storeStateInPersistentStorage = !doPersistAcrossReloads ? undefined : (state: T) => localStorage.setItem(localStorageKey, stringify(state));
 
         const evtXyz = Evt.create(
             (() => {
@@ -234,9 +194,9 @@ export function createUseGlobalState<T, Name extends string>(
 
                 }
 
-                if (persistentStorage !== undefined) {
+                if (doPersistAcrossReloads ) {
 
-                    const serializedState = persistentStorage.getItem();
+                    const serializedState = localStorage.getItem(localStorageKey);
 
                     if (serializedState !== null) {
 
@@ -280,22 +240,15 @@ export function createUseGlobalState<T, Name extends string>(
 
         const evtXyz = getEvtXyz();
 
-        const [xyz, setXyz] = useState(evtXyz.state);
-
-        useEvt(
-            ctx => evtXyz
-                .toStateless(ctx)
-                .attach(setXyz),
-            []
-        );
+        useRerenderOnStateChange(evtXyz);
 
         return {
-            [name]: xyz,
+            [name]: evtXyz.state,
             [`set${capitalize(name)}`]:
                 useConstCallback((setStateAction: T | ((prevState: T) => T)) =>
                     evtXyz.state =
                     typeGuard<(prevState: T) => T>(setStateAction, typeof setStateAction === "function") ?
-                        setStateAction(xyz) :
+                        setStateAction(evtXyz.state) :
                         setStateAction
                 )
         } as any;
@@ -317,99 +270,3 @@ export function createUseGlobalState<T, Name extends string>(
 
 
 
-
-type PersistentStorage = {
-    getItem(): string | null;
-    setItem(value: string): void;
-};
-
-const { getPersistentStorage } = (() => {
-
-
-    function getLocalStorageImplementationOfPersistantStorage(
-        params: {
-            key: string;
-        }
-    ): PersistentStorage {
-
-        const { key } = params;
-
-        return {
-            "getItem": () => localStorage.getItem(key),
-            "setItem": value => localStorage.setItem(key, value)
-        };
-
-    }
-
-    function getCookieImplementationOfPersistantStorage(
-        params: {
-            key: string;
-        }
-    ): PersistentStorage {
-
-        const { key } = params;
-
-        return {
-            "getItem": () =>
-                document.cookie
-                    .split("; ")
-                    .find(row => row.startsWith(`${key}=`))
-                    ?.split("=")?.[1] ?? null,
-            "setItem": value => {
-
-                let newCookie = `${key}=${value};path=/;max-age=31536000`;
-
-                //TODO: Use https://dev.to/debosthefirst/how-to-use-cookies-for-persisting-users-in-nextjs-4617?signin=true
-                //to make it work with nextJs.
-                //We do not set the domain if we are on localhost or an ip
-                if (window.location.hostname.match(/\.[a-zA-Z]{2,}$/)) {
-                    newCookie += `;domain=${window.location.hostname.split(".").length >= 3 ?
-                        window.location.hostname.replace(/^[^.]+\./, "") :
-                        window.location.hostname
-                        }`;
-                }
-
-                document.cookie = newCookie;
-
-            }
-        }
-
-    }
-
-    function getPersistentStorage(
-        params: {
-            key: string;
-            mechanism: "localStorage" | "cookie"
-        }
-    ): { isSupported: false } | { isSupported: true, persistanceStorage: PersistentStorage; } {
-
-        const { key, mechanism } = params;
-
-        switch (mechanism) {
-            case "localStorage":
-                return typeof localStorage === "undefined" ?
-                    { "isSupported": false } :
-                    {
-                        "isSupported": true,
-                        "persistanceStorage": getLocalStorageImplementationOfPersistantStorage({ key })
-                    };
-            case "cookie":
-                return (
-                    typeof document === "undefined" ||
-                    !(
-                        document instanceof Object &&
-                        "cookie" in document
-                    )
-                ) ?
-                    { "isSupported": false } :
-                    {
-                        "isSupported": true,
-                        "persistanceStorage": getCookieImplementationOfPersistantStorage({ key })
-                    };
-        }
-    }
-
-    return { getPersistentStorage };
-
-
-})();
