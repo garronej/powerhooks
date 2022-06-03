@@ -96,23 +96,6 @@ export const { useLang, withLang, evtLang } = createUseSsrGlobalState({
 			[lang]
 		);
 
-		// eslint-disable-next-line react-hooks/rules-of-hooks
-		useEffect(() => {
-
-			const result = retrieveParamFromUrl({
-				"url": window.location.href,
-				name
-
-			});
-
-			if (!result.wasPresent) {
-				return;
-			}
-
-			updateSearchBarUrl(result.newUrl);
-
-		}, []);
-
 		return (
 			<Head>
 				{
@@ -156,6 +139,21 @@ export const { useLang, withLang, evtLang } = createUseSsrGlobalState({
 		);
 	}
 });
+
+//NOTE: We remove the param from the url ASAP client side
+if (typeof window !== "undefined") {
+
+	const result = retrieveParamFromUrl({
+		"url": window.location.href,
+		name
+
+	});
+
+	if (result.wasPresent) {
+		updateSearchBarUrl(result.newUrl);
+	}
+
+}
 
 
 function getLanguageBestApprox<Language extends string>(
