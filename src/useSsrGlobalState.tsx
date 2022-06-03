@@ -36,10 +36,10 @@ const cookiePrefix = "powerhooks_useGlobalState_"
 export function createUseSsrGlobalState<T, Name extends string>(
 	params: {
 		name: Name;
-		/** If present and it doesn't return undefined it will override the current state and will take precedence over getInitialValueServerSide if no cookie was present */
-		getValueSeverSide?: (appContext: AppContext) => MaybePromise<{ value: T; } | undefined>
-		getInitialValueServerSide: (appContext: AppContext) => MaybePromise<{ initialValue: T; doFallbackToGetInitialValueClientSide?: boolean; }>;
-		getInitialValueClientSide?: () => MaybePromise<T>;
+		/** If present and it doesn't return undefined it will override the current state and will take precedence over getInitialStateServerSide if no cookie was present */
+		getStateSeverSide?: (appContext: AppContext) => MaybePromise<{ value: T; } | undefined>
+		getInitialStateServerSide: (appContext: AppContext) => MaybePromise<{ initialValue: T; doFallbackToGetInitialValueClientSide?: boolean; }>;
+		getInitialStateClientSide?: () => MaybePromise<T>;
 		Head?: (props: Record<Name, T> & { headers: IncomingHttpHeaders; query: ParsedUrlQuery; pathname: string; }) => ReturnType<FC>;
 	}
 ): Record<
@@ -53,7 +53,7 @@ export function createUseSsrGlobalState<T, Name extends string>(
 	<AppComponent>(App?: AppComponent) => AppComponent
 > {
 
-	const { name, getValueSeverSide, getInitialValueServerSide, getInitialValueClientSide, Head } = params;
+	const { name, getStateSeverSide, getInitialStateServerSide, getInitialStateClientSide, Head } = params;
 
 
 	let doThrowIsTateRead= true;
@@ -185,14 +185,14 @@ export function createUseSsrGlobalState<T, Name extends string>(
 					}
 
 					assert(
-						getInitialValueClientSide !== undefined,
+						getInitialStateClientSide !== undefined,
 						[
 							"You've stipulated to fallback on client side evaluation",
-							"of the initial state but provided no getInitialValueClientSide"
+							"of the initial state but provided no getInitialStateClientSide"
 						].join(" ")
 					);
 
-					Promise.resolve(getInitialValueClientSide()).then(initialValue => evtXyz.state = initialValue);
+					Promise.resolve(getInitialStateClientSide()).then(initialValue => evtXyz.state = initialValue);
 
 				},
 				[]
@@ -245,11 +245,11 @@ export function createUseSsrGlobalState<T, Name extends string>(
 
 				get_value: {
 
-					if (getValueSeverSide === undefined) {
+					if (getStateSeverSide === undefined) {
 						break get_value;
 					}
 
-					const resp = await getValueSeverSide(appContext);
+					const resp = await getStateSeverSide(appContext);
 
 					if (resp === undefined) {
 						break get_value;
@@ -308,7 +308,7 @@ export function createUseSsrGlobalState<T, Name extends string>(
 
 				}
 
-				const { initialValue, doFallbackToGetInitialValueClientSide = false } = await getInitialValueServerSide(appContext);
+				const { initialValue, doFallbackToGetInitialValueClientSide = false } = await getInitialStateServerSide(appContext);
 
 				return {
 					"xyz": initialValue,

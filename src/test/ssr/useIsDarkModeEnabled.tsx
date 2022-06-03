@@ -7,7 +7,7 @@ import Head from "next/head";
 
 export const { useIsDarkModeEnabled, withIsDarkModeEnabled } = createUseSsrGlobalState({
 	"name": "isDarkModeEnabled",
-	"getValueSeverSide": appContext => {
+	"getStateSeverSide": appContext => {
 
 		const { theme } = appContext.router.query;
 
@@ -23,11 +23,11 @@ export const { useIsDarkModeEnabled, withIsDarkModeEnabled } = createUseSsrGloba
 		return undefined;
 
 	},
-	"getInitialValueServerSide": () => ({
+	"getInitialStateServerSide": () => ({
 		"doFallbackToGetInitialValueClientSide": true,
 		"initialValue": false
 	}),
-	"getInitialValueClientSide": () =>
+	"getInitialStateClientSide": () =>
 		window.matchMedia &&
 		window.matchMedia("(prefers-color-scheme: dark)").matches,
 	"Head": ({ isDarkModeEnabled }) => {

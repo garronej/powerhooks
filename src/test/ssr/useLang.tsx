@@ -18,182 +18,179 @@ const fallbackLanguage = "en";
 const name = "lang";
 
 export const { useLang, withLang, evtLang } = createUseSsrGlobalState({
-	name,
-	"getValueSeverSide": appContext => {
+    name,
+    "getStateSeverSide": appContext => {
 
-		const { [name]: value } = appContext.router.query;
+        const { [name]: value } = appContext.router.query;
 
-		if (typeof value !== "string") {
-			return undefined;
-		}
+        if (typeof value !== "string") {
+            return undefined;
+        }
 
-		const lang = getLanguageBestApprox({
-			languages,
-			"languageLike": value
-		})
+        const lang = getLanguageBestApprox({
+            languages,
+            "languageLike": value
+        })
 
-		if (lang === undefined) {
-			return undefined;
-		}
+        if (lang === undefined) {
+            return undefined;
+        }
 
-		return { "value": lang };
+        return { "value": lang };
 
-	},
-	"getInitialValueServerSide": appContext => {
+    },
+    "getInitialStateServerSide": appContext => {
 
-		let languageLike: string;
+        let languageLike: string;
 
-		try {
+        try {
 
-			languageLike = appContext.ctx.req?.headers["accept-language"]?.split(/[,;]/)[1]!;
+            languageLike = appContext.ctx.req?.headers["accept-language"]?.split(/[,;]/)[1]!;
 
-			assert(typeof languageLike === "string");
+            assert(typeof languageLike === "string");
 
-		} catch {
+        } catch {
 
-			return {
-				"doFallbackToGetInitialValueClientSide": true,
-				"initialValue": fallbackLanguage
-			} as const;
+            return {
+                "doFallbackToGetInitialValueClientSide": true,
+                "initialValue": fallbackLanguage
+            } as const;
 
-		}
+        }
 
-		const lang = getLanguageBestApprox<Language>({
-			languageLike,
-			languages
-		});
+        const lang = getLanguageBestApprox<Language>({
+            languageLike,
+            languages
+        });
 
-		if (lang === undefined) {
-			return {
-				"doFallbackToGetInitialValueClientSide": true,
-				"initialValue": fallbackLanguage
-			} as const;
-		}
+        if (lang === undefined) {
+            return {
+                "doFallbackToGetInitialValueClientSide": true,
+                "initialValue": fallbackLanguage
+            } as const;
+        }
 
-		return { "initialValue": lang };
+        return { "initialValue": lang };
 
-	},
-	"getInitialValueClientSide": () => {
-		const lang = getLanguageBestApprox<Language>({
-			"languageLike": navigator.language,
-			languages,
-		});
+    },
+    "getInitialStateClientSide": () => {
+        const lang = getLanguageBestApprox<Language>({
+            "languageLike": navigator.language,
+            languages,
+        });
 
-		if (lang === undefined) {
-			return fallbackLanguage;
-		}
+        if (lang === undefined) {
+            return fallbackLanguage;
+        }
 
-		return lang;
+        return lang;
 
-	},
-	"Head": ({ lang, headers, pathname, query }) => {
+    },
+    "Head": ({ lang, headers, pathname, query }) => {
 
-		// eslint-disable-next-line react-hooks/rules-of-hooks
-		useEffect(
-			() => {
-				document.documentElement.setAttribute(name, lang);
-			},
-			[lang]
-		);
+        // eslint-disable-next-line react-hooks/rules-of-hooks
+        useEffect(
+            () => {
+                document.documentElement.setAttribute(name, lang);
+            },
+            [lang]
+        );
 
-		return (
-			<Head>
-				{
-					[...languages, undefined].map(lang =>
-						<link
-							key={lang ?? "default"}
-							rel="alternate"
-							hrefLang={lang === undefined ? "x-default" : lang}
-							href={
-								Object.entries((() => {
+        return (
+            <Head>
+                {
+                    [...languages, undefined].map(lang =>
+                        <link
+                            key={lang ?? "default"}
+                            rel="alternate"
+                            hrefLang={lang === undefined ? "x-default" : lang}
+                            href={
+                                Object.entries((() => {
 
-									const { lang: _, ...rest } = query;
+                                    const { lang: _, ...rest } = query;
 
-									return { ...rest, ...(lang === undefined ? {} : { lang }) };
+                                    return { ...rest, ...(lang === undefined ? {} : { lang }) };
 
-								})())
-									.reduce((url, [name, value]) => {
+                                })())
+                                    .reduce((url, [name, value]) => {
 
-										if (typeof value !== "string") {
-											console.warn("TODO: Fix hrefLang generator");
-											return url;
-										}
+                                        if (typeof value !== "string") {
+                                            console.warn("TODO: Fix hrefLang generator");
+                                            return url;
+                                        }
 
-										const { newUrl } = addParamToUrl(
-											{
-												url,
-												name,
-												value
+                                        const { newUrl } = addParamToUrl({
+                                            url,
+                                            name,
+                                            value
+                                        });
 
-											}
-										);
+                                        return newUrl;
 
-										return newUrl;
-
-									}, `${headers.host}${pathname}`)
-							}
-						/>
-					)
-				}
-			</Head>
-		);
-	}
+                                    }, `${headers.host}${pathname}`)
+                            }
+                        />
+                    )
+                }
+            </Head>
+        );
+    }
 });
 
 //NOTE: We remove the param from the url ASAP client side
 if (typeof window !== "undefined") {
 
-	const result = retrieveParamFromUrl({
-		"url": window.location.href,
-		name
+    const result = retrieveParamFromUrl({
+        "url": window.location.href,
+        name
 
-	});
+    });
 
-	if (result.wasPresent) {
-		updateSearchBarUrl(result.newUrl);
-	}
+    if (result.wasPresent) {
+        updateSearchBarUrl(result.newUrl);
+    }
 
 }
 
 
 function getLanguageBestApprox<Language extends string>(
-	params: {
-		languages: readonly Language[];
-		languageLike: string;
-	}
+    params: {
+        languages: readonly Language[];
+        languageLike: string;
+    }
 ): Language | undefined {
 
-	const { languages, languageLike } = params;
+    const { languages, languageLike } = params;
 
-	scope: {
-		const lang = languages.find(lang => lang.toLowerCase() === languageLike.toLowerCase());
+    scope: {
+        const lang = languages.find(lang => lang.toLowerCase() === languageLike.toLowerCase());
 
-		if (lang === undefined) {
-			break scope;
-		}
+        if (lang === undefined) {
+            break scope;
+        }
 
-		return lang;
+        return lang;
 
-	}
+    }
 
-	scope: {
+    scope: {
 
-		const iso2LanguageLike = languageLike
-			.split("-")[0]
-			.toLowerCase();
+        const iso2LanguageLike = languageLike
+            .split("-")[0]
+            .toLowerCase();
 
-		const lang = languages.find(lang =>
-			lang.toLowerCase().includes(iso2LanguageLike),
-		);
+        const lang = languages.find(lang =>
+            lang.toLowerCase().includes(iso2LanguageLike),
+        );
 
-		if (lang === undefined) {
-			break scope;
-		}
+        if (lang === undefined) {
+            break scope;
+        }
 
-		return lang;
+        return lang;
 
-	}
+    }
 
-	return undefined;
+    return undefined;
 
 }

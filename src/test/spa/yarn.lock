@@ -4272,10 +4272,10 @@ events@^3.2.0:
   resolved "https://registry.yarnpkg.com/events/-/events-3.3.0.tgz#31a95ad0a924e2d2c419a813aeb2c4e878ea7400"
   integrity sha512-mQw+2fkQbALzQ7V0MY0IqdnXNOeTtP4r0lN9z7AAawCXgqea7bDii20AYrIBrFd/Hx0M2Ocz6S111CaFkUcb0Q==
 
-evt@2.0.0-beta.41:
-  version "2.0.0-beta.41"
-  resolved "https://registry.yarnpkg.com/evt/-/evt-2.0.0-beta.41.tgz#df0be147f167824c94b25f2e0a50f529d178edc8"
-  integrity sha512-aJ9hIN8wFxpPyBzKI19a1mHbwiWGfJgTw+/SYo1T6WC33a+7bClwowNzNrxsOwHhRQxVCcFClvB+pQphRxfsRQ==
+evt@2.0.0-beta.44:
+  version "2.0.0-beta.44"
+  resolved "https://registry.yarnpkg.com/evt/-/evt-2.0.0-beta.44.tgz#7b936e65b3a8c2536e21f1c2af9e85fb95cc32ec"
+  integrity sha512-2XKKP3UhwLY1jOe8Ta0iL44ZZCy8iG1fGRHeyuU8W/aRcpcKy0PFi/FkVhaaI3tkWjqqfNJQ0wRgDovNP6N3KQ==
   dependencies:
     minimal-polyfills "^2.2.1"
     run-exclusive "^2.2.14"
@@ -7189,9 +7189,9 @@ postcss@^8.3.5, postcss@^8.4.12, postcss@^8.4.4, postcss@^8.4.7:
     source-map-js "^1.0.2"
 
 "powerhooks@file:../../../dist":
-  version "0.16.3"
+  version "0.17.2"
   dependencies:
-    evt "2.0.0-beta.41"
+    evt "2.0.0-beta.44"
     memoizee "^0.4.15"
     resize-observer-polyfill "^1.5.1"
     tsafe "^0.10.0"
