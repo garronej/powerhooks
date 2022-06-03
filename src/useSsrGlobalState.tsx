@@ -56,15 +56,15 @@ export function createUseSsrGlobalState<T, Name extends string>(
 	const { name, getValueSeverSide, getInitialValueServerSide, getInitialValueClientSide, Head } = params;
 
 
-	let initialStateWrap: [T] | undefined = undefined;
+	let doThrowIsTateRead= true;
 
 	const evtXyz = createLazilyInitializedStatefulEvt<T>(() => {
 
-		if (initialStateWrap === undefined) {
+		if (doThrowIsTateRead) {
 			throw new Error("Too soon, we need to get the initial state from backend first");
 		}
 
-		return initialStateWrap[0];
+		return { "isFake": true } as any;
 
 	});
 
@@ -149,7 +149,8 @@ export function createUseSsrGlobalState<T, Name extends string>(
 					break scope;
 				}
 
-				initialStateWrap = [xyzServerInfos.xyz];
+				doThrowIsTateRead= false;
+				evtXyz.state = xyzServerInfos.xyz;
 
 				if (!isServer) {
 
