@@ -50,7 +50,10 @@ export function createUseSsrGlobalState<T, Name extends string>(
 	StatefulEvt<T>
 > & Record<
 	`with${Capitalize<Name>}`,
-	<AppComponent>(App?: AppComponent) => AppComponent
+	{
+		<AppComponent extends NextComponentType<any, any, any>>(App: AppComponent): AppComponent
+		(): typeof DefaultApp;
+	}
 > {
 
 	const { name, getStateSeverSide, getInitialStateServerSide, getInitialStateClientSide, Head } = params;
@@ -112,8 +115,9 @@ export function createUseSsrGlobalState<T, Name extends string>(
 
 	}
 
-	function withXyz<C extends NextComponentType<any, any, any>>(App: C = DefaultApp as any): C {
-
+	function withXyz(): typeof DefaultApp;
+	function withXyz<AppComponent extends NextComponentType<any, any, any>>(App: AppComponent): AppComponent;
+	function withXyz<AppComponent extends NextComponentType<any, any, any>>(App: AppComponent = DefaultApp as any): AppComponent {
 
 		type AppWithXyzProps = {
 			initialProps: AppProps;

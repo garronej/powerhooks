@@ -1,7 +1,7 @@
 import Head from "next/head";
 import type { AppProps } from "next/app";
 import { withLang } from "../useLang";
-import { withIsDarkModeEnabled, useIsDarkModeEnabled } from "../useIsDarkModeEnabled";
+import { withIsDarkModeEnabled } from "../useIsDarkModeEnabled";
 
 export function App({ Component, pageProps }: AppProps) {
 	return (
@@ -15,5 +15,6 @@ export function App({ Component, pageProps }: AppProps) {
 		</>
 	);
 }
+const x= withLang()
 
 export default withIsDarkModeEnabled(withLang(App));
