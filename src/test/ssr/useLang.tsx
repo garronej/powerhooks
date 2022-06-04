@@ -17,13 +17,6 @@ const fallbackLanguage = "en";
 
 const name = "lang";
 
-function f(): string;
-function f<T>(a: T): T;
-function f(a?: any): any{
-}
-
-const x= f();
-
 export const { useLang, withLang, evtLang } = createUseSsrGlobalState({
     name,
     "getStateSeverSide": appContext => {

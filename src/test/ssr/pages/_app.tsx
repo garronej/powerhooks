@@ -15,6 +15,5 @@ export function App({ Component, pageProps }: AppProps) {
 		</>
 	);
 }
-const x= withLang()
 
 export default withIsDarkModeEnabled(withLang(App));
