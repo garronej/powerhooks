@@ -1,3 +1,9 @@
+## **0.18.0** (2022-06-04)  
+  
+- Implement useLang for SPA  
+- cleanup url outside useEffect  
+- The state postes when first initializated    
+  
 ### **0.17.2** (2022-06-01)  
   
   
