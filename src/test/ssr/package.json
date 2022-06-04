@@ -9,9 +9,7 @@
         "lint": "next lint"
     },
     "dependencies": {
-        "cookie": "^0.5.0",
         "next": "12.1.7-canary.4",
-        "next-dark-mode": "^3.0.0",
         "powerhooks": "file:../../../dist",
         "react": "18.1.0",
         "react-dom": "18.1.0"
