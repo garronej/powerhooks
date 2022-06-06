@@ -1,3 +1,8 @@
+## **0.19.0** (2022-06-04)  
+  
+- Better typing with useSsrGlobalState  
+- Better typing with useSsrGlobalState    
+  
 ## **0.18.0** (2022-06-04)  
   
 - Implement useLang for SPA  
