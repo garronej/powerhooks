@@ -86,11 +86,66 @@ NOTE: It makes uses of TypeScript's [template literal types](https://www.typescr
 `useIsDarkModeEnabled` based on the `name` parameter (`"isDarkModeEnabled"`).  
 How cool is that ?!
 
-<p align="center">
-  <img src="https://user-images.githubusercontent.com/6702424/137588840-b40ec4a4-288e-4d23-981a-9dd834bcd794.png">
-</p>
+`useIsDarkModeEnabled.ts`
+```tsx
+import { createUseGlobalState } from "powerhooks/useGlobalState";
 
-WARNING: Not yet compatible with SSR.  
+export const { useIsDarkModeEnabled, evtIsDarkModeEnabled } = createUseGlobalState({
+	"name": "isDarkModeEnabled",
+	"initialState": (
+		window.matchMedia &&
+		window.matchMedia("(prefers-color-scheme: dark)").matches
+	),
+	"doPersistAcrossReloads": true
+});
+```
+
+`MyComponent.tsx`
+```tsx
+import { useIsDarkModeEnabled } from "./useIsDarkModeEnabled";
+
+export function MyComponent(){
+
+  const { isDarkModeEnabled, setIsDarkModeEnabled }= useIsDarkModeEnabled();
+
+  return (
+    <div>
+      <p>The dark mode is currently: {isDarkModeEnabled?"enabled":"disabled"}</p>
+      <button onClick={()=> setIsDarkModeEnabled(!isDarkModeEnabled)}>
+        Click to toggle dark mode
+      <button>
+    </dvi>
+  );
+
+}
+```
+
+Optionally, you can track your state an edit them outside of the react tree React
+but still trigger refresh when the state is changed.
+
+```ts
+
+import { evtIsDarkModeEnabled } from "./useIsDarkModeEnabled";
+
+//After 4 seconds, enable dark mode, it will triggers re-renders of all the components 
+//that uses the state.
+setTimeout(
+  ()=>{
+
+      evtIsDarkModeEnabled.state = true;
+
+  },
+  4000
+);
+
+//Print something in the console anytime the state changes:  
+
+evtIsDarkModeEnabled.attach(isDarkModeEnabled=> {
+  console.log(`idDarkModeEnabled changed, new value: ${isDarkModeEnabled}`);
+});
+```
+
+> For SSR (Next.js) use `powerhook/useSsrGlobalState` as showed in `src/test/apps/ssr`.
 
 ## `useDomRect`
 
