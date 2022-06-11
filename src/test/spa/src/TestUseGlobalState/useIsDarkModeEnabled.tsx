@@ -2,7 +2,7 @@
 import { createUseGlobalState } from "powerhooks/useGlobalState";
 import { updateSearchBarUrl, retrieveParamFromUrl } from "powerhooks/tools/urlSearchParams";
 
-export const { useIsDarkModeEnabled, evtIsDarkModeEnabled } = createUseGlobalState({
+export const { useIsDarkModeEnabled, $isDarkModeEnabled } = createUseGlobalState({
 	"name": "isDarkModeEnabled",
 	"initialState": (
 		window.matchMedia &&
@@ -36,13 +36,13 @@ export const { useIsDarkModeEnabled, evtIsDarkModeEnabled } = createUseGlobalSta
 		return;
 	}
 
-	evtIsDarkModeEnabled.state = isDarkModeEnabled;
+	$isDarkModeEnabled.current = isDarkModeEnabled;
 
 })();
 
+{
 
-evtIsDarkModeEnabled
-	.attach(isDarkModeEnabled => {
+	const next = (isDarkModeEnabled: boolean) => {
 
 		const id = "root-color-scheme";
 
@@ -71,7 +71,10 @@ evtIsDarkModeEnabled
 
 
 		document.getElementsByTagName("head")[0].appendChild(element);
+	};
 
+	next($isDarkModeEnabled.current);
 
+	$isDarkModeEnabled.subscribe(next);
 
-	});
+}

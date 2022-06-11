@@ -14,7 +14,7 @@ const fallbackLanguage = "en";
 
 const name = "lang";
 
-export const { useLang, evtLang } = createUseGlobalState({
+export const { useLang, $lang } = createUseGlobalState({
 	name,
 	"initialState": (() => {
 
@@ -33,7 +33,16 @@ export const { useLang, evtLang } = createUseGlobalState({
 	"doPersistAcrossReloads": true
 });
 
-evtLang.attach(lang => document.documentElement.setAttribute(name, lang));
+{
+
+	const next = (lang: Language) => document.documentElement.setAttribute(name, lang);
+
+	next($lang.current);
+
+	$lang.subscribe(next);
+
+}
+
 
 {
 

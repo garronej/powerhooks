@@ -1,5 +1,4 @@
 import { useEffect, memo } from "react";
-import type { StatefulEvt } from "evt";
 import { useConstCallback } from "./useConstCallback";
 import { overwriteReadonlyProp } from "tsafe/lab/overwriteReadonlyProp";
 import type { UseNamedStateReturnType } from "./useNamedState";
@@ -10,15 +9,16 @@ import DefaultApp from "next/app";
 import type { NextComponentType } from "next";
 import type { AppProps } from "next/app";
 import { assert } from "tsafe/assert";
-import { useRerenderOnStateChange } from "evt/hooks/useRerenderOnStateChange";
-import { createLazilyInitializedStatefulEvt } from "./tools/createLazilyInitializedStatefulEvt";
 import type { IncomingHttpHeaders } from "http";
 import type { FC } from "react";
 import { useConst } from "./useConst";
 import type { MaybePromise } from "./tools/MaybePromise";
 import type { ParsedUrlQuery } from "querystring";
+import { createStatefulObservable, useRerenderOnChange } from "./tools/StatefulObservable";
+import type { StatefulObservable } from "./tools/StatefulObservable";
 
-export type { StatefulEvt };
+export type { StatefulObservable };
+
 
 const isServer = typeof window === "undefined";
 
@@ -46,8 +46,8 @@ export function createUseSsrGlobalState<T, Name extends string>(
 	`use${Capitalize<Name>}`,
 	() => UseNamedStateReturnType<T, Name>
 > & Record<
-	`evt${Capitalize<Name>}`,
-	StatefulEvt<T>
+	`$${Name}`,
+	StatefulObservable<T>
 > & Record<
 	`with${Capitalize<Name>}`,
 	{
@@ -58,10 +58,9 @@ export function createUseSsrGlobalState<T, Name extends string>(
 
 	const { name, getStateSeverSide, getInitialStateServerSide, getInitialStateClientSide, Head } = params;
 
-
 	let doThrowIsTateRead= true;
 
-	const evtXyz = createLazilyInitializedStatefulEvt<T>(() => {
+	const $xyz = createStatefulObservable(()=>{
 
 		if (doThrowIsTateRead) {
 			throw new Error("Too soon, we need to get the initial state from backend first");
@@ -71,20 +70,17 @@ export function createUseSsrGlobalState<T, Name extends string>(
 
 	});
 
-	//Susceptible to have one handler attached for every component.
-	evtXyz.setMaxHandlers(Infinity);
-
 	function useXyz() {
 
-		useRerenderOnStateChange(evtXyz);
+		useRerenderOnChange($xyz);
 
 		return {
-			[name]: evtXyz.state,
+			[name]: $xyz.current,
 			[`set${capitalize(name)}`]:
 				useConstCallback((setStateAction: T | ((prevState: T) => T)) =>
-					evtXyz.state =
+					$xyz.current =
 					typeGuard<(prevState: T) => T>(setStateAction, typeof setStateAction === "function") ?
-						setStateAction(evtXyz.state) :
+						setStateAction($xyz.current) :
 						setStateAction
 				)
 		} as any;
@@ -95,13 +91,13 @@ export function createUseSsrGlobalState<T, Name extends string>(
 
 	const AppWithXyzHead = memo((props: { headers: IncomingHttpHeaders; query: ParsedUrlQuery; pathname: string; }) => {
 
-		useRerenderOnStateChange(evtXyz);
+		useRerenderOnChange($xyz);
 
 		if (Head === undefined) {
 			return null;
 		}
 
-		return <Head {...{ [name]: evtXyz.state, ...props } as any} />;
+		return <Head {...{ [name]: $xyz.current, ...props } as any} />;
 
 	});
 
@@ -147,19 +143,19 @@ export function createUseSsrGlobalState<T, Name extends string>(
 				if (isInit) {
 
 					if (isServer) {
-						evtXyz.state = xyzServerInfos.xyz;
+						$xyz.current = xyzServerInfos.xyz;
 					}
 
 					break scope;
 				}
 
 				doThrowIsTateRead= false;
-				evtXyz.state = xyzServerInfos.xyz;
+				$xyz.current = xyzServerInfos.xyz;
 
 				if (!isServer) {
 
-					evtXyz
-						.attach(state => {
+					$xyz
+						.subscribe(state => {
 
 							let newCookie = `${cookiePrefix}${name}=${stringify(state)};path=/;max-age=31536000`;
 
@@ -196,7 +192,7 @@ export function createUseSsrGlobalState<T, Name extends string>(
 						].join(" ")
 					);
 
-					Promise.resolve(getInitialStateClientSide()).then(initialValue => evtXyz.state = initialValue);
+					Promise.resolve(getInitialStateClientSide()).then(initialValue => $xyz.current = initialValue);
 
 				},
 				[]
@@ -336,7 +332,7 @@ export function createUseSsrGlobalState<T, Name extends string>(
 
 	return {
 		[useXyz.name]: useXyz,
-		[`evt${capitalize(name)}`]: evtXyz,
+		[`$${name}`]: $xyz,
 		[withXyz.name]: withXyz,
 	} as any;
 

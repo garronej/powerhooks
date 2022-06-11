@@ -1,17 +1,16 @@
 
 import { createContext } from "react";
-import { Evt } from "evt";
-import type { StatefulEvt } from "evt";
-import { useRerenderOnStateChange } from "evt/hooks/useRerenderOnStateChange";
 import { useConstCallback } from "./useConstCallback";
 import { overwriteReadonlyProp } from "tsafe/lab/overwriteReadonlyProp";
 import type { UseNamedStateReturnType } from "./useNamedState";
 import { typeGuard } from "tsafe/typeGuard";
 import { capitalize } from "./tools/capitalize";
-import memoize from "memoizee";
+import { memoize0 } from "./tools/memoize0";
 import { addParamToUrl, retrieveAllParamStartingWithPrefixFromUrl, updateSearchBarUrl } from "./tools/urlSearchParams";
+import { createStatefulObservable, useRerenderOnChange } from "./tools/StatefulObservable";
+import type { StatefulObservable } from "./tools/StatefulObservable";
 
-export type { StatefulEvt };
+export type { StatefulObservable };
 
 const {
     globalStates,
@@ -84,7 +83,7 @@ const { injectGlobalStatesInSearchParams, getStatesFromUrlSearchParams } = (() =
 
     }
 
-    const getUnparsedStatesFromUrlSearchParams = memoize(() => {
+    const getUnparsedStatesFromUrlSearchParams = memoize0(() => {
 
         const {
             newUrl,
@@ -159,13 +158,13 @@ export function createUseGlobalState<T, Name extends string>(
     `use${Capitalize<Name>}`,
     () => UseNamedStateReturnType<T, Name>
 > & Record<
-    `evt${Capitalize<Name>}`,
-    StatefulEvt<T>
+    `$${Name}`,
+    StatefulObservable<T>
 > {
 
     const { name, initialState, doPersistAcrossReloads } = params;
 
-    if( doPersistAcrossReloads) {
+    if (doPersistAcrossReloads) {
 
         persistedGlobalStateNames.add(name);
 
@@ -175,14 +174,15 @@ export function createUseGlobalState<T, Name extends string>(
     // evt getter... 
     const urlSearchParam = getStatesFromUrlSearchParams<T>({ name });
 
-    const getEvtXyz = memoize(() => {
+    const get$xyz = memoize0(() => {
 
-        const localStorageKey= `${prefix}${name}`;
+        const localStorageKey = `${prefix}${name}`;
 
         const storeStateInPersistentStorage = !doPersistAcrossReloads ? undefined : (state: T) => localStorage.setItem(localStorageKey, stringify(state));
 
-        const evtXyz = Evt.create(
-            (() => {
+        const $xyz= createStatefulObservable<T>((()=>{
+
+            const initialValue = (() => {
 
                 if (urlSearchParam.wasPresent) {
 
@@ -194,7 +194,7 @@ export function createUseGlobalState<T, Name extends string>(
 
                 }
 
-                if (doPersistAcrossReloads ) {
+                if (doPersistAcrossReloads) {
 
                     const serializedState = localStorage.getItem(localStorageKey);
 
@@ -210,19 +210,20 @@ export function createUseGlobalState<T, Name extends string>(
                     initialState() :
                     initialState;
 
-            })()
-        );
+            })();
 
-        //Susceptible to have one handler attached for every component.
-        evtXyz.setMaxHandlers(Infinity);
+            return ()=> initialValue;
+
+        })());
+
 
         if (storeStateInPersistentStorage !== undefined) {
 
-            evtXyz.attach(storeStateInPersistentStorage);
+            $xyz.subscribe(storeStateInPersistentStorage);
 
         }
 
-        return evtXyz;
+        return $xyz;
 
     });
 
@@ -232,23 +233,23 @@ export function createUseGlobalState<T, Name extends string>(
         name,
         {
             "enumerable": true,
-            "get": () => getEvtXyz().state
+            "get": () => get$xyz().current
         }
     );
 
     function useXyz() {
 
-        const evtXyz = getEvtXyz();
+        const $xyz = get$xyz();
 
-        useRerenderOnStateChange(evtXyz);
+        useRerenderOnChange($xyz);
 
         return {
-            [name]: evtXyz.state,
+            [name]: $xyz.current,
             [`set${capitalize(name)}`]:
                 useConstCallback((setStateAction: T | ((prevState: T) => T)) =>
-                    evtXyz.state =
+                    $xyz.current =
                     typeGuard<(prevState: T) => T>(setStateAction, typeof setStateAction === "function") ?
-                        setStateAction(evtXyz.state) :
+                        setStateAction($xyz.current) :
                         setStateAction
                 )
         } as any;
@@ -259,10 +260,10 @@ export function createUseGlobalState<T, Name extends string>(
 
     return Object.defineProperty(
         { [useXyz.name]: useXyz } as any,
-        `evt${capitalize(name)}`,
+        `$${name}`,
         {
             "enumerable": true,
-            "get": () => getEvtXyz()
+            "get": () => get$xyz()
         }
     );
 
