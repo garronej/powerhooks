@@ -1,3 +1,10 @@
+## **0.20.0** (2022-06-11)  
+  
+- Add missing files  
+- Enable to use useGlobalState without Evt and memoizee  
+- Update README  
+- Remove no longer used dependencies    
+  
 ## **0.19.0** (2022-06-04)  
   
 - Better typing with useSsrGlobalState  
