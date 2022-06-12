@@ -1,3 +1,7 @@
+### **0.20.1** (2022-06-12)  
+  
+- Fix stafulObservableToStatefulEvt    
+  
 ## **0.20.0** (2022-06-11)  
   
 - Add missing files  
