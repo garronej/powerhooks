@@ -6,7 +6,7 @@ import type { StatefulObservable } from "./StatefulObservable";
 export function statefulObservableToStatefulEvt<T>(
 	params: {
 		statefulObservable: StatefulObservable<T>;
-		ctx: Ctx;
+		ctx?: Ctx;
 	}
 ): StatefulEvt<T> {
 
