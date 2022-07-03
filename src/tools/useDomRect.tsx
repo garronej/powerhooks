@@ -60,12 +60,15 @@ export function useDomRect<T extends HTMLElement = any>(params?: { ref: React.Re
 
             ctx.evtDoneOrAborted.setMaxHandlers(Infinity);
 
+            console.log("up===>", element);
+
             Evt.merge([
                 Evt.from(ctx, ResizeObserver, element),
                 evtForceUpdate
             ])
                 .toStateful()
                 .attach(() => (async function callee(previousCallCount: number) {
+
 
                     {
 
@@ -103,7 +106,7 @@ export function useDomRect<T extends HTMLElement = any>(params?: { ref: React.Re
                 })(0));
 
         },
-        [ref.current]
+        [{}]
     );
 
     return { ref, domRect, checkIfDomRectUpdated };
