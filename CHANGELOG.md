@@ -1,3 +1,7 @@
+### **0.20.3** (2022-07-03)  
+  
+- Fix memory leak useDomRect    
+  
 ### **0.20.2** (2022-07-03)  
   
 - Fix previous commit  
