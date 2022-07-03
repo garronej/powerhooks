@@ -5,6 +5,7 @@ import memoize from "memoizee";
 import { useConstCallback } from "../useConstCallback";
 import { useEvt } from "evt/hooks";
 import { useStateRef } from "../useStateRef";
+import { useConst } from "../useConst";
 
 //TODO: only re-renders when width or height change.
 
@@ -38,7 +39,7 @@ export function useDomRect<T extends HTMLElement = any>(params?: { ref: React.Re
 
     const [domRect, setDomRect] = useState<PartialDomRect>(() => toMemoPartial(0, 0, 0, 0, 0, 0));
 
-    const [evtForceUpdate] = useState(() => Evt.create());
+    const evtForceUpdate = useConst(() => Evt.create());
 
     /** Shouldn't be necessary but hey... */
     const checkIfDomRectUpdated = useConstCallback(
@@ -62,7 +63,7 @@ export function useDomRect<T extends HTMLElement = any>(params?: { ref: React.Re
 
             Evt.merge([
                 Evt.from(ctx, ResizeObserver, element),
-                evtForceUpdate
+                evtForceUpdate.pipe(ctx)
             ])
                 .toStateful()
                 .attach(() => (async function callee(previousCallCount: number) {
