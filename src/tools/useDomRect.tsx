@@ -60,8 +60,6 @@ export function useDomRect<T extends HTMLElement = any>(params?: { ref: React.Re
 
             ctx.evtDoneOrAborted.setMaxHandlers(Infinity);
 
-            console.log("up===>", element);
-
             Evt.merge([
                 Evt.from(ctx, ResizeObserver, element),
                 evtForceUpdate
@@ -105,8 +103,7 @@ export function useDomRect<T extends HTMLElement = any>(params?: { ref: React.Re
 
                 })(0));
 
-        },
-        [{}]
+        }
     );
 
     return { ref, domRect, checkIfDomRectUpdated };
