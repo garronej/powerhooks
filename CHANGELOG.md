@@ -1,3 +1,9 @@
+### **0.20.2** (2022-07-03)  
+  
+- Fix previous commit  
+- useDom rect refresh each render  
+- Update README.md    
+  
 ### **0.20.1** (2022-06-12)  
   
 - Fix stafulObservableToStatefulEvt    
