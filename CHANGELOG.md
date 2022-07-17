@@ -1,3 +1,7 @@
+### **0.20.4** (2022-07-17)  
+  
+- update evt    
+  
 ### **0.20.3** (2022-07-03)  
   
 - Fix memory leak useDomRect    
