@@ -50,26 +50,39 @@ export function useDomRect<T extends HTMLElement = any>(params?: { ref: React.Re
 
     const ref = params?.ref ?? internallyCreatedRef;
 
+    const evtResize = useConst(() => Evt.create());
+
+    useEvt(ctx => {
+
+        const element = ref.current;
+
+        if (element === null) {
+            return;
+        }
+
+        Evt.from(ctx, ResizeObserver, element).attach(() => evtResize.post());
+
+    }, [ref.current])
+
     useEvt(
         ctx => {
 
             const element = ref.current;
 
-            if( element === null ){
+            if (element === null) {
                 return;
             }
 
             ctx.evtDoneOrAborted.setMaxHandlers(Infinity);
 
             Evt.merge([
-                Evt.from(ctx, ResizeObserver, element),
-                evtForceUpdate.pipe(ctx)
+                evtResize.pipe(ctx, ()=>[true]),
+                evtForceUpdate.pipe(ctx, ()=> [false])
             ])
-                .toStateful()
-                .attach(() => (async function callee(previousCallCount: number) {
+                .toStateful(false)
+                .attach(isResize => (async function callee(previousCallCount: number) {
 
-
-                    {
+                    if( isResize ){
 
                         let timer: ReturnType<typeof setTimeout>;
 
@@ -97,6 +110,10 @@ export function useDomRect<T extends HTMLElement = any>(params?: { ref: React.Re
                         )
                     );
 
+                    if( !isResize ){
+                        return;
+                    }
+
                     if (previousCallCount < 6) {
                         callee(previousCallCount + 1);
                         return;
@@ -104,7 +121,7 @@ export function useDomRect<T extends HTMLElement = any>(params?: { ref: React.Re
 
                 })(0));
 
-        }
+        },
     );
 
     return { ref, domRect, checkIfDomRectUpdated };
