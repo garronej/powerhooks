@@ -1,3 +1,7 @@
+### **0.20.5** (2022-07-21)  
+  
+- Improve performance of useDomRect    
+  
 ### **0.20.4** (2022-07-17)  
   
 - update evt    
