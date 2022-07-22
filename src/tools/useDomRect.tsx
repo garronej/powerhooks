@@ -1,11 +1,10 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { Evt } from "evt";
 import ResizeObserver from "./ResizeObserver";
 import memoize from "memoizee";
 import { useConstCallback } from "../useConstCallback";
 import { useEvt } from "evt/hooks";
 import { useStateRef } from "../useStateRef";
-import { useConst } from "../useConst";
 
 //TODO: only re-renders when width or height change.
 
@@ -13,33 +12,56 @@ export const domRectKeys = ["bottom", "right", "top", "left", "height", "width"]
 
 export type PartialDomRect = Pick<DOMRectReadOnly, typeof domRectKeys[number]>;
 
-
 // https://gist.github.com/morajabi/523d7a642d8c0a2f71fcfa0d8b3d2846
 // https://developer.mozilla.org/en-US/docs/Web/API/Element/getBoundingClientRect
 export function useDomRect<T extends HTMLElement = any>(): { ref: React.RefObject<T>; domRect: PartialDomRect; checkIfDomRectUpdated: () => void; }
 export function useDomRect<T extends HTMLElement = any>(params: { ref: React.RefObject<T>; }): { domRect: PartialDomRect; checkIfDomRectUpdated: () => void; };
 export function useDomRect<T extends HTMLElement = any>(params?: { ref: React.RefObject<T>; }): { ref: React.RefObject<T>; domRect: PartialDomRect; checkIfDomRectUpdated: () => void; } {
 
-    const [toMemoPartial] = useState(
-        () => memoize(
-            (
-                bottom: number,
-                right: number,
-                top: number,
-                left: number,
-                height: number,
-                width: number
-            ): PartialDomRect => ({
+    const { domRect, updateDomRect } = (function useClosure() {
+
+        const [toMemoPartial] = useState(
+            () => memoize(
+                (
+                    bottom: number,
+                    right: number,
+                    top: number,
+                    left: number,
+                    height: number,
+                    width: number
+                ): PartialDomRect => ({
+                    bottom, right, top,
+                    left, height, width
+                }),
+                { "max": 1 }
+            )
+        );
+
+        const [domRect, setDomRect] = useState<PartialDomRect>(() => toMemoPartial(0, 0, 0, 0, 0, 0));
+
+        const updateDomRect = useConstCallback((element: HTMLElement) => {
+
+            const {
                 bottom, right, top,
                 left, height, width
-            }),
-            { "max": 1 }
-        )
-    );
+            } = element.getBoundingClientRect();
 
-    const [domRect, setDomRect] = useState<PartialDomRect>(() => toMemoPartial(0, 0, 0, 0, 0, 0));
+            setDomRect(
+                toMemoPartial(
+                    bottom, right, top,
+                    left, height, width
+                )
+            );
 
-    const evtForceUpdate = useConst(() => Evt.create());
+        });
+
+
+        return { domRect, updateDomRect };
+
+
+    })();
+
+    const [evtForceUpdate] = useState(() => Evt.create());
 
     /** Shouldn't be necessary but hey... */
     const checkIfDomRectUpdated = useConstCallback(
@@ -55,7 +77,7 @@ export function useDomRect<T extends HTMLElement = any>(params?: { ref: React.Re
 
             const element = ref.current;
 
-            if( element === null ){
+            if (element === null) {
                 return;
             }
 
@@ -67,7 +89,6 @@ export function useDomRect<T extends HTMLElement = any>(params?: { ref: React.Re
             ])
                 .toStateful()
                 .attach(() => (async function callee(previousCallCount: number) {
-
 
                     {
 
@@ -85,17 +106,7 @@ export function useDomRect<T extends HTMLElement = any>(params?: { ref: React.Re
 
                     }
 
-                    const {
-                        bottom, right, top,
-                        left, height, width
-                    } = element.getBoundingClientRect();
-
-                    setDomRect(
-                        toMemoPartial(
-                            bottom, right, top,
-                            left, height, width
-                        )
-                    );
+                    updateDomRect(element);
 
                     if (previousCallCount < 6) {
                         callee(previousCallCount + 1);
@@ -104,8 +115,24 @@ export function useDomRect<T extends HTMLElement = any>(params?: { ref: React.Re
 
                 })(0));
 
+        },
+        [ref.current]
+    );
+
+    useEffect(
+        () => {
+
+            const element = ref.current;
+
+            if (element === null) {
+                return;
+            }
+
+            updateDomRect(element);
+
         }
     );
+
 
     return { ref, domRect, checkIfDomRectUpdated };
 
