@@ -11,7 +11,7 @@
       "packagePatterns": ["*"],
       "excludePackagePatterns": ["tsafe", "evt"],
       "enabled": false
-    }
+    },
     {
       "packagePatterns": ["tsafe", "evt"],
       "groupName": "housegrown",
