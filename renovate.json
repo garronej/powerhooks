@@ -5,5 +5,17 @@
   ],
   "rangeStrategy": "bump",
   "ignorePaths": [".github/**"],
-  "bumpVersion": "patch"
+  "bumpVersion": "patch",
+  "packageRules": [
+    {
+      "packagePatterns": ["*"],
+      "excludePackagePatterns": ["tsafe", "evt"],
+      "enabled": false
+    }
+    {
+      "packagePatterns": ["tsafe", "evt"],
+      "groupName": "housegrown",
+      "automerge": true
+    }
+  ]
 }
