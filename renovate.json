@@ -3,5 +3,6 @@
   "extends": [
     "config:base"
   ],
+  "ignorePaths": [".github/**"],
   "bumpVersion": "patch"
 }
