@@ -4,8 +4,9 @@
     "config:base"
   ],
   "rangeStrategy": "bump",
-  "ignorePaths": [".github/**"],
+  "ignorePaths": [".github/**", "res/**"],
   "bumpVersion": "patch",
+  "branchPrefix": "renovate_",
   "packageRules": [
     {
       "packagePatterns": ["*"],
@@ -17,7 +18,7 @@
       "matchUpdateTypes": ["minor", "patch"],
       "automerge": true,
       "automergeType": "branch",
-      "branchName": "renovate_garronej_dependencies_update"
+      "groupName": "garronej_modules_update"
     }
   ]
 }
