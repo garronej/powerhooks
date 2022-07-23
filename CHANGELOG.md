@@ -1,3 +1,30 @@
+### **0.20.7** (2022-07-23)  
+  
+- Merge pull request #60 from garronej/renovate_garronej_modules_update
+
+Update dependency evt to ^2.2.1  
+- Update renovate.json  
+- Update renovate.json  
+- Update dependency evt to ^2.2.1  
+- Update renovate.json  
+- Update renovate.json  
+- Update renovate.json  
+- Update renovate.json  
+- Update renovate.json  
+- Update renovate.json  
+- Merge pull request #58 from garronej/renovate/configure
+
+Configure Renovate  
+- Update renovate.json  
+- Update renovate.json  
+- Update renovate.json  
+- Update renovate.json  
+- Update renovate.json  
+- Update renovate.json  
+- Update renovate.json  
+- Update renovate.json  
+- Add renovate.json    
+  
 ### **0.20.6** (2022-07-22)  
   
 - Fix useDomRect performances    
