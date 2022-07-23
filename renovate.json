@@ -17,7 +17,7 @@
       "matchUpdateTypes": ["minor", "patch"],
       "automerge": true,
       "automergeType": "branch",
-      "branchName": "garronej_depdendencies_update"
+      "branchName": "renovate_garronej_dependencies_update"
     }
   ]
 }
