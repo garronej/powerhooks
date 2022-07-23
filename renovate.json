@@ -14,7 +14,7 @@
     },
     {
       "packagePatterns": ["tsafe", "evt"],
-      "groupName": "housegrown",
+      "groupName": "homegrown",
       "automerge": true
     }
   ]
