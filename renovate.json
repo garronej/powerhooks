@@ -14,10 +14,10 @@
     },
     {
       "packagePatterns": ["tsafe", "evt"],
-      "groupName": "homegrown",
       "matchUpdateTypes": ["minor", "patch"],
       "automerge": true,
-      "automergeType": "branch"
+      "automergeType": "branch",
+      "branchName": "garronej_depdendencies_update"
     }
   ]
 }
