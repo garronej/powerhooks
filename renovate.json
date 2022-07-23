@@ -11,7 +11,13 @@
     {
       "packagePatterns": ["*"],
       "excludePackagePatterns": ["tsafe", "evt"],
-      "enabled": false
+      "enabled": false,
+    },
+    {
+      "matchDepTypes": ["devDependencies"],
+      "vulnerabilityAlerts": {
+        "enabled": false
+      }
     },
     {
       "packagePatterns": ["tsafe", "evt"],
