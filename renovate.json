@@ -9,6 +9,7 @@
   "packageRules": [
     {
       "packagePatterns": ["*"],
+      "excludePackagePatterns": ["tsafe", "evt"],
       "enabled": false
     },
     {
