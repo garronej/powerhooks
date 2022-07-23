@@ -15,6 +15,7 @@
     {
       "packagePatterns": ["tsafe", "evt"],
       "groupName": "homegrown",
+      "matchUpdateTypes": ["minor", "patch"],
       "automerge": true
     }
   ]
