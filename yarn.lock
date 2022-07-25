@@ -158,13 +158,13 @@ event-emitter@^0.3.5:
     d "1"
     es5-ext "~0.10.14"
 
-evt@^2.2.1:
-  version "2.2.1"
-  resolved "https://registry.yarnpkg.com/evt/-/evt-2.2.1.tgz#a3d6b19e92a5fae2801d98e764294c08b8079d78"
-  integrity sha512-MbzwSxMaZrmg09Q0HeK/W0/xwH3u9jFxb78MAXhhFczjog8gqoaO1IQGCAIOlI7FHW7NzuoCKpjcIyJUva7H3w==
+evt@^2.3.0:
+  version "2.3.0"
+  resolved "https://registry.yarnpkg.com/evt/-/evt-2.3.0.tgz#709456803f79a125371f709fb32c0989a948a9f8"
+  integrity sha512-Tkv4vM4BrIiW9p+YM7DiWNGcxrajtSaNMsJl6C43gbk/pY5xhN7RNQ9j3wyXNgKrkudNYMTO4dTE+v3JGdJqTQ==
   dependencies:
     minimal-polyfills "^2.2.1"
-    run-exclusive "^2.2.14"
+    run-exclusive "^2.2.15"
     tsafe "^0.10.0"
 
 ext@^1.1.2:
@@ -212,7 +212,7 @@ memoizee@^0.4.15:
     next-tick "^1.1.0"
     timers-ext "^0.1.7"
 
-minimal-polyfills@^2.1.5, minimal-polyfills@^2.2.1:
+minimal-polyfills@^2.2.1:
   version "2.2.1"
   resolved "https://registry.yarnpkg.com/minimal-polyfills/-/minimal-polyfills-2.2.1.tgz#7249d7ece666d3b4e1ec1c1b8f949eb9d44e2308"
   integrity sha512-WLmHQrsZob4rVYf8yHapZPNJZ3sspGa/sN8abuSD59b0FifDEE7HMfLUi24z7mPZqTpBXy4Svp+iGvAmclCmXg==
@@ -285,12 +285,12 @@ resize-observer-polyfill@^1.5.1:
   resolved "https://registry.yarnpkg.com/resize-observer-polyfill/-/resize-observer-polyfill-1.5.1.tgz#0e9020dd3d21024458d4ebd27e23e40269810464"
   integrity sha512-LwZrotdHOo12nQuZlHEmtuXdqGoOD0OhaxopaNFxWzInpEgaLWoVuAMbTzixuosCx2nEG58ngzW3vxdWoxIgdg==
 
-run-exclusive@^2.2.14:
-  version "2.2.14"
-  resolved "https://registry.yarnpkg.com/run-exclusive/-/run-exclusive-2.2.14.tgz#4f41dc7843e091f10991f8708fce87b09022a0ce"
-  integrity sha512-NHaQfB3zPJFx7p4M06AcmoK8xz/h8YDMCdy3jxfyoC9VqIbl1U+DiVjUuAYZBRMwvj5qkQnOUGfsmyUC4k46dg==
+run-exclusive@^2.2.15:
+  version "2.2.15"
+  resolved "https://registry.yarnpkg.com/run-exclusive/-/run-exclusive-2.2.15.tgz#8e311a741cb8def53ececf2e9d921e47abf15117"
+  integrity sha512-MpQTHZspu8Qcl/WtJXGn7ClQitwk8m9iQwVPqFhhYSJQF/YcEu0Btn7h1UfPXHAgcDClZsHBzg0HVGYRt8Txaw==
   dependencies:
-    minimal-polyfills "^2.1.5"
+    minimal-polyfills "^2.2.1"
 
 scheduler@^0.22.0:
   version "0.22.0"
