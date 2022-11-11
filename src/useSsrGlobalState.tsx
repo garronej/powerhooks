@@ -58,9 +58,9 @@ export function createUseSsrGlobalState<T, Name extends string>(
 
 	const { name, getStateSeverSide, getInitialStateServerSide, getInitialStateClientSide, Head } = params;
 
-	let doThrowIsTateRead= true;
+	let doThrowIsTateRead = true;
 
-	const $xyz = createStatefulObservable(()=>{
+	const $xyz = createStatefulObservable(() => {
 
 		if (doThrowIsTateRead) {
 			throw new Error("Too soon, we need to get the initial state from backend first");
@@ -149,7 +149,7 @@ export function createUseSsrGlobalState<T, Name extends string>(
 					break scope;
 				}
 
-				doThrowIsTateRead= false;
+				doThrowIsTateRead = false;
 				$xyz.current = xyzServerInfos.xyz;
 
 				if (!isServer) {
@@ -159,12 +159,17 @@ export function createUseSsrGlobalState<T, Name extends string>(
 
 							let newCookie = `${cookiePrefix}${name}=${stringify(state)};path=/;max-age=31536000`;
 
-							//We do not set the domain if we are on localhost or an ip
-							if (window.location.hostname.match(/\.[a-zA-Z]{2,}$/)) {
-								newCookie += `;domain=${window.location.hostname.split(".").length >= 3 ?
-									window.location.hostname.replace(/^[^.]+\./, "") :
-									window.location.hostname
-									}`;
+							set_domain: {
+
+								const { hostname } = window.location;
+
+								//We do not set the domain if we are on localhost or an ip
+								if (/(^localhost$)|(^((25[0-5]|(2[0-4]|1\d|[1-9]|)\d)\.?\b){4}$)/.test(hostname)) {
+									break set_domain;
+								}
+
+								newCookie += `;domain=${hostname}`;
+
 							}
 
 							document.cookie = newCookie;
@@ -240,8 +245,6 @@ export function createUseSsrGlobalState<T, Name extends string>(
 					return { pathname, query, headers };
 
 				})();
-
-				//TODO: Read state from URL and update route
 
 				get_value: {
 
