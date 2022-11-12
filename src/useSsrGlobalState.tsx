@@ -224,12 +224,15 @@ export function createUseSsrGlobalState<T, Name extends string>(
 
 		}
 
+		const super_getInitialProps =
+			App.getInitialProps?.bind(App) ??
+			DefaultApp.getInitialProps.bind(DefaultApp);
 
 		Object.keys(App)
 			.forEach(staticMethod => (AppWithXyz as any)[staticMethod] = (App as any)[staticMethod]);
 
 		AppWithXyz.getInitialProps = async (appContext: AppContext): Promise<AppWithXyzProps> => ({
-			"initialProps": App.getInitialProps ? await App.getInitialProps(appContext as any) : {},
+			"initialProps": await super_getInitialProps(appContext),
 			"xyzServerInfos": await (async () => {
 
 				if (!isServer) {
