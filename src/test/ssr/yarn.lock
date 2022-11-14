@@ -395,9 +395,9 @@ callsites@^3.0.0:
   integrity sha512-P8BjAsXvZS+VIDUI11hHCQEv74YT67YUi5JJFNWIqL235sBmjX4+qx9Muvls5ivyNENctx46xQLQ3aTuE7ssaQ==
 
 caniuse-lite@^1.0.30001332:
-  version "1.0.30001341"
-  resolved "https://registry.yarnpkg.com/caniuse-lite/-/caniuse-lite-1.0.30001341.tgz#59590c8ffa8b5939cf4161f00827b8873ad72498"
-  integrity sha512-2SodVrFFtvGENGCv0ChVJIDQ0KPaS1cg7/qtfMaICgeMolDdo/Z2OD32F0Aq9yl6F4YFwGPBS5AaPqNYiW4PoA==
+  version "1.0.30001431"
+  resolved "https://registry.yarnpkg.com/caniuse-lite/-/caniuse-lite-1.0.30001431.tgz#e7c59bd1bc518fae03a4656be442ce6c4887a795"
+  integrity sha512-zBUoFU0ZcxpvSt9IU66dXVT/3ctO1cy4y9cscs1szkPlcWb6pasYM144GqrUygUbT+k7cmUCW61cvskjcv0enQ==
 
 chalk@^2.0.0:
   version "2.4.2"
@@ -866,14 +866,14 @@ event-emitter@^0.3.5:
     d "1"
     es5-ext "~0.10.14"
 
-evt@2.0.0-beta.44:
-  version "2.0.0-beta.44"
-  resolved "https://registry.yarnpkg.com/evt/-/evt-2.0.0-beta.44.tgz#7b936e65b3a8c2536e21f1c2af9e85fb95cc32ec"
-  integrity sha512-2XKKP3UhwLY1jOe8Ta0iL44ZZCy8iG1fGRHeyuU8W/aRcpcKy0PFi/FkVhaaI3tkWjqqfNJQ0wRgDovNP6N3KQ==
+evt@^2.4.10:
+  version "2.4.10"
+  resolved "https://registry.yarnpkg.com/evt/-/evt-2.4.10.tgz#91b3c10e5ce50112656bdbe6c599c38f72617e51"
+  integrity sha512-HPepROqeyGpl54AvytYMJh+JoB5eGInaRG3Sqr7VAQX69jzWdou6mq8vNvy41lRSSsK2rQ7XJXoyEaqVnLDBSw==
   dependencies:
-    minimal-polyfills "^2.2.1"
-    run-exclusive "^2.2.14"
-    tsafe "^0.4.1"
+    minimal-polyfills "^2.2.2"
+    run-exclusive "^2.2.18"
+    tsafe "^1.2.1"
 
 ext@^1.1.2:
   version "1.6.0"
@@ -1363,10 +1363,15 @@ micromatch@^4.0.4:
     braces "^3.0.2"
     picomatch "^2.3.1"
 
-minimal-polyfills@^2.1.5, minimal-polyfills@^2.2.1:
+minimal-polyfills@^2.2.1:
   version "2.2.1"
   resolved "https://registry.yarnpkg.com/minimal-polyfills/-/minimal-polyfills-2.2.1.tgz#7249d7ece666d3b4e1ec1c1b8f949eb9d44e2308"
   integrity sha512-WLmHQrsZob4rVYf8yHapZPNJZ3sspGa/sN8abuSD59b0FifDEE7HMfLUi24z7mPZqTpBXy4Svp+iGvAmclCmXg==
+
+minimal-polyfills@^2.2.2:
+  version "2.2.2"
+  resolved "https://registry.yarnpkg.com/minimal-polyfills/-/minimal-polyfills-2.2.2.tgz#6b06a004acce420eb91cf94698f5e6e7f2518378"
+  integrity sha512-eEOUq/LH/DbLWihrxUP050Wi7H/N/I2dQT98Ep6SqOpmIbk4sXOI4wqalve66QoZa+6oljbZWU6I6T4dehQGmw==
 
 minimatch@^3.0.4, minimatch@^3.1.1, minimatch@^3.1.2:
   version "3.1.2"
@@ -1584,12 +1589,12 @@ postcss@8.4.5:
     source-map-js "^1.0.1"
 
 "powerhooks@file:../../../dist":
-  version "0.18.0"
+  version "0.20.26"
   dependencies:
-    evt "2.0.0-beta.44"
+    evt "^2.4.10"
     memoizee "^0.4.15"
     resize-observer-polyfill "^1.5.1"
-    tsafe "^0.10.0"
+    tsafe "^1.2.1"
 
 prelude-ls@^1.2.1:
   version "1.2.1"
@@ -1703,12 +1708,12 @@ rimraf@^3.0.2:
   dependencies:
     glob "^7.1.3"
 
-run-exclusive@^2.2.14:
-  version "2.2.14"
-  resolved "https://registry.yarnpkg.com/run-exclusive/-/run-exclusive-2.2.14.tgz#4f41dc7843e091f10991f8708fce87b09022a0ce"
-  integrity sha512-NHaQfB3zPJFx7p4M06AcmoK8xz/h8YDMCdy3jxfyoC9VqIbl1U+DiVjUuAYZBRMwvj5qkQnOUGfsmyUC4k46dg==
+run-exclusive@^2.2.18:
+  version "2.2.18"
+  resolved "https://registry.yarnpkg.com/run-exclusive/-/run-exclusive-2.2.18.tgz#ec930edc3a7044750dc827df9372bde8f610f586"
+  integrity sha512-TXr1Gkl1iEAOCCpBTRm/2m0+1KGjORcWpZZ+VGGTe7dYX8E4y8/fMvrHk0zf+kclec2R//tpvdBxgG0bDgaJfw==
   dependencies:
-    minimal-polyfills "^2.1.5"
+    minimal-polyfills "^2.2.1"
 
 run-parallel@^1.1.9:
   version "1.2.0"
@@ -1894,15 +1899,10 @@ to-regex-range@^5.0.1:
   dependencies:
     is-number "^7.0.0"
 
-tsafe@^0.10.0:
-  version "0.10.0"
-  resolved "https://registry.yarnpkg.com/tsafe/-/tsafe-0.10.0.tgz#c4fba365a49467ea6167e8c9482ddb94ee51b795"
-  integrity sha512-CFfa1uJKfU0DDRbuB8bf2mfXjkOqiTsrltexzMMLxq5gjd1LttFECNGsO8dYUALJDbShb6+f3CwAppW/wf9BrA==
-
-tsafe@^0.4.1:
-  version "0.4.1"
-  resolved "https://registry.yarnpkg.com/tsafe/-/tsafe-0.4.1.tgz#00af1be2db82abb4be531209b90232d7954e1a03"
-  integrity sha512-+OZ0gdgmwcru+MOSheCx+ymAvQz+1/ui+KFJRuaq0t2m8RNrlf7eSzEieptoPQXPY67Mdkqgkdjknn8azoD5sw==
+tsafe@^1.2.1:
+  version "1.2.1"
+  resolved "https://registry.yarnpkg.com/tsafe/-/tsafe-1.2.1.tgz#578f7acd22b5ff32b5b820b6eb551af9ad4024da"
+  integrity sha512-fDDbPiAG6xjZuyXXakHZi8ewGx7ERxGVJ3dwFtcoex+9lvp/nHm5ROlFAB6lyZSmspG0cjpYpFxrKyRnniiOdQ==
 
 tsconfig-paths@^3.14.1:
   version "3.14.1"
