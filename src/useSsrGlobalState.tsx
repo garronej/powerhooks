@@ -154,24 +154,24 @@ export function createUseSsrGlobalState<T, Name extends string>(
 
 				if (!isServer) {
 
-					const next = (state: T)=> {
+					const next = (state: T) => {
 
-							let newCookie = `${cookiePrefix}${name}=${stringify(state)};path=/;max-age=31536000`;
+						let newCookie = `${cookiePrefix}${name}=${stringify(state)};path=/;max-age=31536000`;
 
-							set_domain: {
+						set_domain: {
 
-								const { hostname } = window.location;
+							const { hostname } = window.location;
 
-								//We do not set the domain if we are on localhost or an ip
-								if (/(^localhost$)|(^((25[0-5]|(2[0-4]|1\d|[1-9]|)\d)\.?\b){4}$)/.test(hostname)) {
-									break set_domain;
-								}
-
-								newCookie += `;domain=${hostname}`;
-
+							//We do not set the domain if we are on localhost or an ip
+							if (/(^localhost$)|(^((25[0-5]|(2[0-4]|1\d|[1-9]|)\d)\.?\b){4}$)/.test(hostname)) {
+								break set_domain;
 							}
 
-							document.cookie = newCookie;
+							newCookie += `;domain=${hostname}`;
+
+						}
+
+						document.cookie = newCookie;
 
 					};
 
