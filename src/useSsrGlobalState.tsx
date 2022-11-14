@@ -20,7 +20,7 @@ import type { StatefulObservable } from "./tools/StatefulObservable";
 export type { StatefulObservable };
 
 
-const isServer = typeof window === "undefined";
+const isServer = !(typeof window === "object" && typeof document === "object");
 
 
 function stringify(obj: unknown): string {
