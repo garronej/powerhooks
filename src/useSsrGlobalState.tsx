@@ -1,4 +1,4 @@
-import { useEffect, memo } from "react";
+import { useEffect, useContext, createContext, memo } from "react";
 import { useConstCallback } from "./useConstCallback";
 import { overwriteReadonlyProp } from "tsafe/lab/overwriteReadonlyProp";
 import type { UseNamedStateReturnType } from "./useNamedState";
@@ -19,9 +19,7 @@ import type { StatefulObservable } from "./tools/StatefulObservable";
 
 export type { StatefulObservable };
 
-
 const isServer = !(typeof window === "object" && typeof document === "object");
-
 
 function stringify(obj: unknown): string {
 	return JSON.stringify([obj]);
@@ -31,7 +29,7 @@ function parse<T>(str: string): T {
 	return JSON.parse(str)[0];
 }
 
-const cookiePrefix = "powerhooks_useGlobalState_"
+const prefix = "powerhooks_useGlobalState_"
 
 export function createUseSsrGlobalState<T, Name extends string>(
 	params: {
@@ -70,34 +68,60 @@ export function createUseSsrGlobalState<T, Name extends string>(
 
 	});
 
-	function useXyz() {
+	const wrappedXyzContext = createContext<[T] | undefined>(undefined);
 
-		useRerenderOnChange($xyz);
+	const { useXyz } = (() => {
 
-		return {
-			[name]: $xyz.current,
-			[`set${capitalize(name)}`]:
-				useConstCallback((setStateAction: T | ((prevState: T) => T)) =>
-					$xyz.current =
-					typeGuard<(prevState: T) => T>(setStateAction, typeof setStateAction === "function") ?
-						setStateAction($xyz.current) :
-						setStateAction
-				)
-		} as any;
+		function useXyzClientSide() {
 
-	}
+			useRerenderOnChange($xyz);
+
+			return {
+				[name]: $xyz.current,
+				[`set${capitalize(name)}`]:
+					useConstCallback((setStateAction: T | ((prevState: T) => T)) =>
+						$xyz.current =
+						typeGuard<(prevState: T) => T>(setStateAction, typeof setStateAction === "function") ?
+							setStateAction($xyz.current) :
+							setStateAction
+					)
+			} as any;
+
+		}
+
+		function useXyzServerSide() {
+
+			const wrappedXyz = useContext(wrappedXyzContext);
+
+			assert(wrappedXyz !== undefined);
+
+			return {
+				[name]: wrappedXyz[0],
+				[`set${capitalize(name)}`]: useConstCallback(() => {
+					/* nothing */
+				})
+			} as any;
+
+		}
+
+		const useXyz = isServer ? useXyzServerSide : useXyzClientSide;
+
+		return { useXyz };
+
+	})();
+
 
 	overwriteReadonlyProp(useXyz as any, "name", `use${capitalize(name)}`);
 
 	const AppWithXyzHead = memo((props: { headers: IncomingHttpHeaders; query: ParsedUrlQuery; pathname: string; }) => {
 
-		useRerenderOnChange($xyz);
+		const { [name]: xyz } = useXyz();
 
 		if (Head === undefined) {
 			return null;
 		}
 
-		return <Head {...{ [name]: $xyz.current, ...props } as any} />;
+		return <Head {...{ [name]: xyz, ...props } as any} />;
 
 	});
 
@@ -111,40 +135,37 @@ export function createUseSsrGlobalState<T, Name extends string>(
 
 	}
 
-	function withXyz(): typeof DefaultApp;
-	function withXyz<AppComponent extends NextComponentType<any, any, any>>(App: AppComponent): AppComponent;
-	function withXyz<AppComponent extends NextComponentType<any, any, any>>(App: AppComponent = DefaultApp as any): AppComponent {
+	function withXyz<AppComponent extends NextComponentType<any, any, any>>(App: AppComponent): AppComponent {
 
-		type AppWithXyzProps = {
-			initialProps: AppProps;
-			xyzServerInfos: {
-				xyz: T;
-				doFallbackToGetInitialValueClientSide: boolean;
-				headers: IncomingHttpHeaders | undefined;
-				pathname: string;
-				query: ParsedUrlQuery;
-			} | undefined;
+		type XyzServerInfos = {
+			xyz: T;
+			doFallbackToGetInitialValueClientSide: boolean;
+			headers: IncomingHttpHeaders | undefined;
+			pathname: string;
+			query: ParsedUrlQuery;
 		};
-
 
 		let isInit = false;
 
+		const xyzServerInfosAppPropName = `${prefix}${name}`;
 
-		function AppWithXyz({ initialProps, xyzServerInfos, ...props }: AppWithXyzProps) {
+		function AppWithXyz({ [xyzServerInfosAppPropName]: xyzServerInfos, ...props }: AppProps & Record<typeof xyzServerInfosAppPropName, XyzServerInfos | undefined>) {
 
 			scope: {
 
 				if (xyzServerInfos === undefined) {
 					//NOTE: getInitialProps was called client side
-					//evtXyz is already initialized.
+					//$xyz is already initialized.
+
+					assert(!isServer);
+					break scope;
+				}
+
+				if (isServer) {
 					break scope;
 				}
 
 				if (isInit) {
-
-					if (isServer) {
-						$xyz.current = xyzServerInfos.xyz;
-					}
 
 					break scope;
 				}
@@ -152,33 +173,31 @@ export function createUseSsrGlobalState<T, Name extends string>(
 				doThrowIfStateRead = false;
 				$xyz.current = xyzServerInfos.xyz;
 
-				if (!isServer) {
 
-					const next = (state: T) => {
+				const next = (state: T) => {
 
-						let newCookie = `${cookiePrefix}${name}=${stringify(state)};path=/;max-age=31536000;SameSite=Strict`;
+					let newCookie = `${prefix}${name}=${stringify(state)};path=/;max-age=31536000;SameSite=Strict`;
 
-						set_domain: {
-							const { hostname } = window.location;
-			
-							//We do not set the domain if we are on localhost or an ip
-							if (/(^localhost$)|(^((25[0-5]|(2[0-4]|1\d|[1-9]|)\d)\.?\b){4}$)/.test(hostname)) {
-								break set_domain;
-							}
-			
-							newCookie += `;domain=${hostname}`;
+					set_domain: {
+						const { hostname } = window.location;
+
+						//We do not set the domain if we are on localhost or an ip
+						if (/(^localhost$)|(^((25[0-5]|(2[0-4]|1\d|[1-9]|)\d)\.?\b){4}$)/.test(hostname)) {
+							break set_domain;
 						}
-			
-						document.cookie = newCookie;
+
+						newCookie += `;domain=${hostname}`;
+					}
+
+					document.cookie = newCookie;
 
 
-					};
+				};
 
-					$xyz.subscribe(next);
+				$xyz.subscribe(next);
 
-					next($xyz.current);
+				next($xyz.current);
 
-				}
 
 				isInit = true;
 
@@ -187,7 +206,11 @@ export function createUseSsrGlobalState<T, Name extends string>(
 			useEffect(
 				() => {
 
-					if (isServer || !xyzServerInfos?.doFallbackToGetInitialValueClientSide) {
+					if (xyzServerInfos === undefined) {
+						return;
+					}
+
+					if (!xyzServerInfos.doFallbackToGetInitialValueClientSide) {
 						return;
 					}
 
@@ -218,10 +241,21 @@ export function createUseSsrGlobalState<T, Name extends string>(
 			});
 
 			return (
-				<>
-					<AppWithXyzHead {...headProps} />
-					<App {...initialProps as any} {...props as any} />
-				</>
+				!isServer ? (
+					<>
+						<AppWithXyzHead {...headProps} />
+						<App {...props as any} />
+					</>) :
+					<wrappedXyzContext.Provider value={(() => {
+
+						assert(xyzServerInfos !== undefined);
+
+						return [xyzServerInfos.xyz];
+
+					})()}>
+						<AppWithXyzHead {...headProps} />
+						<App {...props as any} />
+					</wrappedXyzContext.Provider>
 			);
 
 		}
@@ -233,14 +267,14 @@ export function createUseSsrGlobalState<T, Name extends string>(
 		Object.keys(App)
 			.forEach(staticMethod => (AppWithXyz as any)[staticMethod] = (App as any)[staticMethod]);
 
-		AppWithXyz.getInitialProps = async (appContext: AppContext): Promise<AppWithXyzProps> => ({
-			"initialProps": await super_getInitialProps(appContext),
-			"xyzServerInfos": await (async () => {
+		(AppWithXyz as any).getInitialProps = async (appContext: AppContext) => {
+			const initialProps = await super_getInitialProps(appContext);
+
+			const xyzServerInfos: XyzServerInfos | undefined = await (async () => {
 
 				if (!isServer) {
 					return undefined;
 				}
-
 				const common = (() => {
 
 					const { pathname, query, req } = appContext.ctx;
@@ -289,7 +323,7 @@ export function createUseSsrGlobalState<T, Name extends string>(
 							.map(([key, value]) => [key, decodeURIComponent(value)])
 					);
 
-					const cookieName = `${cookiePrefix}${name}`;
+					const cookieName = `${prefix}${name}`;
 
 					if (!(cookieName in parsedCookies)) {
 						break read_cookie;
@@ -324,9 +358,13 @@ export function createUseSsrGlobalState<T, Name extends string>(
 					...common
 				};
 
-			})()
 
-		});
+			})();
+
+			return { ...initialProps, [xyzServerInfosAppPropName]: xyzServerInfos };
+
+		};
+
 
 		AppWithXyz.displayName = `with${capitalize(name)}(${App.displayName || App.name || "App"})`;
 
@@ -341,7 +379,7 @@ export function createUseSsrGlobalState<T, Name extends string>(
 	return {
 		[useXyz.name]: useXyz,
 		[`$${name}`]: $xyz,
-		[withXyz.name]: withXyz,
+		[withXyz.name]: withXyz
 	} as any;
 
 }
