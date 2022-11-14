@@ -58,11 +58,11 @@ export function createUseSsrGlobalState<T, Name extends string>(
 
 	const { name, getStateSeverSide, getInitialStateServerSide, getInitialStateClientSide, Head } = params;
 
-	let doThrowIsTateRead = true;
+	let doThrowIfStateRead = true;
 
 	const $xyz = createStatefulObservable(() => {
 
-		if (doThrowIsTateRead) {
+		if (doThrowIfStateRead) {
 			throw new Error("Too soon, we need to get the initial state from backend first");
 		}
 
@@ -149,13 +149,12 @@ export function createUseSsrGlobalState<T, Name extends string>(
 					break scope;
 				}
 
-				doThrowIsTateRead = false;
+				doThrowIfStateRead = false;
 				$xyz.current = xyzServerInfos.xyz;
 
 				if (!isServer) {
 
-					$xyz
-						.subscribe(state => {
+					const next = (state: T)=> {
 
 							let newCookie = `${cookiePrefix}${name}=${stringify(state)};path=/;max-age=31536000`;
 
@@ -174,7 +173,11 @@ export function createUseSsrGlobalState<T, Name extends string>(
 
 							document.cookie = newCookie;
 
-						});
+					};
+
+					$xyz.subscribe(next);
+
+					next($xyz.current);
 
 				}
 
