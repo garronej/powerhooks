@@ -1,19 +1,15 @@
-import { useEffect } from "react";
+import { useEffect, useTransition } from "react";
 import { waitForDebounceFactory } from "./tools/waitForDebounce";
 import { useConst } from "./useConst";
 import { useConstCallback } from "./useConstCallback";
+import { useEffectOnValueChange } from "./useEffectOnValueChange";
 
 export function createUseDebounce(params: {
 	delay: number;
 }) {
 	const { delay } = params;
 
-	function useDebounce(params: {
-		query: any;
-		onDebounced: () => void;
-	}) {
-
-		const { query, onDebounced: onDebounced_props } = params;
+	function useDebounce(callback: () => void, deps: readonly [value: any, ...moreValues: any[]]) {
 
 		const { waitForDebounce } = useConst(() => waitForDebounceFactory({ delay }));
 
@@ -26,9 +22,11 @@ export function createUseDebounce(params: {
 			[]
 		);
 
-		const onDebounced = useConstCallback(onDebounced_props);
+		const constCallback = useConstCallback(callback);
 
-		useEffect(
+		const [, startTransition] = useTransition();
+
+		useEffectOnValueChange(
 			() => {
 
 				(async () => {
@@ -39,13 +37,13 @@ export function createUseDebounce(params: {
 						return;
 					}
 
-					onDebounced();
+					startTransition(() => constCallback());
 
 				})();
 
 
 			},
-			[query]
+			deps
 		);
 
 	}
