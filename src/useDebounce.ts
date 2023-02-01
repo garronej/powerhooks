@@ -1,15 +1,18 @@
-import { useEffect, useTransition } from "react";
+import { useEffect } from "react";
 import { waitForDebounceFactory } from "./tools/waitForDebounce";
 import { useConst } from "./useConst";
 import { useConstCallback } from "./useConstCallback";
-import { useEffectOnValueChange } from "./useEffectOnValueChange";
+
+type Destructor = () => void;
+
+type EffectCallback = () => (void | Destructor);
 
 export function createUseDebounce(params: {
 	delay: number;
 }) {
 	const { delay } = params;
 
-	function useDebounce(callback: () => void, deps: readonly [value: any, ...moreValues: any[]]) {
+	function useDebounce(effectCallback: EffectCallback, deps: readonly [value: any, ...moreValues: any[]]) {
 
 		const { waitForDebounce } = useConst(() => waitForDebounceFactory({ delay }));
 
@@ -22,12 +25,12 @@ export function createUseDebounce(params: {
 			[]
 		);
 
-		const constCallback = useConstCallback(callback);
+		const constEffectCallback = useConstCallback(effectCallback);
 
-		const [, startTransition] = useTransition();
-
-		useEffectOnValueChange(
+		useEffect(
 			() => {
+
+				let destructor: Destructor | undefined = undefined;
 
 				(async () => {
 
@@ -37,9 +40,13 @@ export function createUseDebounce(params: {
 						return;
 					}
 
-					startTransition(() => constCallback());
+					destructor= constEffectCallback() ?? undefined;
 
 				})();
+
+				return ()=> {
+					destructor?.();
+				};
 
 
 			},
