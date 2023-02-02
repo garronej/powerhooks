@@ -1,60 +1,51 @@
 import { useEffect } from "react";
-import { waitForDebounceFactory } from "./tools/waitForDebounce";
 import { useConst } from "./useConst";
 import { useConstCallback } from "./useConstCallback";
+import { waitForDebounceFactory } from "./tools/waitForDebounce";
 
 type Destructor = () => void;
 
-type EffectCallback = () => (void | Destructor);
+type EffectCallback = () => void | Destructor;
 
-export function createUseDebounce(params: {
-	delay: number;
-}) {
-	const { delay } = params;
+export function createUseDebounce(params: { delay: number }) {
+    const { delay } = params;
 
-	function useDebounce(effectCallback: EffectCallback, deps: readonly [value: any, ...moreValues: any[]]) {
+    function useDebounce(
+        effectCallback: EffectCallback,
+        deps: readonly [value: any, ...moreValues: any[]],
+    ) {
+        const { waitForDebounce } = useConst(() => waitForDebounceFactory({ delay }));
 
-		const { waitForDebounce } = useConst(() => waitForDebounceFactory({ delay }));
+        const constEffectCallback = useConstCallback(effectCallback);
 
-		const isUnmountedRef = useConst(() => ({ "current": false }));
+        const refIsFirst = useConst(() => ({ "current": false }));
 
-		useEffect(
-			() => () => {
-				isUnmountedRef.current = true;
-			},
-			[]
-		);
+        useEffect(() => {
+            if (refIsFirst.current) {
+                refIsFirst.current = false;
 
-		const constEffectCallback = useConstCallback(effectCallback);
+                return constEffectCallback();
+            }
 
-		useEffect(
-			() => {
+            let isActive = true;
+            let destructor: Destructor | undefined = undefined;
 
-				let destructor: Destructor | undefined = undefined;
+            (async () => {
+                await waitForDebounce();
 
-				(async () => {
+                if (!isActive) {
+                    return;
+                }
 
-					await waitForDebounce();
+                destructor = constEffectCallback() ?? undefined;
+            })();
 
-					if (isUnmountedRef.current) {
-						return;
-					}
+            return () => {
+                isActive = false;
+                destructor?.();
+            };
+        }, deps);
+    }
 
-					destructor= constEffectCallback() ?? undefined;
-
-				})();
-
-				return ()=> {
-					destructor?.();
-				};
-
-
-			},
-			deps
-		);
-
-	}
-
-	return { useDebounce };
-
+    return { useDebounce };
 }
