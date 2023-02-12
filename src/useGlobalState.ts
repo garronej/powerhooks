@@ -94,7 +94,11 @@ const { injectGlobalStatesInSearchParams, getStatesFromUrlSearchParams } = (() =
             "doLeavePrefixInResults": false
         });
 
-        updateSearchBarUrl(newUrl);
+        //NOTE: We use a timeout in case there is multiple instances of 
+        // powerhooks.
+        setTimeout(()=> {
+            updateSearchBarUrl(newUrl);
+        },0);
 
         return { unparsedStates };
 
