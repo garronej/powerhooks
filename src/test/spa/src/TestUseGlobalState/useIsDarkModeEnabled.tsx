@@ -4,13 +4,16 @@ import { updateSearchBarUrl, retrieveParamFromUrl } from "powerhooks/tools/urlSe
 
 export const { useIsDarkModeEnabled, $isDarkModeEnabled } = createUseGlobalState({
 	"name": "isDarkModeEnabled",
+	// We use by defautl the OS preference of the user related to dark mode.  
 	"initialState": (
 		window.matchMedia &&
 		window.matchMedia("(prefers-color-scheme: dark)").matches
 	),
+	// Use local storage to remember the state.  
 	"doPersistAcrossReloads": true
 });
 
+// NOTE: If ever there is ?theme=light or ?theme=dark in the url query, we use that. 
 (() => {
 
 	const result = retrieveParamFromUrl({
@@ -40,6 +43,8 @@ export const { useIsDarkModeEnabled, $isDarkModeEnabled } = createUseGlobalState
 
 })();
 
+// NOTE: For sync: https://developer.mozilla.org/en-US/docs/Web/CSS/color-scheme
+// https://twitter.com/diegohaz/status/1529543787311144961?s=20&t=c6hJDBr5GUWOlXEI2xYHSg
 {
 
 	const next = (isDarkModeEnabled: boolean) => {
