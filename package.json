@@ -1,6 +1,6 @@
 {
   "name": "powerhooks",
-  "version": "0.26.4",
+  "version": "0.26.5",
   "description": "The missing builtins hooks",
   "repository": {
     "type": "git",
@@ -42,7 +42,7 @@
     "typescript": "^4.6.4"
   },
   "dependencies": {
-    "evt": "^2.4.15",
+    "evt": "^2.4.16",
     "memoizee": "^0.4.15",
     "resize-observer-polyfill": "^1.5.1",
     "tsafe": "^1.5.1"
