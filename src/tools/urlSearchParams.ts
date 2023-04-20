@@ -22,7 +22,7 @@ export function addParamToUrl(
 
     }
 
-    newUrl += `${newUrl.includes("?") ? "&" : newUrl.endsWith("?") ? "" : "?"}${name}=${encodeURI(value)}`;
+    newUrl += `${newUrl.includes("?") ? "&" : newUrl.endsWith("?") ? "" : "?"}${name}=${encodeURIComponent(value)}`;
 
     return { newUrl };
 
@@ -51,7 +51,7 @@ export function retrieveAllParamStartingWithPrefixFromUrl<Prefix extends string,
             .filter(([key, value_i]) =>
                 !key.startsWith(prefix) ?
                     true :
-                    (values[doLeavePrefixInResults ? key : key.substring(prefix.length)] = decodeURI(value_i), false))
+                    (values[doLeavePrefixInResults ? key : key.substring(prefix.length)] = decodeURIComponent(value_i), false))
             .map(entry => entry.join("="))
             .join("&")
             ;
