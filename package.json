@@ -1,6 +1,6 @@
 {
   "name": "powerhooks",
-  "version": "0.26.14",
+  "version": "0.26.15",
   "description": "The missing builtins hooks",
   "repository": {
     "type": "git",
