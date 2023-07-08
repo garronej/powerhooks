@@ -2,11 +2,19 @@
 import { useWindowInnerSize as useRealWindowInnerSize } from "./tools/useWindowInnerSize";
 import { useViewPortState } from "./ViewPortAdapter";
 
-/** Returns 0 values on the server side */
-export function useWindowInnerSize() {
+export function useWindowInnerSize<P extends { isSsrSetup: boolean; }>(
+	/** Default: { isSsrSetup: false }, We assume we are in a SPA */
+	params?: P
+): P extends { isSsrSetup: true; } ? {
+	windowInnerWidth: number | undefined;
+	windowInnerHeight: number | undefined;
+} : {
+	windowInnerWidth: number;
+	windowInnerHeight: number;
+} {
 
 	const { viewPortState } = useViewPortState();
-	const { windowInnerWidth, windowInnerHeight } = useRealWindowInnerSize();
+	const { windowInnerWidth, windowInnerHeight } = useRealWindowInnerSize(params);
 
 	return viewPortState !== undefined ?
 		{
