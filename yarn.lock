@@ -158,10 +158,10 @@ event-emitter@^0.3.5:
     d "1"
     es5-ext "~0.10.14"
 
-evt@^2.4.23:
-  version "2.4.23"
-  resolved "https://registry.yarnpkg.com/evt/-/evt-2.4.23.tgz#207dc9ac6693ed47e65e65f577634fa669dce686"
-  integrity sha512-cvwEIS0xCu4OO5+kE6q6VlQDppNZW2rkywbaQ6R86iDutClkf3IbMjZ6WenNj8sxlHyLJVuasScx6n5pwni8gA==
+evt@^2.5.0:
+  version "2.5.0"
+  resolved "https://registry.yarnpkg.com/evt/-/evt-2.5.0.tgz#e7dfc3d97ef93ffdc585644d6c9439022c44616f"
+  integrity sha512-dvyPRD1J8ruBiSJvEoE81Wfus2QMxLyjFigY5+uoe1yxWqC+UOS9U77oXrkD17B4jxixGWNdmxlusUzOCVrlcg==
   dependencies:
     minimal-polyfills "^2.2.3"
     run-exclusive "^2.2.19"
