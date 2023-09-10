@@ -1,7 +1,7 @@
 {
   "name": "powerhooks",
-  "version": "0.27.2",
-  "description": "The missing builtins hooks",
+  "version": "1.0.0",
+  "description": "Some generic React hooks",
   "repository": {
     "type": "git",
     "url": "git://github.com/garronej/powerhooks.git"

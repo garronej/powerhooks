@@ -1,5 +1,5 @@
 <p align="center">
-    <i>The missing builtins hooks</i>
+    <i>A library of generic React hooks</i>
     <br>
     <br>
     <a href="https://github.com/garronej/powerhooks/actions">
