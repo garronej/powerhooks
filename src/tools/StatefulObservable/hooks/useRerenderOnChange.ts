@@ -2,7 +2,6 @@ import { useObservable } from "./useObservable";
 import { useState } from "react";
 import type { StatefulObservable } from "../StatefulObservable";
 
-
 /**
  * Equivalent of https://docs.evt.land/api/react-hooks
  * */
@@ -13,7 +12,11 @@ export function useRerenderOnChange($: StatefulObservable<unknown>): void {
 
     useObservable(
         ({ registerSubscription }) => {
-            const subscription = $.subscribe(current => setCurrent(() => current));
+            const next = (current: unknown) => setCurrent(() => current);
+
+            next($.current);
+            const subscription = $.subscribe(next);
+
             registerSubscription(subscription);
         },
         [$]
