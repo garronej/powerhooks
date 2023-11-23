@@ -1,6 +1,6 @@
 {
   "name": "powerhooks",
-  "version": "1.0.4",
+  "version": "1.0.5",
   "description": "Some generic React hooks",
   "repository": {
     "type": "git",
