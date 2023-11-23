@@ -4,9 +4,14 @@ export type StatefulObservable<T> = {
     subscribe: (next: (data: T) => void) => Subscription;
 };
 
-    export type Subscription = {
-        unsubscribe(): void;
-    };
+export type ReadOnlyStatefulObservable<T> = {
+    readonly current: T;
+    subscribe: (next: (data: T) => void) => Subscription;
+}
+
+export type Subscription = {
+    unsubscribe(): void;
+};
 
 
 export function createStatefulObservable<T>(getInitialValue: () => T): StatefulObservable<T> {
@@ -19,24 +24,24 @@ export function createStatefulObservable<T>(getInitialValue: () => T): StatefulO
         let wrappedState: [T] | undefined = undefined;
 
         return {
-        "get": ()=> {
-            if( wrappedState === undefined ){
-                wrappedState = [getInitialValue()];
+            "get": () => {
+                if (wrappedState === undefined) {
+                    wrappedState = [getInitialValue()];
+                }
+                return wrappedState[0];
+            },
+            "set": (data: T) => {
+
+                wrappedState = [data];
+
+                nextFunctions.forEach(next => next(data));
+
             }
-            return wrappedState[0];
-        },
-        "set": (data: T) =>{
-
-            wrappedState = [data];
-
-            nextFunctions.forEach(next => next(data));
-
-        }
         };
 
     })();
 
-    return Object.defineProperty({ 
+    return Object.defineProperty({
         "current": null as any as T,
         "subscribe": (next: (data: T) => void) => {
 
