@@ -4,7 +4,7 @@ export type StatefulObservable<T> = {
     subscribe: (next: (data: T) => void) => Subscription;
 };
 
-export type ReadOnlyStatefulObservable<T> = {
+export type StatefulReadonlyObservable<T> = {
     readonly current: T;
     subscribe: (next: (data: T) => void) => Subscription;
 }
