@@ -136,6 +136,8 @@ export { injectGlobalStatesInSearchParams };
 
 
 
+const hotReloadCleanup = new Map<string, () => void>();
+
 /**
  * 
  * Assert: If localStorageKey is not disabled, T must be 
@@ -168,6 +170,18 @@ export function createUseGlobalState<T, Name extends string>(
 
     const { name, initialState, doPersistAcrossReloads } = params;
 
+
+    let isActive = true;
+
+    {
+        const cleanup = hotReloadCleanup.get(name);
+
+        cleanup?.();
+
+        hotReloadCleanup.set(name, () => { isActive = false; });
+    }
+
+
     if (doPersistAcrossReloads) {
 
         persistedGlobalStateNames.add(name);
@@ -182,9 +196,17 @@ export function createUseGlobalState<T, Name extends string>(
 
         const localStorageKey = `${prefix}${name}`;
 
-        const storeStateInPersistentStorage = !doPersistAcrossReloads ? undefined : (state: T) => localStorage.setItem(localStorageKey, stringify(state));
+        const storeStateInPersistentStorage = !doPersistAcrossReloads ? undefined : (state: T) => {
 
-        const $xyz= createStatefulObservable<T>((()=>{
+            if (!isActive) {
+                return;
+            }
+
+            localStorage.setItem(localStorageKey, stringify(state));
+        };
+
+
+        const $xyz = createStatefulObservable<T>((() => {
 
             const initialValue = (() => {
 
@@ -216,7 +238,7 @@ export function createUseGlobalState<T, Name extends string>(
 
             })();
 
-            return ()=> initialValue;
+            return () => initialValue;
 
         })());
 
@@ -237,7 +259,8 @@ export function createUseGlobalState<T, Name extends string>(
         name,
         {
             "enumerable": true,
-            "get": () => get$xyz().current
+            "get": () => get$xyz().current,
+            "configurable": true
         }
     );
 
