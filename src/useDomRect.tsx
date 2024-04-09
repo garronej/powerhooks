@@ -11,6 +11,15 @@ export const domRectKeys = ["bottom", "right", "top", "left", "height", "width"]
 
 export type PartialDomRect = Pick<DOMRectReadOnly, typeof domRectKeys[number]>;
 
+const defaultDomRect: PartialDomRect = {
+    "bottom": 0,
+    "right": 0,
+    "top": 0,
+    "left": 0,
+    "height": 0,
+    "width": 0
+};
+
 // https://gist.github.com/morajabi/523d7a642d8c0a2f71fcfa0d8b3d2846
 // https://developer.mozilla.org/en-US/docs/Web/API/Element/getBoundingClientRect
 export function useDomRect<T extends HTMLElement = any>(): { ref: React.RefObject<T>; domRect: PartialDomRect; }
@@ -25,14 +34,7 @@ export function useDomRect<T extends HTMLElement = any>(params?: { ref: React.Re
 
     })();
 
-    const [domRect, setDomRect] = useState<PartialDomRect>({
-        "bottom": 0,
-        "right": 0,
-        "top": 0,
-        "left": 0,
-        "height": 0,
-        "width": 0
-    });
+    const [domRect, setDomRect] = useState<PartialDomRect>(defaultDomRect);
 
     useEvt(
         ctx => {
@@ -40,6 +42,7 @@ export function useDomRect<T extends HTMLElement = any>(params?: { ref: React.Re
             const element = ref.current;
 
             if (element === null) {
+                setDomRect(defaultDomRect);
                 return;
             }
 
