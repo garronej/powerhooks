@@ -85,22 +85,39 @@ const { injectGlobalStatesInSearchParams, getStatesFromUrlSearchParams } = (() =
 
     const getUnparsedStatesFromUrlSearchParams = memoize0(() => {
 
-        const {
-            newUrl,
-            values: unparsedStates
-        } = retrieveAllParamStartingWithPrefixFromUrl({
+        const doLeavePrefixInResults = false;
+
+        const { values } = retrieveAllParamStartingWithPrefixFromUrl({
             "url": window.location.href,
             prefix,
-            "doLeavePrefixInResults": false
+            doLeavePrefixInResults,
         });
 
-        //NOTE: We use a timeout in case there is multiple instances of 
-        // powerhooks.
-        setTimeout(()=> {
-            updateSearchBarUrl(newUrl);
-        },0);
+        remove_query_params_from_url: {
 
-        return { unparsedStates };
+            if (Object.keys(values).length === 0) {
+                break remove_query_params_from_url;
+            }
+
+            //NOTE: We use a timeout in case there is multiple instances of 
+            // powerhooks.
+            setTimeout(() => {
+
+                // NOTE: We have to re-extract here since the href might have been updated
+                // while we were waiting for the timeout to be executed.
+                const { newUrl } = retrieveAllParamStartingWithPrefixFromUrl({
+                    "url": window.location.href,
+                    prefix,
+                    doLeavePrefixInResults,
+                });
+
+                updateSearchBarUrl(newUrl);
+
+            }, 0);
+
+        }
+
+        return { "unparsedStates": values };
 
     })
 
