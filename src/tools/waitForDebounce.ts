@@ -1,5 +1,5 @@
 import { Deferred } from "evt/tools/Deferred";
-import { createStatefulObservable } from "../tools/StatefulObservable";
+import { createStatefulObservable } from "../tools/StatefulObservable/StatefulObservable";
 
 export function waitForDebounceFactory(params: { delay: number }) {
     const { delay } = params;
