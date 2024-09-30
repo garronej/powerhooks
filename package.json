@@ -1,6 +1,6 @@
 {
   "name": "powerhooks",
-  "version": "1.0.13",
+  "version": "1.0.14",
   "description": "Some generic React hooks",
   "repository": {
     "type": "git",
@@ -44,6 +44,6 @@
   "dependencies": {
     "evt": "^2.5.7",
     "memoizee": "^0.4.15",
-    "tsafe": "^1.7.2"
+    "tsafe": "^1.7.4"
   }
 }
