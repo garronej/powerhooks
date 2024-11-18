@@ -5,8 +5,7 @@ import { useDomRect } from "./useDomRect";
 import { useEvt } from "evt/hooks/useEvt";
 import { useConst } from "./useConst";
 import { getScrollableParent } from "./getScrollableParent";
-import { assert } from "tsafe/assert";
-import { is } from "tsafe/is";
+import { assert, is } from "tsafe/assert";
 
 export function useOnLoadMore(props: {
     loadingDivRef: RefObject<any>;
