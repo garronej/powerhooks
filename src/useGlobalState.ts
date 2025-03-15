@@ -6,9 +6,10 @@ import type { UseNamedStateReturnType } from "./useNamedState";
 import { typeGuard } from "tsafe/typeGuard";
 import { capitalize } from "./tools/capitalize";
 import { memoize0 } from "./tools/memoize0";
-import { addParamToUrl, retrieveAllParamStartingWithPrefixFromUrl, updateSearchBarUrl } from "./tools/urlSearchParams";
+import { addOrUpdateSearchParam, getAllSearchParamsStartingWithPrefix } from "./tools/urlSearchParams";
 import { createStatefulObservable, useRerenderOnChange } from "./tools/StatefulObservable";
 import type { StatefulObservable } from "./tools/StatefulObservable";
+import { updateSearchBarUrl } from "./tools/updateSearchBar";
 
 export type { StatefulObservable };
 
@@ -71,12 +72,12 @@ const { injectGlobalStatesInSearchParams, getStatesFromUrlSearchParams } = (() =
             .filter(name => persistedGlobalStateNames.has(name))
             .forEach(name =>
                 newUrl =
-                addParamToUrl({
+                addOrUpdateSearchParam({
                     "url": newUrl,
                     "name": `${prefix}${name}`,
-                    "value": stringify(globalStates[name])
+                    "value": stringify(globalStates[name]),
+                    "encodeMethod": "encodeURIComponent"
                 })
-                    .newUrl
             );
 
         return newUrl;
@@ -87,7 +88,7 @@ const { injectGlobalStatesInSearchParams, getStatesFromUrlSearchParams } = (() =
 
         const doLeavePrefixInResults = false;
 
-        const { values } = retrieveAllParamStartingWithPrefixFromUrl({
+        const { valueByName: values}= getAllSearchParamsStartingWithPrefix({
             "url": window.location.href,
             prefix,
             doLeavePrefixInResults,
@@ -105,13 +106,13 @@ const { injectGlobalStatesInSearchParams, getStatesFromUrlSearchParams } = (() =
 
                 // NOTE: We have to re-extract here since the href might have been updated
                 // while we were waiting for the timeout to be executed.
-                const { newUrl } = retrieveAllParamStartingWithPrefixFromUrl({
+                const { url_withoutTheParams } = getAllSearchParamsStartingWithPrefix({
                     "url": window.location.href,
                     prefix,
                     doLeavePrefixInResults,
                 });
 
-                updateSearchBarUrl(newUrl);
+                updateSearchBarUrl(url_withoutTheParams);
 
             }, 0);
 

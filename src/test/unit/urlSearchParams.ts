@@ -1,336 +1,276 @@
-import { addParamToUrl, retrieveParamFromUrl, retrieveAllParamStartingWithPrefixFromUrl } from "../../tools/urlSearchParams";
+import {
+  getSearchParam,
+  addOrUpdateSearchParam,
+  getAllSearchParams,
+  getAllSearchParamsStartingWithPrefix
+} from "../../tools/urlSearchParams";
 import { assert } from "tsafe/assert";
 import { same } from "evt/tools/inDepth/same";
 
-console.log("START");
+{
+  const url = "https://example.com?p=x&foo=bar#xx";
 
+  const got = getSearchParam({
+    url,
+    name: "foo",
+  });
 
-assert(same(
-	addParamToUrl({
-		"url": "https://example.com",
-		"name": "foo",
-		"value": "bar"
-	}),
-	{
-		"newUrl": "https://example.com?foo=bar"
-	}
-));
+  const expected = {
+    wasPresent: true as const,
+    value: "bar",
+    url_withoutTheParam: "https://example.com?p=x#xx",
+  };
 
-assert(same(
-	addParamToUrl({
-		"url": "https://example.com?",
-		"name": "foo",
-		"value": "bar"
-	}),
-	{
-		"newUrl": "https://example.com?foo=bar"
-	}
-));
+  assert(same(got, expected));
+}
 
-assert(same(
-	addParamToUrl({
-		"url": "https://example.com#",
-		"name": "foo",
-		"value": "bar"
-	}),
-	{
-		"newUrl": "https://example.com?foo=bar#"
-	}
-));
+{
+  const url = "https://example.com/?foo=bar";
 
-assert(same(
-	addParamToUrl({
-		"url": "https://example.com#xx",
-		"name": "foo",
-		"value": "bar"
-	}),
-	{
-		"newUrl": "https://example.com?foo=bar#xx"
-	}
-));
+  const got = getSearchParam({
+    url,
+    name: "foo",
+  });
 
-assert(same(
-	addParamToUrl({
-		"url": "https://example.com?p=x#xx",
-		"name": "foo",
-		"value": "bar"
-	}),
-	{
-		"newUrl": "https://example.com?p=x&foo=bar#xx"
-	}
-));
+  const expected = {
+    wasPresent: true as const,
+    value: "bar",
+    url_withoutTheParam: "https://example.com/",
+  };
 
-assert(same(
-	addParamToUrl({
-		"url": "https://example.com?foo=notBar",
-		"name": "foo",
-		"value": "bar"
-	}),
-	{
-		"newUrl": "https://example.com?foo=bar"
-	}
-));
+  assert(same(got, expected));
+}
 
-assert(same(
-	addParamToUrl({
-		"url": "https://example.com?foo=notBar&baz=xxx",
-		"name": "foo",
-		"value": "bar"
-	}),
-	{
-		"newUrl": "https://example.com?baz=xxx&foo=bar"
-	}
-));
+{
+  const url = "https://example.com?foo=bar#xx";
 
-assert(same(
-	retrieveParamFromUrl({
-		"url": "https://www.example.com?foo=bar",
-		"name": "foo"
-	}),
-	{
-		"wasPresent": true,
-		"value": "bar",
-		"newUrl": "https://www.example.com"
-	}
-));
+  const got = getSearchParam({
+    url,
+    name: "foo",
+  });
 
-assert(same(
-	retrieveParamFromUrl({
-		"url": "https://www.example.com?foo=bar&baz=xxx",
-		"name": "foo"
-	}),
-	{
-		"wasPresent": true,
-		"value": "bar",
-		"newUrl": "https://www.example.com?baz=xxx"
-	}
-));
+  const expected = {
+    wasPresent: true as const,
+    value: "bar",
+    url_withoutTheParam: "https://example.com#xx",
+  };
 
-assert(same(
-	retrieveParamFromUrl({
-		"url": "https://www.example.com?foo=bar&baz=xxx",
-		"name": "yyy"
-	}),
-	{ "wasPresent": false }
-));
+  assert(same(got, expected));
+}
 
-assert(same(
-	retrieveParamFromUrl({
-		"url": "https://www.example.com?foo=bar&baz=xxx",
-		"name": "yyy"
-	}),
-	{ "wasPresent": false }
-));
+{
+  for (const value of [
+    "",
+    " ",
+    "+",
+    "++",
+    "%20",
+    "%20+",
+    "?",
+    "#",
+    "oidc email profile",
+    JSON.stringify({ foo: "+%20🐹foo=#?", bar: 22 }),
+  ]) {
+    for (const encodeMethod of ["encodeURIComponent", "www-form"] as const) {
+      const url = addOrUpdateSearchParam({
+        url: "https://example.com",
+        name: "foo",
+        value,
+        encodeMethod,
+      });
 
-assert(same(
-	retrieveAllParamStartingWithPrefixFromUrl({
-		"url": "https://www.example.com?xxx_foo=a&xxx_bar=b&baz=c",
-		"prefix": "xxx_",
-		"doLeavePrefixInResults": false
-	}),
-	{
-		"newUrl": "https://www.example.com?baz=c",
-		"values": {
-			"foo": "a",
-			"bar": "b"
-		}
-	}
-));
+      const got = getSearchParam({
+        url,
+        name: "foo",
+      });
 
-assert(same(
-	retrieveAllParamStartingWithPrefixFromUrl({
-		"url": "https://www.example.com?xxx_foo=a&xxx_bar=b&baz=c",
-		"prefix": "xxx_",
-		"doLeavePrefixInResults": true
-	}),
-	{
-		"newUrl": "https://www.example.com?baz=c",
-		"values": {
-			"xxx_foo": "a",
-			"xxx_bar": "b"
-		}
-	}
-));
+      const expected = {
+        wasPresent: true as const,
+        value,
+        url_withoutTheParam: "https://example.com",
+      };
 
-assert(same(
-	retrieveParamFromUrl({
-		"url": "https://datalab.sspcloud.fr/?palette=ultraviolet&title=Eurostat",
-		"name": "title"
-	}),
-	{
-		"newUrl": "https://datalab.sspcloud.fr/?palette=ultraviolet",
-		"wasPresent": true,
-		"value": "Eurostat"
-	}
-));
+      assert(same(got, expected));
+    }
+  }
+}
 
-assert(same(
-	retrieveParamFromUrl({
-		"url": "https://datalab.sspcloud.fr/?oidc_1=a&oidc_2=b&oidc=c",
-		"name": "oidc"
-	}),
-	{
-		"newUrl": "https://datalab.sspcloud.fr/?oidc_1=a&oidc_2=b",
-		"wasPresent": true,
-		"value": "c"
-	}
-));
+{
 
-assert(same(
-	retrieveAllParamStartingWithPrefixFromUrl({
-		"url": "https://datalab.sspcloud.fr/?oidc_1=a&oidc_2=b&oidc=c&other=xxx",
-		"prefix": "oidc",
-		"doLeavePrefixInResults": false
-	}),
-	{
-		"newUrl": "https://datalab.sspcloud.fr/?other=xxx",
-		values: {
-			"_1": "a",
-			"_2": "b",
-			"": "c"
-		}
-	}
-));
+    let url = "https://example.com";
 
+    url = addOrUpdateSearchParam({
+      url,
+      name: "x",
+      value: JSON.stringify({ foo: "+%20🐹foo=#?", bar: 22 }),
+      encodeMethod: "encodeURIComponent",
+    });
 
+    url = addOrUpdateSearchParam({
+      url,
+      name: "foo",
+      value: "__",
+      encodeMethod: "www-form",
+    });
 
+    url = addOrUpdateSearchParam({
+      url,
+      name: "foo",
+      value: "oidc email profile",
+      encodeMethod: "www-form",
+    });
 
+    url = addOrUpdateSearchParam({
+      url,
+      name: "p",
+      value: "",
+      encodeMethod: "encodeURIComponent",
+    });
 
-assert(same(
-	addParamToUrl({
-		"url": "https://example.com?foo=notBar#xx",
-		"name": "foo",
-		"value": "bar"
-	}),
-	{
-		"newUrl": "https://example.com?foo=bar#xx"
-	}
-));
+    const got = getAllSearchParams(url);
 
-assert(same(
-	addParamToUrl({
-		"url": "https://example.com?foo=notBar&baz=xxx#xx",
-		"name": "foo",
-		"value": "bar"
-	}),
-	{
-		"newUrl": "https://example.com?baz=xxx&foo=bar#xx"
-	}
-));
+    const expected = {
+      x: JSON.stringify({ foo: "+%20🐹foo=#?", bar: 22 }),
+      foo: "oidc email profile",
+      p: "",
+    };
 
-assert(same(
-	retrieveParamFromUrl({
-		"url": "https://www.example.com?foo=bar#xx",
-		"name": "foo"
-	}),
-	{
-		"wasPresent": true,
-		"value": "bar",
-		"newUrl": "https://www.example.com#xx"
-	}
-));
+    assert(same(got, expected));
 
-assert(same(
-	retrieveParamFromUrl({
-		"url": "https://www.example.com?foo=bar&baz=xxx#xx",
-		"name": "foo"
-	}),
-	{
-		"wasPresent": true,
-		"value": "bar",
-		"newUrl": "https://www.example.com?baz=xxx#xx"
-	}
-));
+}
 
-assert(same(
-	retrieveParamFromUrl({
-		"url": "https://www.example.com?foo=bar&baz=xxx#xx",
-		"name": "yyy"
-	}),
-	{ "wasPresent": false }
-));
+{
 
-assert(same(
-	retrieveParamFromUrl({
-		"url": "https://www.example.com?foo=bar&baz=xxx#xx",
-		"name": "yyy"
-	}),
-	{ "wasPresent": false }
-));
+    let url = "https://example.com";
 
-assert(same(
-	retrieveAllParamStartingWithPrefixFromUrl({
-		"url": "https://www.example.com?xxx_foo=a&xxx_bar=b&baz=c#xx",
-		"prefix": "xxx_",
-		"doLeavePrefixInResults": false
-	}),
-	{
-		"newUrl": "https://www.example.com?baz=c#xx",
-		"values": {
-			"foo": "a",
-			"bar": "b"
-		}
-	}
-));
+    url = addOrUpdateSearchParam({
+        url,
+        name: "p1",
+        value: "v1",
+        encodeMethod: "encodeURIComponent",
+    });
 
-assert(same(
-	retrieveAllParamStartingWithPrefixFromUrl({
-		"url": "https://www.example.com?xxx_foo=a&xxx_bar=b&baz=c#xx",
-		"prefix": "xxx_",
-		"doLeavePrefixInResults": true
-	}),
-	{
-		"newUrl": "https://www.example.com?baz=c#xx",
-		"values": {
-			"xxx_foo": "a",
-			"xxx_bar": "b"
-		}
-	}
-));
+    url = addOrUpdateSearchParam({
+        url,
+        name: "p2",
+        value: "v2",
+        encodeMethod: "encodeURIComponent",
+    });
 
-assert(same(
-	retrieveParamFromUrl({
-		"url": "https://datalab.sspcloud.fr/?palette=ultraviolet&title=Eurostat#xx",
-		"name": "title"
-	}),
-	{
-		"newUrl": "https://datalab.sspcloud.fr/?palette=ultraviolet#xx",
-		"wasPresent": true,
-		"value": "Eurostat"
-	}
-));
+    url = addOrUpdateSearchParam({
+        url,
+        name: "p3",
+        value: "v3",
+        encodeMethod: "encodeURIComponent",
+    });
 
-assert(same(
-	retrieveParamFromUrl({
-		"url": "https://datalab.sspcloud.fr/?oidc_1=a&oidc_2=b&oidc=c#xx",
-		"name": "oidc"
-	}),
-	{
-		"newUrl": "https://datalab.sspcloud.fr/?oidc_1=a&oidc_2=b#xx",
-		"wasPresent": true,
-		"value": "c"
-	}
-));
+    url = addOrUpdateSearchParam({
+        url,
+        name: "foo",
+        value: "bar",
+        encodeMethod: "encodeURIComponent",
+    });
 
-assert(same(
-	retrieveAllParamStartingWithPrefixFromUrl({
-		"url": "https://datalab.sspcloud.fr/?oidc_1=a&oidc_2=b&oidc=c&other=xxx#xx",
-		"prefix": "oidc",
-		"doLeavePrefixInResults": false
-	}),
-	{
-		"newUrl": "https://datalab.sspcloud.fr/?other=xxx#xx",
-		values: {
-			"_1": "a",
-			"_2": "b",
-			"": "c"
-		}
-	}
-));
+    const result = getAllSearchParamsStartingWithPrefix({
+        url,
+        prefix: "p",
+        doLeavePrefixInResults: false,
+    });
+
+    const expected = {
+        valueByName: {
+            "1": "v1",
+            "2": "v2",
+            "3": "v3",
+        },
+        url_withoutTheParams: "https://example.com?foo=bar",
+    };
+
+    assert(same(result, expected));
+
+}
+
+{
+
+    let url = "https://example.com";
+
+    url = addOrUpdateSearchParam({
+        url,
+        name: "p1",
+        value: "v1",
+        encodeMethod: "encodeURIComponent",
+    });
+
+    url = addOrUpdateSearchParam({
+        url,
+        name: "p2",
+        value: "v2",
+        encodeMethod: "encodeURIComponent",
+    });
+
+    url = addOrUpdateSearchParam({
+        url,
+        name: "p3",
+        value: "v3",
+        encodeMethod: "encodeURIComponent",
+    });
+
+    url = addOrUpdateSearchParam({
+        url,
+        name: "foo",
+        value: "bar",
+        encodeMethod: "encodeURIComponent",
+    });
+
+    const result = getAllSearchParamsStartingWithPrefix({
+        url,
+        prefix: "p",
+        doLeavePrefixInResults: true,
+    });
+
+    const expected = {
+        valueByName: {
+            "p1": "v1",
+            "p2": "v2",
+            "p3": "v3",
+        },
+        url_withoutTheParams: "https://example.com?foo=bar",
+    };
+
+    assert(same(result, expected));
+
+}
+
+{
+
+  const got = addOrUpdateSearchParam({
+    url: "https://example.com",
+    name: "foo",
+    value: "oidc profile email",
+    encodeMethod: "www-form",
+  });
+
+  const expected = "https://example.com?foo=oidc+profile+email";
+
+  assert(got === expected);
+
+}
+
+{
+
+  const got = addOrUpdateSearchParam({
+    url: "https://example.com",
+    name: "foo",
+    value: "oidc profile email",
+    encodeMethod: "encodeURIComponent"
+  });
+
+  const expected = "https://example.com?foo=oidc%20profile%20email";
+
+  assert(got === expected);
+
+}
 
 console.log("PASS");
-
-
-
 
 

@@ -1,52 +1,140 @@
-import { assert } from "tsafe/assert";
-import { id } from "tsafe/id";
+function getAllSearchParams_encoded(url: string): Record<string, string> {
 
-export function addParamToUrl(params: {
-  url: string;
-  name: string;
-  value: string;
-}): {
-  newUrl: string;
-} {
-  const { url, name, value } = params;
-
-  let newUrl = url;
+  let search: string | undefined;
 
   {
-    const result = retrieveParamFromUrl({
-      url,
-      name,
-    });
 
-    if (result.wasPresent) {
-      newUrl = result.newUrl;
+    const [url_withoutHash] = url.split("#");
+
+    search = url_withoutHash.split("?")[1]
+
+  }
+
+  if (search === undefined) {
+    return {};
+  }
+
+  return Object.fromEntries(
+    search
+      .split("&")
+      .map((part) => {
+        const [name, value_encoded] = part.split("=");
+
+        return [name, value_encoded];
+      })
+  );
+}
+
+function addOrUpdateOrRemoveSearchParam_encoded(params: {
+  url: string;
+  name: string;
+  value_encoded: string | undefined;
+}): string {
+  const { url, name, value_encoded } = params;
+
+  const value_encodedByName = getAllSearchParams_encoded(url);
+
+  if (value_encoded === undefined) {
+    delete value_encodedByName[name];
+  } else {
+    value_encodedByName[name] = value_encoded;
+  }
+
+  let search: string;
+
+  update_search: {
+    if (Object.keys(value_encodedByName).length === 0) {
+      search = "";
+      break update_search;
+    } else {
+      search =
+        "?" +
+        Object.entries(value_encodedByName)
+          .map(([name, value_encoded]) => `${name}=${value_encoded}`)
+          .join("&");
     }
   }
 
-  let hash: string | undefined = undefined;
+  const [url_withoutHash, hash] = url.split("#");
 
-  if (newUrl.includes("#")) {
-    const [p1, p2] = newUrl.split("#");
+  const [url_withoutHash_withoutSearch] = url_withoutHash.split("?");
 
-    assert(p2 !== undefined);
-
-    newUrl = p1;
-
-    hash = p2;
-  }
-
-  newUrl += `${
-    newUrl.includes("?") ? (newUrl.endsWith("?") ? "" : "&") : "?"
-  }${name}=${encodeURIComponent(value)}`;
-
-  if (hash !== undefined) {
-    newUrl += `#${hash}`;
-  }
-
-  return { newUrl };
+  return `${url_withoutHash_withoutSearch}${search}${hash ? "#" + hash : ""}`;
 }
 
-export function retrieveAllParamStartingWithPrefixFromUrl<
+export function addOrUpdateSearchParam(params: {
+  url: string;
+  name: string;
+  value: string;
+  encodeMethod: "encodeURIComponent" | "www-form";
+}): string {
+  const { url, name, value, encodeMethod } = params;
+
+  let value_encoded = encodeURIComponent(value);
+
+  if (encodeMethod === "www-form") {
+    value_encoded = value_encoded.replace(/%20/g, "+");
+  }
+
+  return addOrUpdateOrRemoveSearchParam_encoded({
+    url,
+    name,
+    value_encoded,
+  });
+}
+
+function decodeSearchParamValue(value_encoded: string): string {
+  return decodeURIComponent(value_encoded.replace(/\+/g, "%20"));
+}
+
+export function getSearchParam(params: { url: string; name: string }):
+  | {
+      wasPresent: true;
+      value: string;
+      url_withoutTheParam: string;
+    }
+  | {
+      wasPresent: false;
+      value?: never;
+      url_withoutTheParam?: never;
+    } {
+  const { url, name } = params;
+
+  const encodedValueByName = getAllSearchParams_encoded(url);
+
+  const value_encoded = encodedValueByName[name];
+
+  if (value_encoded === undefined) {
+    return {
+      wasPresent: false,
+    };
+  }
+
+  const url_withoutTheParam = addOrUpdateOrRemoveSearchParam_encoded({
+    url,
+    name,
+    value_encoded: undefined,
+  });
+
+  return {
+    wasPresent: true,
+    value: decodeSearchParamValue(value_encoded),
+    url_withoutTheParam,
+  };
+}
+
+export function getAllSearchParams(url: string): Record<string, string> {
+  const encodedValueByName = getAllSearchParams_encoded(url);
+
+  return Object.fromEntries(
+    Object.entries(encodedValueByName).map(([name, value_encoded]) => [
+      name,
+      decodeSearchParamValue(value_encoded),
+    ])
+  );
+}
+
+export function getAllSearchParamsStartingWithPrefix<
   Prefix extends string,
   DoLeave extends boolean
 >(params: {
@@ -54,130 +142,36 @@ export function retrieveAllParamStartingWithPrefixFromUrl<
   prefix: Prefix;
   doLeavePrefixInResults: DoLeave;
 }): {
-  newUrl: string;
-  values: Record<DoLeave extends true ? `${Prefix}${string}` : string, string>;
+  valueByName: Record<
+    DoLeave extends true ? `${Prefix}${string}` : string,
+    string
+  >;
+  url_withoutTheParams: string;
 } {
   const { url, prefix, doLeavePrefixInResults } = params;
 
-  const { urlWithoutHash, hash } = (() => {
-    if (url.includes("#")) {
-      const [p1, p2] = url.split("#");
+  const encodedValueByName = getAllSearchParams_encoded(url);
 
-      assert(p2 !== undefined);
+  let url_withoutTheParams = url;
+  const valueByName: Record<string, string> = {};
 
-      return {
-        urlWithoutHash: p1,
-        hash: p2,
-      };
+  for (const [name, value_encoded] of Object.entries(encodedValueByName)) {
+    if (!name.startsWith(prefix)) {
+      continue;
     }
 
-    return {
-      urlWithoutHash: url,
-      hash: undefined,
-    };
-  })();
+    valueByName[doLeavePrefixInResults ? name : name.slice(prefix.length)] =
+      decodeSearchParamValue(value_encoded);
 
-  const { urlBeforeSearch, search } = (() => {
-    if (urlWithoutHash.includes("?")) {
-      const [p1, p2] = urlWithoutHash.split("?");
-
-      assert(p2 !== undefined);
-
-      return {
-        urlBeforeSearch: p1,
-        search: p2,
-      };
-    }
-
-    return {
-      urlBeforeSearch: urlWithoutHash,
-      search: undefined,
-    };
-  })();
-
-  if (search === undefined) {
-    return {
-      newUrl: url,
-      values: id<Record<string, string>>({}),
-    };
+    url_withoutTheParams = addOrUpdateOrRemoveSearchParam_encoded({
+      url: url_withoutTheParams,
+      name,
+      value_encoded: undefined,
+    });
   }
 
-  const values: Record<string, string> = {};
-
-  const { newLocationSearch } = (() => {
-    let newLocationSearch = search
-      .split("&")
-      .filter((part) => part !== "")
-      .map((part) => part.split("=") as [string, string])
-      .filter(([key, value_i]) =>
-        !key.startsWith(prefix)
-          ? true
-          : ((values[
-              doLeavePrefixInResults ? key : key.substring(prefix.length)
-            ] = decodeURIComponent(value_i)),
-            false)
-      )
-      .map((entry) => entry.join("="))
-      .join("&");
-
-    return { newLocationSearch };
-  })();
-
   return {
-    newUrl: `${urlBeforeSearch}${
-      newLocationSearch === "" ? "" : `?${newLocationSearch}`
-    }${hash === undefined ? "" : `#${hash}`}`,
-    values,
+    valueByName,
+    url_withoutTheParams,
   };
-}
-
-export function retrieveAllParamFromUrl(params: { url: string }): {
-  newUrl: string;
-  values: Record<string, string>;
-} {
-  return retrieveAllParamStartingWithPrefixFromUrl({
-    url: params.url,
-    prefix: "",
-    doLeavePrefixInResults: true,
-  });
-}
-
-export function retrieveParamFromUrl(params: {
-  url: string;
-  name: string;
-}):
-  | { wasPresent: false }
-  | { wasPresent: true; newUrl: string; value: string } {
-  const { url, name } = params;
-
-  let { newUrl, values } = retrieveAllParamStartingWithPrefixFromUrl({
-    url,
-    prefix: name,
-    doLeavePrefixInResults: true,
-  });
-
-  if (!(name in values)) {
-    return { wasPresent: false };
-  }
-
-  const { [name]: value, ...rest } = values;
-
-  Object.entries(rest).forEach(
-    ([name, value]) =>
-      (newUrl = addParamToUrl({
-        name,
-        url: newUrl,
-        value,
-      }).newUrl)
-  );
-
-  return {
-    wasPresent: true,
-    newUrl,
-    value: value,
-  };
-}
-
-export function updateSearchBarUrl(url: string) {
-  window.history.replaceState("", "", url);
 }

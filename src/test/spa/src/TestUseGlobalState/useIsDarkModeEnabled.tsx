@@ -1,6 +1,7 @@
 /* eslint-disable no-labels */
 import { createUseGlobalState } from "powerhooks/useGlobalState";
-import { updateSearchBarUrl, retrieveParamFromUrl } from "powerhooks/tools/urlSearchParams";
+import { getSearchParam } from "powerhooks/tools/urlSearchParams";
+import { updateSearchBarUrl } from "powerhooks/tools/updateSearchBar";
 
 export const { useIsDarkModeEnabled, $isDarkModeEnabled } = createUseGlobalState({
 	"name": "isDarkModeEnabled",
@@ -16,7 +17,7 @@ export const { useIsDarkModeEnabled, $isDarkModeEnabled } = createUseGlobalState
 // NOTE: If ever there is ?theme=light or ?theme=dark in the url query, we use that. 
 (() => {
 
-	const result = retrieveParamFromUrl({
+	const result = getSearchParam({
 		"url": window.location.href,
 		"name": "theme"
 	});
@@ -25,7 +26,7 @@ export const { useIsDarkModeEnabled, $isDarkModeEnabled } = createUseGlobalState
 		return;
 	}
 
-	updateSearchBarUrl(result.newUrl);
+	updateSearchBarUrl(result.url_withoutTheParam);
 
 	const isDarkModeEnabled = (() => {
 		switch (result.value) {

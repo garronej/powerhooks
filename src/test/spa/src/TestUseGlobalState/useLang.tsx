@@ -1,6 +1,7 @@
 /* eslint-disable no-labels */
 import { createUseGlobalState } from "powerhooks/useGlobalState";
-import { updateSearchBarUrl, retrieveParamFromUrl, addParamToUrl } from "powerhooks/tools/urlSearchParams";
+import { updateSearchBarUrl } from "powerhooks/tools/updateSearchBar";
+import { getSearchParam, addOrUpdateSearchParam } from "powerhooks/tools/urlSearchParams";
 
 //https://www.woorank.com/en/edu/seo-guides/best-practices-for-language-declaration
 //https://www.woorank.com/en/edu/seo-guides/hreflang-seo-guide
@@ -46,14 +47,14 @@ export const { useLang, $lang } = createUseGlobalState({
 
 {
 
-	const result = retrieveParamFromUrl({
+	const result = getSearchParam({
 		"url": window.location.href,
 		name
 
 	});
 
 	if (result.wasPresent) {
-		updateSearchBarUrl(result.newUrl);
+		updateSearchBarUrl(result.url_withoutTheParam);
 	}
 
 }
@@ -64,11 +65,12 @@ export const { useLang, $lang } = createUseGlobalState({
 	link.rel = "alternate"
 	link.hreflang = lang === undefined ? "x-default" : lang;
 	link.href = lang === undefined ? window.location.href :
-		addParamToUrl({
+		addOrUpdateSearchParam({
 			"url": window.location.href,
 			name,
-			"value": lang
-		}).newUrl;
+			"value": lang,
+			"encodeMethod": "encodeURIComponent"
+		});
 
 	document.getElementsByTagName("head")[0].appendChild(link);
 
