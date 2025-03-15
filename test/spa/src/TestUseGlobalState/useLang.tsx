@@ -47,6 +47,7 @@ export const { useLang, $lang } = createUseGlobalState({
     });
 
     if (result.wasPresent) {
+        $lang.current = result.value as Language;
         updateSearchBarUrl(result.url_withoutTheParam);
     }
 }

@@ -14,8 +14,8 @@
         "format": "yarn _format --write",
         "format:check": "yarn _format --list-different",
         "yarn_link": "ts-node src/bin/yarn_link.ts",
-        "start_spa": "yarn yarn_link && cd src/test/spa && yarn start",
-        "test": "node dist/test/unit/main"
+        "start_spa": "yarn build && tsx scripts/link-in-examples.ts && cd test/spa && rm -rf node_modules/.vite && yarn dev",
+        "test": "tsx test/unit/main"
     },
     "author": "u/garronej & u/thieryw",
     "license": "MIT",
@@ -51,10 +51,10 @@
         "react": "18.1.0",
         "react-dom": "18.1.0",
         "typescript": "^4.6.4",
-        "ts-node": "^10.4.0",
         "prettier": "^2.8.8",
         "husky": "^4.3.8",
-        "lint-staged": "^11.1.1"
+        "lint-staged": "^11.1.1",
+        "tsx": "^4.19.3"
     },
     "dependencies": {
         "evt": "^2.5.9",

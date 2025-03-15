@@ -1,2 +1,2 @@
-export * from "./useObservable";
-export * from "./useRerenderOnChange";
+export { useObservable } from "./useObservable";
+export { useRerenderOnChange } from "./useRerenderOnChange";

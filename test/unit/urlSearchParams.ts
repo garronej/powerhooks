@@ -3,7 +3,7 @@ import {
     addOrUpdateSearchParam,
     getAllSearchParams,
     getAllSearchParamsStartingWithPrefix
-} from "../../tools/urlSearchParams";
+} from "../../src/tools/urlSearchParams";
 import { assert } from "tsafe/assert";
 import { same } from "evt/tools/inDepth/same";
 
