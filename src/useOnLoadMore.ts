@@ -7,17 +7,14 @@ import { useConst } from "./useConst";
 import { getScrollableParent } from "./getScrollableParent";
 import { assert, is } from "tsafe/assert";
 
-export function useOnLoadMore(props: {
-    loadingDivRef: RefObject<any>;
-    onLoadMore: () => void;
-}) {
+export function useOnLoadMore(props: { loadingDivRef: RefObject<any>; onLoadMore: () => void }) {
     const { loadingDivRef, onLoadMore } = props;
 
     assert(is<RefObject<HTMLElement>>(loadingDivRef));
 
     const {
-        domRect: { height: loadingDivHeight },
-    } = useDomRect({ "ref": loadingDivRef });
+        domRect: { height: loadingDivHeight }
+    } = useDomRect({ ref: loadingDivRef });
 
     const { onLoadMoreOnce } = (function useClosure() {
         const onLoadMoreConst = useConstCallback(onLoadMore);
@@ -52,16 +49,14 @@ export function useOnLoadMore(props: {
             //NOTE: If the loadingDivHeight is not 0, loadingDiv has rendered.
             assert(loadingDivElement !== null);
 
-            const scrollElement = getScrollableParent({ 
-                "element": loadingDivElement,
-                "doReturnElementIfScrollable": false
+            const scrollElement = getScrollableParent({
+                element: loadingDivElement,
+                doReturnElementIfScrollable: false
             });
 
             Evt.from(ctx, scrollElement, "scroll")
                 .toStateful()
                 .attach(() => {
-
-
                     const { scrollTop, clientHeight, scrollHeight } = scrollElement;
 
                     const rest = scrollHeight - (scrollTop + clientHeight);
@@ -71,6 +66,6 @@ export function useOnLoadMore(props: {
                     }
                 });
         },
-        [loadingDivHeight, loadingDivRef],
+        [loadingDivHeight, loadingDivRef]
     );
 }

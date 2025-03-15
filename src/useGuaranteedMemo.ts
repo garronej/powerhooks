@@ -1,9 +1,7 @@
-
 import { useRef } from "react";
 
 export function useGuaranteedMemo<T>(fn: () => T, deps: readonly any[]): T {
-
-    const ref = useRef<{ v: T; prevDeps: any[]; }>()
+    const ref = useRef<{ v: T; prevDeps: any[] }>();
 
     if (
         !ref.current ||
@@ -11,11 +9,10 @@ export function useGuaranteedMemo<T>(fn: () => T, deps: readonly any[]): T {
         ref.current.prevDeps.map((v, i) => v === deps[i]).indexOf(false) >= 0
     ) {
         ref.current = {
-            "v": fn(),
-            "prevDeps": [...deps]
+            v: fn(),
+            prevDeps: [...deps]
         };
     }
 
     return ref.current.v;
-
 }

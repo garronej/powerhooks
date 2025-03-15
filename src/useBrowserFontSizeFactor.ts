@@ -4,7 +4,6 @@ import { Evt } from "evt";
 import memoize from "memoizee";
 
 export const getBrowserFontSizeFactor = memoize(() => {
-
     // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
     const rootElement = document.querySelector("html")!;
 
@@ -14,31 +13,25 @@ export const getBrowserFontSizeFactor = memoize(() => {
 
     const browserFontSizeFactor =
         parseInt(
-            window.getComputedStyle(rootElement, null)
-                .getPropertyValue("font-size")
-                .replace(/px$/, "")
+            window.getComputedStyle(rootElement, null).getPropertyValue("font-size").replace(/px$/, "")
         ) / 16;
 
     rootElement.style.fontSize = fontSize;
 
     return browserFontSizeFactor;
-
 });
 
 export function useBrowserFontSizeFactor() {
-
-    const [browserFontSizeFactor, setBrowserFontSizeFactor] = useState(() => (
-        getBrowserFontSizeFactor.clear(),
-        getBrowserFontSizeFactor()
-    ));
+    const [browserFontSizeFactor, setBrowserFontSizeFactor] = useState(
+        () => (getBrowserFontSizeFactor.clear(), getBrowserFontSizeFactor())
+    );
 
     useEvt(
         ctx =>
-            Evt.from(ctx, window, "focus")
-                .attach(() => {
-                    getBrowserFontSizeFactor.clear();
-                    setBrowserFontSizeFactor(getBrowserFontSizeFactor());
-                }),
+            Evt.from(ctx, window, "focus").attach(() => {
+                getBrowserFontSizeFactor.clear();
+                setBrowserFontSizeFactor(getBrowserFontSizeFactor());
+            }),
         []
     );
 

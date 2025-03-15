@@ -4,83 +4,74 @@ import { getSearchParam } from "powerhooks/tools/urlSearchParams";
 import { updateSearchBarUrl } from "powerhooks/tools/updateSearchBar";
 
 export const { useIsDarkModeEnabled, $isDarkModeEnabled } = createUseGlobalState({
-	"name": "isDarkModeEnabled",
-	// We use by defautl the OS preference of the user related to dark mode.  
-	"initialState": (
-		window.matchMedia &&
-		window.matchMedia("(prefers-color-scheme: dark)").matches
-	),
-	// Use local storage to remember the state.  
-	"doPersistAcrossReloads": true
+    name: "isDarkModeEnabled",
+    // We use by defautl the OS preference of the user related to dark mode.
+    initialState: window.matchMedia && window.matchMedia("(prefers-color-scheme: dark)").matches,
+    // Use local storage to remember the state.
+    doPersistAcrossReloads: true
 });
 
-// NOTE: If ever there is ?theme=light or ?theme=dark in the url query, we use that. 
+// NOTE: If ever there is ?theme=light or ?theme=dark in the url query, we use that.
 (() => {
+    const result = getSearchParam({
+        url: window.location.href,
+        name: "theme"
+    });
 
-	const result = getSearchParam({
-		"url": window.location.href,
-		"name": "theme"
-	});
+    if (!result.wasPresent) {
+        return;
+    }
 
-	if (!result.wasPresent) {
-		return;
-	}
+    updateSearchBarUrl(result.url_withoutTheParam);
 
-	updateSearchBarUrl(result.url_withoutTheParam);
+    const isDarkModeEnabled = (() => {
+        switch (result.value) {
+            case "dark":
+                return true;
+            case "light":
+                return false;
+            default:
+                return undefined;
+        }
+    })();
 
-	const isDarkModeEnabled = (() => {
-		switch (result.value) {
-			case "dark": return true;
-			case "light": return false;
-			default: return undefined;
-		}
-	})();
+    if (isDarkModeEnabled === undefined) {
+        return;
+    }
 
-	if (isDarkModeEnabled === undefined) {
-		return;
-	}
-
-	$isDarkModeEnabled.current = isDarkModeEnabled;
-
+    $isDarkModeEnabled.current = isDarkModeEnabled;
 })();
 
 // NOTE: For sync: https://developer.mozilla.org/en-US/docs/Web/CSS/color-scheme
 // https://twitter.com/diegohaz/status/1529543787311144961?s=20&t=c6hJDBr5GUWOlXEI2xYHSg
 {
+    const next = (isDarkModeEnabled: boolean) => {
+        const id = "root-color-scheme";
 
-	const next = (isDarkModeEnabled: boolean) => {
+        remove_existing_element: {
+            const element = document.getElementById(id);
 
-		const id = "root-color-scheme";
+            if (element === null) {
+                break remove_existing_element;
+            }
 
-		remove_existing_element: {
+            element.remove();
+        }
 
-			const element = document.getElementById(id);
+        const element = document.createElement("style");
 
-			if (element === null) {
-				break remove_existing_element;
-			}
+        element.id = id;
 
-			element.remove();
-
-		}
-
-
-		const element = document.createElement("style");
-
-		element.id = id;
-
-		element.innerHTML = `
+        element.innerHTML = `
 				:root {
 					color-scheme: ${isDarkModeEnabled ? "dark" : "light"}
 				}
 		`;
 
+        document.getElementsByTagName("head")[0].appendChild(element);
+    };
 
-		document.getElementsByTagName("head")[0].appendChild(element);
-	};
+    next($isDarkModeEnabled.current);
 
-	next($isDarkModeEnabled.current);
-
-	$isDarkModeEnabled.subscribe(next);
-
+    $isDarkModeEnabled.subscribe(next);
 }

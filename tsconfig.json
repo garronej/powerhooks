@@ -18,11 +18,6 @@
         "resolveJsonModule": true,
         "skipLibCheck": true
     },
-    "include": [
-        "src",
-    ],
-    "exclude": [
-        "src/test/spa",
-        "src/test/ssr"
-    ]
+    "include": ["src"],
+    "exclude": ["src/test/spa", "src/test/ssr"]
 }

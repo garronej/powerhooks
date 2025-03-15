@@ -20,8 +20,7 @@
 </p>
 -->
 
-<i>This module is still under development. A real documentation website is coming.</i>  
-
+<i>This module is still under development. A real documentation website is coming.</i>
 
 # Main hooks
 
@@ -41,63 +40,49 @@ array to `useCallback`](https://stackoverflow.com/questions/65890278/why-cant-us
 To avoid re-rendering every list item component when the parent re-renders.
 
 ```tsx
-//Without powerhook: 
+//Without powerhook:
 
-todos.map(todo=> 
-    <Todo 
-        todo={todo}
-        onClick={(a, b)=> onClick(todo, a, b)}
-    />
-);
+todos.map(todo => <Todo todo={todo} onClick={(a, b) => onClick(todo, a, b)} />);
 
-//With: 
+//With:
 
-import { useCallbackFactory } from "powerhooks/useCallbackFactory";
+import { useCallbackFactory } from "powerhooks/useCallbackFactory";
 
 //...
 
-const onClickFactory = useCallbackFactory(
-    (
-        [todo]: [string],
-        [a, b]: [string, number]
-    ) => onClick(todo, a, b)
+const onClickFactory = useCallbackFactory(([todo]: [string], [a, b]: [string, number]) =>
+    onClick(todo, a, b)
 );
 
-todos.map(todo=> 
-    <Todo 
-        todo={todo}
-        onClick={onClickFactory(todo)}
-    />
-);
+todos.map(todo => <Todo todo={todo} onClick={onClickFactory(todo)} />);
 ```
 
-Let's assume `<TodoItem />` uses `React.memo`, in the example without powerhooks, 
+Let's assume `<TodoItem />` uses `React.memo`, in the example without powerhooks,
 every render of the parent the reference of `onComplete` changes.  
-`useCallbackFactory` on the other hand always returns the same function for a given `todo: string`.  
+`useCallbackFactory` on the other hand always returns the same function for a given `todo: string`.
 
 ## `useGlobalState`
 
 Create global state persistent across reloads that is accessible through out the entire app, and this without involving a provider.
 
-NOTE: It makes uses of TypeScript's [template literal types](https://www.typescriptlang.org/docs/handbook/release-notes/typescript-4-1.html#template-literal-types) to return 
+NOTE: It makes uses of TypeScript's [template literal types](https://www.typescriptlang.org/docs/handbook/release-notes/typescript-4-1.html#template-literal-types) to return
 `useIsDarkModeEnabled` based on the `name` parameter (`"isDarkModeEnabled"`).  
 How cool is that ?!
 
 `useIsDarkModeEnabled.ts`
+
 ```tsx
 import { createUseGlobalState } from "powerhooks/useGlobalState";
 
 export const { useIsDarkModeEnabled, evtIsDarkModeEnabled } = createUseGlobalState({
-	"name": "isDarkModeEnabled",
-	"initialState": (
-		window.matchMedia &&
-		window.matchMedia("(prefers-color-scheme: dark)").matches
-	),
-	"doPersistAcrossReloads": true
+    name: "isDarkModeEnabled",
+    initialState: window.matchMedia && window.matchMedia("(prefers-color-scheme: dark)").matches,
+    doPersistAcrossReloads: true
 });
 ```
 
 `MyComponent.tsx`
+
 ```tsx
 import { useIsDarkModeEnabled } from "./useIsDarkModeEnabled";
 
@@ -121,24 +106,18 @@ Optionally, you can track your state an edit them outside of the react tree Reac
 but still trigger refresh when the state is changed.
 
 ```ts
+import { evtIsDarkModeEnabled } from "./useIsDarkModeEnabled";
 
-import { evtIsDarkModeEnabled } from "./useIsDarkModeEnabled";
-
-//After 4 seconds, enable dark mode, it will triggers re-renders of all the components 
+//After 4 seconds, enable dark mode, it will triggers re-renders of all the components
 //that uses the state.
-setTimeout(
-  ()=>{
+setTimeout(() => {
+    evtIsDarkModeEnabled.state = true;
+}, 4000);
 
-      evtIsDarkModeEnabled.state = true;
+//Print something in the console anytime the state changes:
 
-  },
-  4000
-);
-
-//Print something in the console anytime the state changes:  
-
-evtIsDarkModeEnabled.attach(isDarkModeEnabled=> {
-  console.log(`idDarkModeEnabled changed, new value: ${isDarkModeEnabled}`);
+evtIsDarkModeEnabled.attach(isDarkModeEnabled => {
+    console.log(`idDarkModeEnabled changed, new value: ${isDarkModeEnabled}`);
 });
 ```
 
@@ -149,39 +128,38 @@ evtIsDarkModeEnabled.attach(isDarkModeEnabled=> {
 Measure rendered components in realtime.
 
 ```tsx
-import { useDomRect } from "powerhooks/useDomRect";
+import { useDomRect } from "powerhooks/useDomRect";
 
-function MyComponent(){
-
-    const { ref, domRect } = useDomRect();
+function MyComponent() {
+    const { ref, domRect } = useDomRect();
 
     return (
-      <>
-        <div ref={ref}> 
-          This div is div size's dimensions <br/>
-          are determined by it's content 
-        </div>
-        <div
-          style={{
-            "width": domRect.width,
-            "height": domRect.height
-          }}
-        > 
-          This div is the same size as the first div
-        </div>
-      </>
+        <>
+            <div ref={ref}>
+                This div is div size's dimensions <br />
+                are determined by it's content
+            </div>
+            <div
+                style={{
+                    width: domRect.width,
+                    height: domRect.height
+                }}
+            >
+                This div is the same size as the first div
+            </div>
+        </>
     );
-
 }
 ```
 
-WARNING: Not yet compatible with SSR  
+WARNING: Not yet compatible with SSR
 
 # Used by
 
-- [Onyxia-ui](https://github.com/InseeFrLab/onyxia-ui)
-- [Onyxia](https://github.com/InseeFrLab/onyxia-web)
-- [Keycloakify](https://github.com/InseeFrLab/keycloakify)
+-   [Onyxia-ui](https://github.com/InseeFrLab/onyxia-ui)
+-   [Onyxia](https://github.com/InseeFrLab/onyxia-web)
+-   [Keycloakify](https://github.com/InseeFrLab/keycloakify)
+
 # Development
 
 Start the test SPA

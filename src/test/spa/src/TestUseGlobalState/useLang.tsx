@@ -9,111 +9,92 @@ import { getSearchParam, addOrUpdateSearchParam } from "powerhooks/tools/urlSear
 
 const languages = ["en", "fr", "es"] as const;
 
-type Language = typeof languages[number];
+type Language = (typeof languages)[number];
 
 const fallbackLanguage = "en";
 
 const name = "lang";
 
 export const { useLang, $lang } = createUseGlobalState({
-	name,
-	"initialState": (() => {
+    name,
+    initialState: (() => {
+        const lang = getLanguageBestApprox<Language>({
+            languageLike: navigator.language,
+            languages
+        });
 
-		const lang = getLanguageBestApprox<Language>({
-			"languageLike": navigator.language,
-			languages,
-		});
+        if (lang === undefined) {
+            return fallbackLanguage;
+        }
 
-		if (lang === undefined) {
-			return fallbackLanguage;
-		}
-
-		return lang;
-
-	})(),
-	"doPersistAcrossReloads": true
+        return lang;
+    })(),
+    doPersistAcrossReloads: true
 });
 
 {
+    const next = (lang: Language) => document.documentElement.setAttribute(name, lang);
 
-	const next = (lang: Language) => document.documentElement.setAttribute(name, lang);
+    next($lang.current);
 
-	next($lang.current);
-
-	$lang.subscribe(next);
-
+    $lang.subscribe(next);
 }
 
-
 {
+    const result = getSearchParam({
+        url: window.location.href,
+        name
+    });
 
-	const result = getSearchParam({
-		"url": window.location.href,
-		name
-
-	});
-
-	if (result.wasPresent) {
-		updateSearchBarUrl(result.url_withoutTheParam);
-	}
-
+    if (result.wasPresent) {
+        updateSearchBarUrl(result.url_withoutTheParam);
+    }
 }
 
 [...languages, undefined].forEach(lang => {
+    const link = document.createElement("link");
+    link.rel = "alternate";
+    link.hreflang = lang === undefined ? "x-default" : lang;
+    link.href =
+        lang === undefined
+            ? window.location.href
+            : addOrUpdateSearchParam({
+                  url: window.location.href,
+                  name,
+                  value: lang,
+                  encodeMethod: "encodeURIComponent"
+              });
 
-	const link = document.createElement("link");
-	link.rel = "alternate"
-	link.hreflang = lang === undefined ? "x-default" : lang;
-	link.href = lang === undefined ? window.location.href :
-		addOrUpdateSearchParam({
-			"url": window.location.href,
-			name,
-			"value": lang,
-			"encodeMethod": "encodeURIComponent"
-		});
-
-	document.getElementsByTagName("head")[0].appendChild(link);
-
+    document.getElementsByTagName("head")[0].appendChild(link);
 });
 
-function getLanguageBestApprox<Language extends string>(
-	params: {
-		languages: readonly Language[];
-		languageLike: string;
-	}
-): Language | undefined {
+function getLanguageBestApprox<Language extends string>(params: {
+    languages: readonly Language[];
+    languageLike: string;
+}): Language | undefined {
+    const { languages, languageLike } = params;
 
-	const { languages, languageLike } = params;
+    scope: {
+        const lang = languages.find(lang => lang.toLowerCase() === languageLike.toLowerCase());
 
-	scope: {
-		const lang = languages.find(lang => lang.toLowerCase() === languageLike.toLowerCase());
+        if (lang === undefined) {
+            break scope;
+        }
 
-		if (lang === undefined) {
-			break scope;
-		}
+        return lang;
+    }
 
-		return lang;
+    scope: {
+        const iso2LanguageLike = languageLike.split("-")[0].toLowerCase();
 
-	}
+        const lang = languages.find(lang => lang.toLowerCase().includes(iso2LanguageLike));
 
-	scope: {
+        if (lang === undefined) {
+            break scope;
+        }
 
-		const iso2LanguageLike = languageLike
-			.split("-")[0]
-			.toLowerCase();
+        return lang;
+    }
 
-		const lang = languages.find(lang =>
-			lang.toLowerCase().includes(iso2LanguageLike),
-		);
-
-		if (lang === undefined) {
-			break scope;
-		}
-
-		return lang;
-
-	}
-
-	return undefined;
-
+    return undefined;
 }

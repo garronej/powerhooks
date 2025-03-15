@@ -1,12 +1,13 @@
-`StatefulObservable` is a construct that allow to avoid having to depend on [EVT](https://evt.land).  
+`StatefulObservable` is a construct that allow to avoid having to depend on [EVT](https://evt.land).
 
-A `StatefulObservable` can be converted to an evt with:  
+A `StatefulObservable` can be converted to an evt with:
+
 ```ts
-import { statefulObservableToStatefulEvt} from "powerhooks/tools/StatefulObservable/statefulObservableToStatefulEvt";
+import { statefulObservableToStatefulEvt } from "powerhooks/tools/StatefulObservable/statefulObservableToStatefulEvt";
 
 const evtXyz = statefulObservableToStatefulEvt({
-	"statefulObservable": $xyz
-	//Optionally you can pass a Ctx
+    statefulObservable: $xyz
+    //Optionally you can pass a Ctx
 });
 ```
 

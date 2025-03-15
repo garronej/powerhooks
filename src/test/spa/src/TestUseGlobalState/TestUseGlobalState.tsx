@@ -1,10 +1,7 @@
-
-
 import { useLang } from "./useLang";
 import { useIsDarkModeEnabled } from "./useIsDarkModeEnabled";
 
 export function TestUseGlobalState() {
-
     const { isDarkModeEnabled, setIsDarkModeEnabled } = useIsDarkModeEnabled();
 
     const { lang, setLang } = useLang();
@@ -19,5 +16,4 @@ export function TestUseGlobalState() {
             <button onClick={() => setLang("en")}>Set language to en</button>
         </>
     );
-
 }

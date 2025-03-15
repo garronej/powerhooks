@@ -4,8 +4,9 @@ import { createStatefulObservable } from "../tools/StatefulObservable/StatefulOb
 export function waitForDebounceFactory(params: { delay: number }) {
     const { delay } = params;
 
-    const obsCurr= createStatefulObservable<{ timer: ReturnType<typeof setTimeout>; startTime: number } | undefined>(()=> undefined);
-
+    const obsCurr = createStatefulObservable<
+        { timer: ReturnType<typeof setTimeout>; startTime: number } | undefined
+    >(() => undefined);
 
     function waitForDebounce(): Promise<void | never> {
         const dOut = new Deferred<void | never>();
@@ -18,27 +19,29 @@ export function waitForDebounceFactory(params: { delay: number }) {
         if (obsCurr.current !== undefined) {
             clearTimeout(obsCurr.current.timer);
 
-            obsCurr.current.timer = setTimeout(timerCallback, delay - (Date.now() - obsCurr.current.startTime));
+            obsCurr.current.timer = setTimeout(
+                timerCallback,
+                delay - (Date.now() - obsCurr.current.startTime)
+            );
 
             return dOut.pr;
         } else {
             const startTime = Date.now();
 
             obsCurr.current = {
-                "timer": setTimeout(timerCallback, delay),
-                startTime,
+                timer: setTimeout(timerCallback, delay),
+                startTime
             };
         }
 
         return dOut.pr;
     }
 
+    const obsIsDebouncing = createStatefulObservable(() => false);
 
-    const obsIsDebouncing = createStatefulObservable(()=> false);
+    obsCurr.subscribe(curr => (obsIsDebouncing.current = curr !== undefined));
 
-    obsCurr.subscribe(curr=> obsIsDebouncing.current = curr !== undefined);
-
-    return { 
+    return {
         waitForDebounce,
         obsIsDebouncing
     };

@@ -1,177 +1,169 @@
 function getAllSearchParams_encoded(url: string): Record<string, string> {
+    let search: string | undefined;
 
-  let search: string | undefined;
+    {
+        const [url_withoutHash] = url.split("#");
 
-  {
+        search = url_withoutHash.split("?")[1];
+    }
 
-    const [url_withoutHash] = url.split("#");
+    if (search === undefined) {
+        return {};
+    }
 
-    search = url_withoutHash.split("?")[1]
+    return Object.fromEntries(
+        search.split("&").map(part => {
+            const [name, value_encoded] = part.split("=");
 
-  }
-
-  if (search === undefined) {
-    return {};
-  }
-
-  return Object.fromEntries(
-    search
-      .split("&")
-      .map((part) => {
-        const [name, value_encoded] = part.split("=");
-
-        return [name, value_encoded];
-      })
-  );
+            return [name, value_encoded];
+        })
+    );
 }
 
 function addOrUpdateOrRemoveSearchParam_encoded(params: {
-  url: string;
-  name: string;
-  value_encoded: string | undefined;
+    url: string;
+    name: string;
+    value_encoded: string | undefined;
 }): string {
-  const { url, name, value_encoded } = params;
+    const { url, name, value_encoded } = params;
 
-  const value_encodedByName = getAllSearchParams_encoded(url);
+    const value_encodedByName = getAllSearchParams_encoded(url);
 
-  if (value_encoded === undefined) {
-    delete value_encodedByName[name];
-  } else {
-    value_encodedByName[name] = value_encoded;
-  }
-
-  let search: string;
-
-  update_search: {
-    if (Object.keys(value_encodedByName).length === 0) {
-      search = "";
-      break update_search;
+    if (value_encoded === undefined) {
+        delete value_encodedByName[name];
     } else {
-      search =
-        "?" +
-        Object.entries(value_encodedByName)
-          .map(([name, value_encoded]) => `${name}=${value_encoded}`)
-          .join("&");
+        value_encodedByName[name] = value_encoded;
     }
-  }
 
-  const [url_withoutHash, hash] = url.split("#");
+    let search: string;
 
-  const [url_withoutHash_withoutSearch] = url_withoutHash.split("?");
+    update_search: {
+        if (Object.keys(value_encodedByName).length === 0) {
+            search = "";
+            break update_search;
+        } else {
+            search =
+                "?" +
+                Object.entries(value_encodedByName)
+                    .map(([name, value_encoded]) => `${name}=${value_encoded}`)
+                    .join("&");
+        }
+    }
 
-  return `${url_withoutHash_withoutSearch}${search}${hash ? "#" + hash : ""}`;
+    const [url_withoutHash, hash] = url.split("#");
+
+    const [url_withoutHash_withoutSearch] = url_withoutHash.split("?");
+
+    return `${url_withoutHash_withoutSearch}${search}${hash ? "#" + hash : ""}`;
 }
 
 export function addOrUpdateSearchParam(params: {
-  url: string;
-  name: string;
-  value: string;
-  encodeMethod: "encodeURIComponent" | "www-form";
+    url: string;
+    name: string;
+    value: string;
+    encodeMethod: "encodeURIComponent" | "www-form";
 }): string {
-  const { url, name, value, encodeMethod } = params;
+    const { url, name, value, encodeMethod } = params;
 
-  let value_encoded = encodeURIComponent(value);
+    let value_encoded = encodeURIComponent(value);
 
-  if (encodeMethod === "www-form") {
-    value_encoded = value_encoded.replace(/%20/g, "+");
-  }
+    if (encodeMethod === "www-form") {
+        value_encoded = value_encoded.replace(/%20/g, "+");
+    }
 
-  return addOrUpdateOrRemoveSearchParam_encoded({
-    url,
-    name,
-    value_encoded,
-  });
+    return addOrUpdateOrRemoveSearchParam_encoded({
+        url,
+        name,
+        value_encoded
+    });
 }
 
 function decodeSearchParamValue(value_encoded: string): string {
-  return decodeURIComponent(value_encoded.replace(/\+/g, "%20"));
+    return decodeURIComponent(value_encoded.replace(/\+/g, "%20"));
 }
 
 export function getSearchParam(params: { url: string; name: string }):
-  | {
-      wasPresent: true;
-      value: string;
-      url_withoutTheParam: string;
+    | {
+          wasPresent: true;
+          value: string;
+          url_withoutTheParam: string;
+      }
+    | {
+          wasPresent: false;
+          value?: never;
+          url_withoutTheParam?: never;
+      } {
+    const { url, name } = params;
+
+    const encodedValueByName = getAllSearchParams_encoded(url);
+
+    const value_encoded = encodedValueByName[name];
+
+    if (value_encoded === undefined) {
+        return {
+            wasPresent: false
+        };
     }
-  | {
-      wasPresent: false;
-      value?: never;
-      url_withoutTheParam?: never;
-    } {
-  const { url, name } = params;
 
-  const encodedValueByName = getAllSearchParams_encoded(url);
+    const url_withoutTheParam = addOrUpdateOrRemoveSearchParam_encoded({
+        url,
+        name,
+        value_encoded: undefined
+    });
 
-  const value_encoded = encodedValueByName[name];
-
-  if (value_encoded === undefined) {
     return {
-      wasPresent: false,
+        wasPresent: true,
+        value: decodeSearchParamValue(value_encoded),
+        url_withoutTheParam
     };
-  }
-
-  const url_withoutTheParam = addOrUpdateOrRemoveSearchParam_encoded({
-    url,
-    name,
-    value_encoded: undefined,
-  });
-
-  return {
-    wasPresent: true,
-    value: decodeSearchParamValue(value_encoded),
-    url_withoutTheParam,
-  };
 }
 
 export function getAllSearchParams(url: string): Record<string, string> {
-  const encodedValueByName = getAllSearchParams_encoded(url);
+    const encodedValueByName = getAllSearchParams_encoded(url);
 
-  return Object.fromEntries(
-    Object.entries(encodedValueByName).map(([name, value_encoded]) => [
-      name,
-      decodeSearchParamValue(value_encoded),
-    ])
-  );
+    return Object.fromEntries(
+        Object.entries(encodedValueByName).map(([name, value_encoded]) => [
+            name,
+            decodeSearchParamValue(value_encoded)
+        ])
+    );
 }
 
 export function getAllSearchParamsStartingWithPrefix<
-  Prefix extends string,
-  DoLeave extends boolean
+    Prefix extends string,
+    DoLeave extends boolean
 >(params: {
-  url: string;
-  prefix: Prefix;
-  doLeavePrefixInResults: DoLeave;
+    url: string;
+    prefix: Prefix;
+    doLeavePrefixInResults: DoLeave;
 }): {
-  valueByName: Record<
-    DoLeave extends true ? `${Prefix}${string}` : string,
-    string
-  >;
-  url_withoutTheParams: string;
+    valueByName: Record<DoLeave extends true ? `${Prefix}${string}` : string, string>;
+    url_withoutTheParams: string;
 } {
-  const { url, prefix, doLeavePrefixInResults } = params;
+    const { url, prefix, doLeavePrefixInResults } = params;
 
-  const encodedValueByName = getAllSearchParams_encoded(url);
+    const encodedValueByName = getAllSearchParams_encoded(url);
 
-  let url_withoutTheParams = url;
-  const valueByName: Record<string, string> = {};
+    let url_withoutTheParams = url;
+    const valueByName: Record<string, string> = {};
 
-  for (const [name, value_encoded] of Object.entries(encodedValueByName)) {
-    if (!name.startsWith(prefix)) {
-      continue;
+    for (const [name, value_encoded] of Object.entries(encodedValueByName)) {
+        if (!name.startsWith(prefix)) {
+            continue;
+        }
+
+        valueByName[doLeavePrefixInResults ? name : name.slice(prefix.length)] =
+            decodeSearchParamValue(value_encoded);
+
+        url_withoutTheParams = addOrUpdateOrRemoveSearchParam_encoded({
+            url: url_withoutTheParams,
+            name,
+            value_encoded: undefined
+        });
     }
 
-    valueByName[doLeavePrefixInResults ? name : name.slice(prefix.length)] =
-      decodeSearchParamValue(value_encoded);
-
-    url_withoutTheParams = addOrUpdateOrRemoveSearchParam_encoded({
-      url: url_withoutTheParams,
-      name,
-      value_encoded: undefined,
-    });
-  }
-
-  return {
-    valueByName,
-    url_withoutTheParams,
-  };
+    return {
+        valueByName,
+        url_withoutTheParams
+    };
 }

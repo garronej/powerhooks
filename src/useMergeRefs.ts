@@ -1,10 +1,7 @@
-
 import type { MutableRefObject, LegacyRef, RefCallback } from "react";
 import { useCallback } from "react";
 
-export function useMergeRefs<T = any>(
-    refs: (MutableRefObject<T> | LegacyRef<T>)[],
-): RefCallback<T> {
+export function useMergeRefs<T = any>(refs: (MutableRefObject<T> | LegacyRef<T>)[]): RefCallback<T> {
     return useCallback(
         value => {
             refs.forEach(ref => {
@@ -15,6 +12,6 @@ export function useMergeRefs<T = any>(
                 }
             });
         },
-        refs.map(ref => ref ?? Object),
+        refs.map(ref => ref ?? Object)
     );
 }

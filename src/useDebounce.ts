@@ -8,45 +8,44 @@ type Destructor = () => void;
 type EffectCallback = () => void | Destructor;
 
 export function createUseDebounce(params: { delay: number }) {
-	const { delay } = params;
+    const { delay } = params;
 
-	const { waitForDebounce, obsIsDebouncing } = waitForDebounceFactory({ delay });
+    const { waitForDebounce, obsIsDebouncing } = waitForDebounceFactory({ delay });
 
-	function useDebounce(
-		effectCallback: EffectCallback,
-		deps: readonly [value: any, ...moreValues: any[]],
-	) {
+    function useDebounce(
+        effectCallback: EffectCallback,
+        deps: readonly [value: any, ...moreValues: any[]]
+    ) {
+        const constEffectCallback = useConstCallback(effectCallback);
 
-		const constEffectCallback = useConstCallback(effectCallback);
+        const refIsFirst = useConst(() => ({ current: false }));
 
-		const refIsFirst = useConst(() => ({ "current": false }));
+        useEffect(() => {
+            if (refIsFirst.current) {
+                refIsFirst.current = false;
 
-		useEffect(() => {
-			if (refIsFirst.current) {
-				refIsFirst.current = false;
+                return constEffectCallback();
+            }
 
-				return constEffectCallback();
-			}
+            let isActive = true;
+            let destructor: Destructor | undefined = undefined;
 
-			let isActive = true;
-			let destructor: Destructor | undefined = undefined;
+            (async () => {
+                await waitForDebounce();
 
-			(async () => {
-				await waitForDebounce();
+                if (!isActive) {
+                    return;
+                }
 
-				if (!isActive) {
-					return;
-				}
+                destructor = constEffectCallback() ?? undefined;
+            })();
 
-				destructor = constEffectCallback() ?? undefined;
-			})();
+            return () => {
+                isActive = false;
+                destructor?.();
+            };
+        }, deps);
+    }
 
-			return () => {
-				isActive = false;
-				destructor?.();
-			};
-		}, deps);
-	}
-
-	return { useDebounce, obsIsDebouncing };
+    return { useDebounce, obsIsDebouncing };
 }

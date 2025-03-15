@@ -4,10 +4,17 @@ import { Evt } from "evt";
 import { useConstCallback } from "./useConstCallback";
 import { useStateRef } from "./useStateRef";
 
-export function useClickAway<T extends HTMLElement = any>(params: { onClickAway: () => void; }): { ref: RefObject<T>; };
-export function useClickAway<T extends HTMLElement = any>(params: { onClickAway: () => void; ref: RefObject<T>; }): void;
-export function useClickAway<T extends HTMLElement = any>(params: { onClickAway: () => void; ref?: RefObject<T>; }): { ref: RefObject<T>; } {
-
+export function useClickAway<T extends HTMLElement = any>(params: {
+    onClickAway: () => void;
+}): { ref: RefObject<T> };
+export function useClickAway<T extends HTMLElement = any>(params: {
+    onClickAway: () => void;
+    ref: RefObject<T>;
+}): void;
+export function useClickAway<T extends HTMLElement = any>(params: {
+    onClickAway: () => void;
+    ref?: RefObject<T>;
+}): { ref: RefObject<T> } {
     const { onClickAway } = params;
 
     const internallyCreatedRef = useStateRef<T>(null);
@@ -18,14 +25,12 @@ export function useClickAway<T extends HTMLElement = any>(params: { onClickAway:
 
     useEvt(
         ctx =>
-            Evt.from(ctx, document, "mousedown")
-                .attach(
-                    ({ target }) => !ref.current?.contains(target as any),
-                    onClickAway_const
-                ),
+            Evt.from(ctx, document, "mousedown").attach(
+                ({ target }) => !ref.current?.contains(target as any),
+                onClickAway_const
+            ),
         []
     );
 
     return { ref };
-
 }

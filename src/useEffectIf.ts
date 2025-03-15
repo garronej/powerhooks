@@ -6,31 +6,23 @@ const { useEffect } = React;
 export type Destructor = () => void;
 
 export function useEffectIf<Deps extends readonly any[]>(
-	effect: (params: { deps: Deps; }) => (void | Destructor),
-	effectRunCondition: Deps | boolean
+    effect: (params: { deps: Deps }) => void | Destructor,
+    effectRunCondition: Deps | boolean
 ): void {
+    const { deps, doSkipEffectRun } = useEffectRunConditionToDependencyArray({
+        effectRunCondition,
+        hookName: useEffectIf.name
+    });
 
-	const { deps, doSkipEffectRun } = useEffectRunConditionToDependencyArray({
-		effectRunCondition,
-		"hookName": useEffectIf.name
-	});
+    useEffect(() => {
+        if (doSkipEffectRun) return;
 
-	useEffect(
-		() => {
+        assert(effectRunCondition !== false);
 
-			if (doSkipEffectRun) return;
-
-			assert(effectRunCondition !== false);
-
-			return effect({
-				"deps": effectRunCondition === true ?
-					[] as any : effectRunCondition
-			});
-
-		},
-		deps
-	);
-
+        return effect({
+            deps: effectRunCondition === true ? ([] as any) : effectRunCondition
+        });
+    }, deps);
 }
 
 /*
